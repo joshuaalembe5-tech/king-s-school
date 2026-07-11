@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — King's School International</title>
+  <style>
+    :root {
+      --royal-blue: #1e3a8a;
+      --blue-mid:   #2563eb;
+      --gold:       #d4af37;
+      --light-gold: #f4e4b6;
+      --white:      #ffffff;
+      --bg:         #f1f5f9;
+      --sidebar:    #0f2460;
+      --error:      #dc2626;
+      --success:    #16a34a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: #1e293b;
+    }
+
+    /* ── Écran de connexion admin ── */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--royal-blue), var(--blue-mid));
+    }
+
+    .login-box {
+      background: white;
+      padding: 2.5rem 2.5rem;
+      border-radius: 16px;
+      width: 360px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .login-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--gold), var(--light-gold), var(--gold));
+      border-radius: 16px 16px 0 0;
+    }
+
+    .login-box h2 {
+      color: var(--royal-blue);
+      font-size: 1.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .login-box p {
+      color: #64748b;
+      font-size: 0.85rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .field { margin-bottom: 1.1rem; }
+
+    .field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.35rem;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .field input:focus { border-color: var(--royal-blue); }
+
+    .btn-login {
+      width: 100%;
+      padding: 0.85rem;
+      background: linear-gradient(135deg, var(--royal-blue), var(--blue-mid));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .btn-login:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(30,58,138,0.3); }
+
+    .login-error {
+      background: #fee2e2;
+      color: var(--error);
+      border: 1px solid #fecaca;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    /* ── Dashboard ── */
+    #dashboard { display: none; min-height: 100vh; }
+
+    .layout { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: var(--sidebar);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      padding: 1.5rem 1.5rem 1.2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar-logo .crown { font-size: 1.6rem; }
+
+    .sidebar-logo h2 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-top: 0.4rem;
+      line-height: 1.3;
+    }
+
+    .sidebar-logo p {
+      font-size: 0.7rem;
+      color: var(--gold);
+      margin-top: 0.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .sidebar-nav {
+      padding: 1rem 0;
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.8rem 1.5rem;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    .nav-item.active { border-left: 3px solid var(--gold); }
+
+    .sidebar-footer {
+      padding: 1.2rem 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .btn-logout {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.7);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: inherit;
+      width: 100%;
+      margin-top: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    /* Contenu principal */
+    .main {
+      flex: 1;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .main-header h1 {
+      font-size: 1.5rem;
+      color: var(--royal-blue);
+    }
+
+    .main-header p { color: #64748b; font-size: 0.85rem; margin-top: 0.2rem; }
+
+    .badge-admin {
+      background: var(--light-gold);
+      color: #92400e;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    /* Cartes stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border-left: 4px solid var(--royal-blue);
+    }
+
+    .stat-card:nth-child(2) { border-left-color: var(--gold); }
+    .stat-card:nth-child(3) { border-left-color: var(--success); }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--royal-blue);
+      margin: 0.3rem 0;
+    }
+
+    .stat-sub { font-size: 0.78rem; color: #94a3b8; }
+
+    /* Table */
+    .table-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+
+    .table-header {
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .table-header h3 {
+      font-size: 1rem;
+      color: var(--royal-blue);
+    }
+
+    .btn-refresh {
+      background: var(--light-gold);
+      color: #92400e;
+      border: none;
+      padding: 0.45rem 1rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .btn-refresh:hover { background: var(--gold); color: white; }
+
+    .search-bar {
+      padding: 0.8rem 1.5rem;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .search-bar input:focus { border-color: var(--royal-blue); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead { background: #f8fafc; }
+
+    th {
+      padding: 0.8rem 1.5rem;
+      text-align: left;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 0.9rem 1.5rem;
+      font-size: 0.88rem;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    tr:hover td { background: #f8fafc; }
+
+    .role-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .role-user  { background: #dbeafe; color: #1e40af; }
+    .role-admin { background: var(--light-gold); color: #92400e; }
+
+    .btn-delete {
+      background: #fee2e2;
+      color: var(--error);
+      border: none;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .btn-delete:hover { background: var(--error); color: white; }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #94a3b8;
+    }
+
+    .empty-state p { font-size: 0.9rem; margin-top: 0.5rem; }
+
+    #loadingMsg {
+      text-align: center;
+      padding: 2rem;
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Écran de connexion ── -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="crown">👑</div>
+    <h2>Panel Administrateur</h2>
+    <p>King's School International — Accès réservé</p>
+
+    <div class="login-error" id="adminLoginError"></div>
+
+    <div class="field">
+      <label>Email administrateur</label>
+      <input type="email" id="adminEmail" placeholder="admin@kingsschool.cd" value="admin@kingsschool.cd">
+    </div>
+    <div class="field">
+      <label>Mot de passe</label>
+      <input type="password" id="adminPassword" placeholder="••••••••">
+    </div>
+    <button class="btn-login" onclick="adminLogin()">Accéder au panel</button>
+  </div>
+</div>
+
+<!-- ── Dashboard ── -->
+<div id="dashboard">
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="crown">👑</div>
+        <h2>King's School<br>International</h2>
+        <p>Administration</p>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-item active">📊 Tableau de bord</div>
+        <div class="nav-item" onclick="window.location.href='portail.html'">🚪 Portail utilisateurs</div>
+        <div class="nav-item" onclick="window.location.href='index.html'">🌐 Voir le site</div>
+      </nav>
+      <div class="sidebar-footer">
+        <div id="adminName" style="font-weight:600;color:white;margin-bottom:0.3rem;"></div>
+        <div>Administrateur</div>
+        <button class="btn-logout" onclick="logout()">🚪 Déconnexion</button>
+      </div>
+    </div>
+
+    <!-- Contenu -->
+    <div class="main">
+      <div class="main-header">
+        <div>
+          <h1>Tableau de bord</h1>
+          <p>Gestion des utilisateurs inscrits</p>
+        </div>
+        <span class="badge-admin">👑 Administrateur</span>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total inscrits</div>
+          <div class="stat-value" id="statTotal">—</div>
+          <div class="stat-sub">utilisateurs enregistrés</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Aujourd'hui</div>
+          <div class="stat-value" id="statToday">—</div>
+          <div class="stat-sub">nouvelles inscriptions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Cette semaine</div>
+          <div class="stat-value" id="statWeek">—</div>
+          <div class="stat-sub">inscriptions (7 jours)</div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-card">
+        <div class="table-header">
+          <h3>👥 Utilisateurs inscrits</h3>
+          <button class="btn-refresh" onclick="loadUsers()">🔄 Actualiser</button>
+        </div>
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="🔍 Rechercher par nom ou email..." oninput="filterTable()">
+        </div>
+        <div id="loadingMsg">Chargement...</div>
+        <table id="usersTable" style="display:none;">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nom</th>
+              <th>Email</th>
+              <th>Rôle</th>
+              <th>Date d'inscription</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="usersBody"></tbody>
+        </table>
+        <div class="empty-state" id="emptyState" style="display:none;">
+          <div style="font-size:2.5rem">👥</div>
+          <p>Aucun utilisateur inscrit pour le moment.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let adminEmail = '';
+  let allUsers   = [];
+
+  // ── Connexion admin ──────────────────────────────────────
+  async function adminLogin() {
+    const email    = document.getElementById('adminEmail').value.trim();
+    const password = document.getElementById('adminPassword').value;
+    const errBox   = document.getElementById('adminLoginError');
+    errBox.style.display = 'none';
+
+    try {
+      const res  = await fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+
+      if (!res.ok || data.user.role !== 'admin') {
+        errBox.textContent = '❌ Accès refusé. Vérifiez vos identifiants administrateur.';
+        errBox.style.display = 'block';
+        return;
+      }
+
+      adminEmail = email;
+      document.getElementById('adminName').textContent = data.user.name;
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display   = 'block';
+      loadStats();
+      loadUsers();
+
+    } catch (err) {
+      errBox.textContent = '⚠️ Impossible de joindre le serveur. Vérifiez que server.js est lancé.';
+      errBox.style.display = 'block';
+    }
+  }
+
+  // ── Charger statistiques ─────────────────────────────────
+  async function loadStats() {
+    try {
+      const res  = await fetch('http://localhost:3000/api/admin/stats', {
+        headers: { 'x-admin-email': adminEmail }
+      });
+      const data = await res.json();
+      document.getElementById('statTotal').textContent = data.total;
+      document.getElementById('statToday').textContent = data.today;
+      document.getElementById('statWeek').textContent  = data.thisWeek;
+    } catch (e) { console.error('Stats error', e); }
+  }
+
+  // ── Charger utilisateurs ─────────────────────────────────
+  async function loadUsers() {
+    document.getElementById('loadingMsg').style.display  = 'block';
+    document.getElementById('usersTable').style.display  = 'none';
+    document.getElementById('emptyState').style.display  = 'none';
+
+    try {
+      const res  = await fetch('http://localhost:3000/api/admin/users', {
+        headers: { 'x-admin-email': adminEmail }
+      });
+      const data = await res.json();
+      allUsers   = data.users;
+      renderTable(allUsers);
+      loadStats();
+    } catch (e) {
+      document.getElementById('loadingMsg').textContent = '⚠️ Erreur de chargement.';
+    }
+  }
+
+  // ── Afficher la table ────────────────────────────────────
+  function renderTable(users) {
+    document.getElementById('loadingMsg').style.display = 'none';
+    const tbody = document.getElementById('usersBody');
+    tbody.innerHTML = '';
+
+    if (users.length === 0) {
+      document.getElementById('emptyState').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('usersTable').style.display = 'table';
+
+    users.forEach((u, i) => {
+      const date = new Date(u.created_at).toLocaleDateString('fr-FR', {
+        day: '2-digit', month: 'long', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+      const roleBadge = u.role === 'admin'
+        ? '<span class="role-badge role-admin">👑 Admin</span>'
+        : '<span class="role-badge role-user">Utilisateur</span>';
+
+      const deleteBtn = u.role !== 'admin'
+        ? `<button class="btn-delete" onclick="deleteUser(${u.id}, '${u.name}')">Supprimer</button>`
+        : '—';
+
+      tbody.innerHTML += `
+        <tr>
+          <td style="color:#94a3b8">${i + 1}</td>
+          <td><strong>${u.name}</strong></td>
+          <td style="color:#2563eb">${u.email}</td>
+          <td>${roleBadge}</td>
+          <td style="color:#64748b">${date}</td>
+          <td>${deleteBtn}</td>
+        </tr>
+      `;
+    });
+  }
+
+  // ── Recherche ────────────────────────────────────────────
+  function filterTable() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = allUsers.filter(u =>
+      u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
+    );
+    renderTable(filtered);
+  }
+
+  // ── Supprimer un utilisateur ─────────────────────────────
+  async function deleteUser(id, name) {
+    if (!confirm(`Supprimer l'utilisateur "${name}" ? Cette action est irréversible.`)) return;
+
+    try {
+      await fetch(`http://localhost:3000/api/admin/users/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-email': adminEmail }
+      });
+      loadUsers();
+    } catch (e) {
+      alert('Erreur lors de la suppression.');
+    }
+  }
+
+  // ── Déconnexion ──────────────────────────────────────────
+  function logout() {
+    adminEmail = '';
+    document.getElementById('dashboard').style.display    = 'none';
+    document.getElementById('loginScreen').style.display  = 'flex';
+    document.getElementById('adminPassword').value = '';
+  }
+
+  // Connexion au clavier
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
+      adminLogin();
+    }
+  });
+</script>
+</body>
+</html>
