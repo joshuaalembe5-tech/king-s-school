@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>King's School International - Former des Leaders, Transformer des Nations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --royal-blue: #1e3a8a;
+            --gold: #d4af37;
+            --light-gold: #f4e4b6;
+            --white: #ffffff;
+            --light-gray: #f8f9fa;
+            --dark-gray: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-gray);
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.3rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-container img {
+            height: 60px;
+            width: auto;
+        }
+
+        .logo-text h1 {
+            color: var(--royal-blue);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .logo-text p {
+            color: var(--gold);
+            font-size: 0.70rem;
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--royal-blue);
+        }
+
+        .nav-links a.active {
+            color: var(--royal-blue);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--royal-blue);
+            cursor: pointer;
+        }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 90px;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            z-index: 999;
+        }
+
+        .mobile-nav.active {
+            display: block;
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            padding: 1rem 0;
+        }
+
+        .mobile-nav li {
+            padding: 0;
+        }
+
+        .mobile-nav a {
+            display: block;
+            padding: 1rem 5%;
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav a:hover {
+            background: var(--light-gray);
+            color: var(--royal-blue);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--royal-blue) 0%, #2563eb 100%);
+            color: var(--white);
+            padding: 10rem 5% 6rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 90px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('images/jo1.jpg');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero .tagline {
+            font-size: 1.8rem;
+            color: var(--light-gold);
+            margin-bottom: 2rem;
+            font-weight: 300;
+            animation: fadeInUp 1s ease 0.2s backwards;
+            min-height: 2.8rem;
+        }
+
+        #typewriterEl {
+            border-right: 3px solid var(--gold);
+            padding-right: 4px;
+            animation: blink 0.75s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { border-color: var(--gold); }
+            50%       { border-color: transparent; }
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+            animation: fadeInUp 1s ease 0.4s backwards;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.6s backwards;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: var(--royal-blue);
+        }
+
+        .btn-primary:hover {
+            background: var(--light-gold);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border-color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: var(--white);
+            color: var(--royal-blue);
+            transform: translateY(-3px);
+        }
+
+        /* About Section - IMPROVED */
+        .about-section {
+            padding: 5rem 5%;
+            background: var(--white);
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .about-header h2 {
+            font-size: 2.5rem;
+            color: var(--royal-blue);
+            margin-bottom: 1rem;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .about-image {
+            height: 400px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Assure que l'image remplit le conteneur sans déformation */
+            border-radius: 20px;
+        }
+
+        .quote-box {
+            background: var(--light-gold);
+            padding: 2rem;
+            border-left: 4px solid var(--gold);
+            border-radius: 10px;
+            font-style: italic;
+            margin: 2rem 0;
+        }
+
+        .quote-box p {
+            font-size: 1.2rem;
+            color: var(--royal-blue);
+            margin: 0;
+        }
+
+        .quote-author {
+            text-align: right;
+            font-weight: 600;
+            margin-top: 1rem;
+            font-style: normal;
+        }
+
+        .about-image {
+            background: linear-gradient(135deg, var(--royal-blue), #2563eb);
+            height: 400px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 120px;
+        }
+
+        /* Values Section */
+        .values-section {
+            padding: 5rem 5%;
+            background: var(--light-gray);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--royal-blue);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--gold);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .value-card {
+            background: var(--white);
+            padding: 2.5rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .value-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .value-card h3 {
+            color: var(--royal-blue);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .value-card p {
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+
+        /* Programs Section */
+        .programs-section {
+            padding: 5rem 5%;
+            background: var(--white);
+        }
+
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto 0;
+        }
+
+        .program-card {
+            background: var(--light-gray);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .program-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .program-card h3 {
+            color: var(--royal-blue);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .program-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .program-card li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .program-card li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        /* Gallery Section — Slider */
+        .gallery-section {
+            padding: 5rem 5%;
+            background: var(--light-gray);
+        }
+
+        .gallery-slider-wrap {
+            max-width: 1000px;
+            margin: 3rem auto 0;
+        }
+
+        /* Grande image principale */
+        .gallery-main {
+            position: relative;
+            width: 100%;
+            height: 460px;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.22);
+            cursor: pointer;
+            background: #111;
+        }
+
+        .gallery-main-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: opacity 0.4s ease, transform 0.5s ease;
+            display: block;
+        }
+
+        .gallery-main:hover .gallery-main-img { transform: scale(1.03); }
+
+        /* Légende en bas de la grande image */
+        .gallery-main-caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(to top, rgba(10,20,60,0.88) 0%, transparent 100%);
+            padding: 2.5rem 2rem 1.4rem;
+            color: white;
+            pointer-events: none;
+        }
+
+        .gallery-main-caption h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.3rem;
+        }
+
+        .gallery-main-caption p {
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.78);
+        }
+
+        /* Flèches prev/next */
+        .gallery-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(4px);
+            border: 1.5px solid rgba(255,255,255,0.35);
+            color: white;
+            width: 46px; height: 46px;
+            border-radius: 50%;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+            z-index: 3;
+        }
+
+        .gallery-arrow:hover {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--royal-blue);
+        }
+
+        .gallery-arrow.prev { left: 1rem; }
+        .gallery-arrow.next { right: 1rem; }
+
+        /* Barre de progression */
+        .gallery-progress {
+            height: 3px;
+            background: rgba(30,58,138,0.12);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .gallery-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--royal-blue), var(--gold));
+            border-radius: 2px;
+            transition: width 0.08s linear;
+        }
+
+        /* Thumbnails centrées et plus petites */
+        .gallery-thumbs {
+            display: flex;
+            justify-content: center;
+            gap: 0.7rem;
+            margin-top: 1.1rem;
+            flex-wrap: wrap;
+        }
+
+        .gallery-thumb {
+            width: 85px;
+            height: 58px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2.5px solid transparent;
+            transition: all 0.25s;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .gallery-thumb img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .gallery-thumb:hover img { transform: scale(1.08); }
+
+        .gallery-thumb.active {
+            border-color: var(--gold);
+            box-shadow: 0 3px 12px rgba(212,175,55,0.5);
+        }
+
+        .gallery-thumb-label {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 0.55rem;
+            text-align: center;
+            padding: 0.15rem 0.2rem;
+            line-height: 1.3;
+        }
+
+        /* Modal for Gallery */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.95);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            margin: auto;
+            display: block;
+            animation: zoomIn 0.3s ease;
+        }
+        .modal-content img {
+            display: block;
+            margin: 0 auto;
+            max-width: 90%;
+            max-height: 80vh;
+            border-radius: 10px;
+        }
+
+        .modal-info {
+            color: var(--white);
+            text-align: center;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .modal-info h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--gold);
+        }
+
+        .modal-info p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 30px;
+            right: 50px;
+            color: var(--white);
+            font-size: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--gold);
+        }
+
+        /* Contact Section - Style El-Shaddai */
+        .contact-section {
+            padding: 5rem 5%;
+            background: #f8fafc;
+            color: var(--dark-gray);
+        }
+
+        .contact-section .section-title {
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-section .section-subtitle {
+            margin-bottom: 0;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3.5rem;
+            margin-top: 3rem;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-info {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .contact-info h3 {
+            color: var(--royal-blue);
+            font-size: 1.5rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+            padding: 1.2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-item:hover {
+            transform: translateX(5px);
+        }
+
+        .contact-item-icon {
+            font-size: 1.8rem;
+            color: var(--gold);
+            min-width: 2.5rem;
+            text-align: center;
+        }
+
+        .contact-item strong {
+            display: block;
+            color: var(--royal-blue);
+            font-size: 0.88rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .contact-item span {
+            font-size: 0.95rem;
+            color: #374151;
+        }
+
+        .social-links-row {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .social-btn-round {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--royal-blue), #2563eb);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .social-btn-round:hover {
+            background: linear-gradient(135deg, var(--gold), #b8941e);
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 6px 20px rgba(212,175,55,0.4);
+        }
+
+        .contact-form-box {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .contact-form-box h3 {
+            color: var(--royal-blue);
+            font-size: 1.5rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .contact-form-box input,
+        .contact-form-box textarea {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1.2rem;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border 0.3s ease;
+            outline: none;
+            color: #1e293b;
+        }
+
+        .contact-form-box input:focus,
+        .contact-form-box textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.15);
+        }
+
+        .contact-form-box textarea {
+            resize: vertical;
+            min-height: 130px;
+        }
+
+        .contact-form-box .btn-submit-contact {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--royal-blue), #2563eb);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .contact-form-box .btn-submit-contact:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(30,58,138,0.35);
+        }
+
+        .contact-form-box .btn-submit-contact:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-feedback {
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            margin-bottom: 1.2rem;
+            display: none;
+        }
+
+        .form-feedback.success {
+            background: #dcfce7;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+            display: block;
+        }
+
+        .form-feedback.error {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .contact-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); }
+            to { transform: scale(1); }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero {
+                padding: 8rem 5% 4rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero .tagline {
+                font-size: 1.4rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .about-image {
+                height: 300px;
+                position: static;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .close-modal {
+                right: 20px;
+                top: 20px;
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero {
+                padding: 6rem 5% 3rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .logo-text h1 {
+                font-size: 1.2rem;
+            }
+
+            .logo-container img {
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <nav>
+            <div class="logo-container">
+                <img src="images/logo1.png" alt="King's School International Logo">
+                <div class="logo-text">
+                    <h1>King's School International</h1>
+                    <p>Metanoia Ministries</p>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#accueil">Accueil</a></li>
+                <li><a href="#apropos">À propos</a></li>
+                <li><a href="#programmes">Programmes</a></li>
+                <li><a href="#galerie">Galerie</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <button class="mobile-menu-btn">☰</button>
+        </nav>
+        <div class="mobile-nav">
+            <ul>
+                <li><a href="#accueil">Accueil</a></li>
+                <li><a href="#apropos">À propos</a></li>
+                <li><a href="#programmes">Programmes</a></li>
+                <li><a href="#galerie">Galerie</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="accueil" class="hero">
+        <div class="hero-content">
+            <h1>King's School International</h1>
+            <p class="tagline"><span id="typewriterEl"></span></p>
+            <p>Une éducation d'excellence basée sur la foi chrétienne, la discipline et le leadership pour préparer la prochaine génération à changer le monde.</p>
+            <div class="cta-buttons">
+                <a href="#apropos" class="btn btn-primary">Découvrir l'école</a>
+                <a href="#contact" class="btn btn-secondary">Nous contacter</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section - IMPROVED -->
+    <section id="apropos" class="about-section">
+        <div class="about-container">
+            <div class="about-header">
+                <h2>À Propos de King's School International</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>King's School International, membre de <strong>Metanoia Ministries International</strong>, est une école chrétienne engagée dans la formation internationale de la prochaine génération de leaders.</p>
+                    
+                    <p>Nous croyons que l'éducation ne consiste pas seulement à transmettre des connaissances, mais à <strong>façonner le caractère</strong>, développer l'esprit critique et préparer les jeunes à changer leur communauté, leur pays et le monde.</p>
+                    
+                    <div class="quote-box">
+                        <p>"L'éducation est l'arme la plus puissante pour changer le monde."</p>
+                        <p class="quote-author">— Nelson Mandela</p>
+                    </div>
+
+                    <p>À King's School International, cette arme est utilisée pour <strong>construire, servir et transformer</strong>. L'éducation demande du sacrifice, de la discipline, de la rigueur et un engagement partagé entre l'école, les parents et l'équipe pédagogique.</p>
+                    
+                    <p><strong>Nous n'éduquons pas seulement des élèves :</strong><br>
+                    ✔ Nous éduquons des leaders de demain<br>
+                    ✔ Nous transmettons des valeurs chrétiennes solides<br>
+                    ✔ Nous formons des citoyens responsables<br>
+                    ✔ Nous bâtissons un Congo prospère et un continent africain transformé</p>
+                </div>
+                <div class="about-image">
+                    <img src="images/jo20.jpg" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values-section">
+        <h2 class="section-title">Nos Valeurs Fondamentales</h2>
+        <p class="section-subtitle">Ce qui nous guide chaque jour</p>
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon">🎓</div>
+                <h3>Excellence Académique</h3>
+                <p>Nous visons l'excellence dans tous les domaines de l'apprentissage, préparant nos élèves aux défis nationaux et internationaux.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">✝️</div>
+                <h3>Foi Chrétienne</h3>
+                <p>Notre fondement spirituel guide notre mission éducative et façonne le caractère de nos élèves.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">⚖️</div>
+                <h3>Discipline & Intégrité</h3>
+                <p>Nous cultivons la rigueur, la responsabilité et l'honnêteté comme piliers de la réussite.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">❤️</div>
+                <h3>Amour & Compassion</h3>
+                <p>Nous enseignons l'empathie, le respect et le service envers les autres.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">🤝</div>
+                <h3>Service Communautaire</h3>
+                <p>Nos élèves apprennent à servir leur communauté et à faire une différence concrète.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">👑</div>
+                <h3>Leadership</h3>
+                <p>Nous formons des leaders qui transformeront le Congo, l'Afrique et le monde.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">🌍</div>
+                <h3>Vision Internationale</h3>
+                <p>Notre programme prépare les élèves à exceller partout dans le monde.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Programs Section -->
+    <section id="programmes" class="programs-section">
+        <h2 class="section-title">Nos Programmes</h2>
+        <p class="section-subtitle">Une formation complète pour un avenir brillant</p>
+        <div class="programs-grid">
+            <div class="program-card">
+                <h3>📚 Enseignement Général</h3>
+                <ul>
+                    <li>Programme primaire et secondaire</li>
+                    <li>Curriculum international</li>
+                    <li>Pédagogie moderne et innovante</li>
+                    <li>Suivi personnalisé</li>
+                </ul>
+            </div>
+            <div class="program-card">
+                <h3>🌐 Langues</h3>
+                <ul>
+                    <li>Anglais intensif</li>
+                    <li>Enseignement bilingue</li>
+                    <li>Français académique</li>
+                    <li>Communication internationale</li>
+                </ul>
+            </div>
+            <div class="program-card">
+                <h3>💻 Sciences & Technologies</h3>
+                <ul>
+                    <li>Initiation informatique</li>
+                    <li>Sciences appliquées</li>
+                    <li>Mathématiques avancées</li>
+                    <li>Innovation et créativité</li>
+                </ul>
+            </div>
+            <div class="program-card">
+                <h3>👑 Leadership</h3>
+                <ul>
+                    <li>Développement personnel</li>
+                    <li>Prise de parole en public</li>
+                    <li>Gestion de projets</li>
+                    <li>Esprit d'équipe</li>
+                </ul>
+            </div>
+            <div class="program-card">
+                <h3>✝️ Formation Chrétienne</h3>
+                <ul>
+                    <li>Enseignement biblique</li>
+                    <li>Éducation morale et spirituelle</li>
+                    <li>Valeurs chrétiennes</li>
+                    <li>Service et compassion</li>
+                </ul>
+            </div>
+            <div class="program-card">
+                <h3>🎨 Arts & Sport</h3>
+                <ul>
+                    <li>Éducation artistique</li>
+                    <li>Musique et chant</li>
+                    <li>Sport et activités physiques</li>
+                    <li>Expression créative</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section — Slider -->
+    <section id="galerie" class="gallery-section">
+        <h2 class="section-title">Galerie Photo</h2>
+        <p class="section-subtitle">Découvrez la vie à King's School</p>
+
+        <div class="gallery-slider-wrap">
+
+            <!-- Grande image -->
+            <div class="gallery-main" id="galleryMain" onclick="openModalCurrent()">
+                <img class="gallery-main-img" id="mainImg" src="images/classroom.jpg" alt="Galerie">
+                <button class="gallery-arrow prev" onclick="event.stopPropagation(); sliderGo(-1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="gallery-arrow next" onclick="event.stopPropagation(); sliderGo(1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <div class="gallery-main-caption">
+                    <h3 id="mainTitle">Salles de classe modernes</h3>
+                    <p id="mainDesc">Nos salles équipées pour un apprentissage optimal.</p>
+                </div>
+            </div>
+
+            <!-- Barre de progression -->
+            <div class="gallery-progress">
+                <div class="gallery-progress-bar" id="progressBar"></div>
+            </div>
+
+            <!-- Thumbnails centrées -->
+            <div class="gallery-thumbs" id="galleryThumbs">
+                <div class="gallery-thumb active" onclick="sliderGoTo(0)">
+                    <img src="images/classroom.jpg" alt="Salles de classe">
+                    <div class="gallery-thumb-label">Salles de classe</div>
+                </div>
+                <div class="gallery-thumb" onclick="sliderGoTo(1)">
+                    <img src="images/activities.jpg" alt="Activités">
+                    <div class="gallery-thumb-label">Activités scolaires</div>
+                </div>
+                <div class="gallery-thumb" onclick="sliderGoTo(2)">
+                    <img src="images/trips.jpg" alt="Sorties">
+                    <div class="gallery-thumb-label">Sorties éducatives</div>
+                </div>
+                <div class="gallery-thumb" onclick="sliderGoTo(3)">
+                    <img src="images/events.jpg" alt="Événements">
+                    <div class="gallery-thumb-label">Événements spéciaux</div>
+                </div>
+                <div class="gallery-thumb" onclick="sliderGoTo(4)">
+                    <img src="images/humanitarian.jpg" alt="Humanitaire">
+                    <div class="gallery-thumb-label">Visite Kanvivira</div>
+                </div>
+                <div class="gallery-thumb" onclick="sliderGoTo(5)">
+                    <img src="images/ceremonies.jpg" alt="Cérémonies">
+                    <div class="gallery-thumb-label">Cérémonies</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal — image + texte comme avant -->
+    <div id="galleryModal" class="modal">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <div class="modal-info" id="modalContent"></div>
+    </div>
+
+    <!-- Contact Section - Style El-Shaddai -->
+    <section id="contact" class="contact-section">
+        <h2 class="section-title">Contactez-Nous</h2>
+        <p class="section-subtitle">Nous sommes là pour vous répondre</p>
+
+        <div class="contact-grid">
+
+            <!-- Colonne gauche : infos -->
+            <div class="contact-info">
+                <h3><i class="fas fa-info-circle" style="color:var(--gold);margin-right:.5rem;"></i>Informations</h3>
+
+                <div class="contact-item">
+                    <span class="contact-item-icon"><i class="fas fa-map-marker-alt"></i></span>
+                    <div>
+                        <strong>Adresse</strong>
+                        <span>Uvira, Sud-Kivu, RDC</span>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <span class="contact-item-icon"><i class="fas fa-phone-alt"></i></span>
+                    <div>
+                        <strong>Téléphone / WhatsApp</strong>
+                        <span>+243 XXX XXX XXX</span>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <span class="contact-item-icon"><i class="fas fa-envelope"></i></span>
+                    <div>
+                        <strong>Email</strong>
+                        <span>contact@kingsschool.cd</span>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <span class="contact-item-icon"><i class="fas fa-clock"></i></span>
+                    <div>
+                        <strong>Heures d'ouverture</strong>
+                        <span>Lundi – Vendredi : 7h30 – 16h00</span>
+                    </div>
+                </div>
+
+                <!-- Réseaux sociaux — vraies couleurs des apps -->
+                <div class="social-links-row">
+                    <a href="https://www.facebook.com/kingschoolinternational" target="_blank" class="social-btn-round" title="Facebook" style="background:#1877f2;">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.instagram.com/metanoia_ministries/" target="_blank" class="social-btn-round" title="Instagram" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/243XXXXXXXXX" target="_blank" class="social-btn-round" title="WhatsApp" style="background:#25d366;">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://youtube.com" target="_blank" class="social-btn-round" title="YouTube" style="background:#ff0000;">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="mailto:contact@kingsschool.cd" class="social-btn-round" title="Email" style="background:linear-gradient(135deg,var(--royal-blue),#2563eb);">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Colonne droite : formulaire -->
+            <div class="contact-form-box">
+                <h3>✉️ Envoyez un Message</h3>
+
+                <div class="form-feedback" id="contactFeedback"></div>
+
+                <input type="text"  id="cName"    placeholder="Votre nom complet">
+                <input type="email" id="cEmail"   placeholder="Votre adresse email">
+                <input type="text"  id="cSubject" placeholder="Sujet">
+                <textarea id="cMessage" rows="5"  placeholder="Votre message..."></textarea>
+
+                <button class="btn-submit-contact" id="btnContact" onclick="sendContactForm()">
+                    Envoyer le message
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+   
+    <!-- Protection : vérifie que l'utilisateur est connecté -->
+    <script src="garde.js"></script>
+
+    <script>
+        // ════════════════════════════════════════════════
+        //  TYPEWRITER — tagline du hero
+        // ════════════════════════════════════════════════
+        const phrases = [
+            'Former des Leaders, Transformer des Nations',
+            'Excellence Académique & Foi Chrétienne',
+            'Discipline, Intégrité & Leadership',
+            'Un Congo Prospère, une Afrique Transformée'
+        ];
+        let pIdx = 0, cIdx = 0, deleting = false;
+        const tyEl = document.getElementById('typewriterEl');
+
+        function typeWriter() {
+            const cur = phrases[pIdx];
+            if (!deleting) {
+                tyEl.textContent = cur.substring(0, cIdx + 1);
+                cIdx++;
+                if (cIdx === cur.length) {
+                    deleting = true;
+                    setTimeout(typeWriter, 2000);
+                    return;
+                }
+                setTimeout(typeWriter, 60);
+            } else {
+                tyEl.textContent = cur.substring(0, cIdx - 1);
+                cIdx--;
+                if (cIdx === 0) {
+                    deleting = false;
+                    pIdx = (pIdx + 1) % phrases.length;
+                    setTimeout(typeWriter, 350);
+                    return;
+                }
+                setTimeout(typeWriter, 35);
+            }
+        }
+        typeWriter();
+
+        // ════════════════════════════════════════════════
+        //  GALLERY SLIDER
+        // ════════════════════════════════════════════════
+        const galleryData = [
+            { key: 'classroom',    title: 'Salles de classe modernes',      short: 'Environnement optimal pour apprendre.',         desc: 'Nos salles de classe sont équipées pour offrir un environnement d\'apprentissage optimal avec des équipements modernes, un éclairage adapté et un espace confortable pour chaque élève.' },
+            { key: 'activities',   title: 'Activités scolaires',             short: 'Travaux de groupe, débats, ateliers pratiques.', desc: 'Les élèves participent à diverses activités éducatives incluant des travaux de groupe, des présentations, des débats et des ateliers pratiques qui développent leurs compétences académiques et sociales.' },
+            { key: 'trips',        title: 'Sorties éducatives',              short: 'Apprendre hors des murs de l\'école.',          desc: 'Nous organisons régulièrement des sorties pédagogiques pour permettre aux élèves d\'apprendre en dehors de la salle de classe et de découvrir leur environnement, leur culture et leur communauté.' },
+            { key: 'events',       title: 'Événements spéciaux',             short: 'Souvenirs inoubliables, esprit d\'équipe.',      desc: 'Tout au long de l\'année, King\'s School International organise des événements culturels, sportifs et académiques qui créent des souvenirs inoubliables et renforcent l\'esprit d\'équipe.' },
+            { key: 'humanitarian', title: 'Visite humanitaire Kanvivira',    short: 'Compassion, partage et service communautaire.', desc: 'Un moment fort en émotions : nos élèves ont visité le camp des réfugiés burundais à Kanvivira. Cette expérience leur a appris la compassion, le partage et l\'importance du service communautaire. Ils ont apporté de l\'aide et du réconfort aux familles réfugiées.' },
+            { key: 'ceremonies',   title: 'Cérémonies & Graduations',        short: 'Célébrer les réussites de nos élèves.',         desc: 'Nous célébrons les réussites de nos élèves lors de cérémonies officielles de remise de diplômes et d\'événements spéciaux qui marquent leur parcours académique et personnel.' }
+        ];
+
+        let currentSlide = 0, progressVal = 0;
+        let sliderTmr = null, progTmr = null;
+        const DURATION = 4500;
+
+        function updateSlider(idx) {
+            currentSlide = (idx + galleryData.length) % galleryData.length;
+            const d = galleryData[currentSlide];
+            const img = document.getElementById('mainImg');
+            img.style.opacity = '0';
+            setTimeout(() => {
+                img.src = 'images/' + d.key + '.jpg';
+                img.alt = d.title;
+                document.getElementById('mainTitle').textContent = d.title;
+                document.getElementById('mainDesc').textContent  = d.short;
+                img.style.opacity = '1';
+            }, 220);
+            document.querySelectorAll('.gallery-thumb').forEach((t, i) => {
+                t.classList.toggle('active', i === currentSlide);
+            });
+            resetProgress();
+        }
+
+        function sliderGo(dir)    { updateSlider(currentSlide + dir); }
+        function sliderGoTo(idx)  { updateSlider(idx); }
+
+        function resetProgress() {
+            clearInterval(progTmr);
+            clearTimeout(sliderTmr);
+            progressVal = 0;
+            document.getElementById('progressBar').style.width = '0%';
+            const step = 100 / (DURATION / 80);
+            progTmr = setInterval(() => {
+                progressVal = Math.min(progressVal + step, 100);
+                document.getElementById('progressBar').style.width = progressVal + '%';
+            }, 80);
+            sliderTmr = setTimeout(() => updateSlider(currentSlide + 1), DURATION);
+        }
+
+        resetProgress();
+
+        // Pause au survol
+        document.getElementById('galleryMain').addEventListener('mouseenter', () => {
+            clearInterval(progTmr); clearTimeout(sliderTmr);
+        });
+        document.getElementById('galleryMain').addEventListener('mouseleave', () => {
+            resetProgress();
+        });
+
+        // Swipe mobile
+        let tx = 0;
+        document.getElementById('galleryMain').addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+        document.getElementById('galleryMain').addEventListener('touchend',   e => {
+            const diff = tx - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 40) sliderGo(diff > 0 ? 1 : -1);
+        });
+
+        // Ouvrir modal au clic sur la grande image
+        function openModalCurrent() {
+            const d = galleryData[currentSlide];
+            const modal   = document.getElementById('galleryModal');
+            const content = document.getElementById('modalContent');
+            content.innerHTML = `
+                <h3>${d.title}</h3>
+                <img src="images/${d.key}.jpg" alt="${d.title}" style="max-width:100%;max-height:65vh;border-radius:10px;margin:1rem 0;display:block;">
+                <p>${d.desc}</p>
+            `;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('galleryModal').classList.remove('active');
+            resetProgress();
+        }
+
+        window.addEventListener('click', e => {
+            const modal = document.getElementById('galleryModal');
+            if (e.target === modal) closeModal();
+        });
+
+        // ════════════════════════════════════════════════
+        //  FORMULAIRE DE CONTACT
+        // ════════════════════════════════════════════════
+        async function sendContactForm() {
+            const feedback = document.getElementById('contactFeedback');
+            const btn      = document.getElementById('btnContact');
+            const name     = document.getElementById('cName').value.trim();
+            const email    = document.getElementById('cEmail').value.trim();
+            const subject  = document.getElementById('cSubject').value.trim();
+            const message  = document.getElementById('cMessage').value.trim();
+
+            feedback.className = 'form-feedback';
+            feedback.textContent = '';
+
+            if (!name || !email || !subject || !message) {
+                feedback.className = 'form-feedback error';
+                feedback.textContent = '⚠️ Veuillez remplir tous les champs.';
+                return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                feedback.className = 'form-feedback error';
+                feedback.textContent = '⚠️ Adresse email invalide.';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Envoi en cours...';
+
+            try {
+                const res  = await fetch('http://localhost:3000/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, subject, message })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    feedback.className = 'form-feedback success';
+                    feedback.textContent = '✅ Message envoyé ! Nous vous répondrons très bientôt.';
+                    document.getElementById('cName').value    = '';
+                    document.getElementById('cEmail').value   = '';
+                    document.getElementById('cSubject').value = '';
+                    document.getElementById('cMessage').value = '';
+                } else {
+                    feedback.className = 'form-feedback error';
+                    feedback.textContent = '❌ ' + (data.message || 'Une erreur est survenue.');
+                }
+            } catch (err) {
+                feedback.className = 'form-feedback error';
+                feedback.textContent = '⚠️ Serveur inaccessible. Vérifiez que node server.js est lancé.';
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Envoyer le message';
+        }
+
+        // ════════════════════════════════════════════════
+        //  NAVIGATION & SCROLL
+        // ════════════════════════════════════════════════
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    document.querySelector('.mobile-nav').classList.remove('active');
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        document.querySelector('.mobile-menu-btn').addEventListener('click', () => {
+            document.querySelector('.mobile-nav').classList.toggle('active');
+        });
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            document.querySelectorAll('section[id]').forEach(section => {
+                if (window.pageYOffset >= section.offsetTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+            document.querySelectorAll('.nav-links a, .mobile-nav a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
