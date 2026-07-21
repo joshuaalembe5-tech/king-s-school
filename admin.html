@@ -1,376 +1,2524 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin — King's School International</title>
-  <style>
-    :root {
-      --royal-blue:#1e3a8a; --blue-mid:#2563eb; --gold:#d4af37;
-      --light-gold:#f4e4b6; --white:#ffffff; --bg:#f1f5f9;
-      --sidebar:#0f2460; --error:#dc2626; --success:#16a34a;
-    }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);color:#1e293b;}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — King's School International</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+:root {
+  --blue:#1e3a8a; --blue-mid:#2563eb; --blue-light:#eff6ff;
+  --gold:#d4af37; --gold-light:#f4e4b6;
+  --sidebar-bg:#0f1f4a; --sidebar-w:240px;
+  --white:#fff; --bg:#f0f4f8;
+  --text:#1e293b; --muted:#64748b;
+  --border:#e2e8f0; --card:#fff;
+  --green:#16a34a; --green-bg:#dcfce7;
+  --red:#dc2626; --red-bg:#fee2e2;
+  --purple:#7c3aed; --purple-bg:#ede9fe;
+  --orange:#ea580c; --orange-bg:#ffedd5;
+  --cyan:#0891b2; --cyan-bg:#cffafe;
+  --radius:12px; --shadow:0 2px 12px rgba(0,0,0,.07);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:.9rem;}
 
-    /* Login screen */
-    #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--royal-blue),var(--blue-mid));}
-    .login-box{background:white;padding:2.5rem;border-radius:16px;width:360px;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative;}
-    .login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--light-gold),var(--gold));border-radius:16px 16px 0 0;}
-    .login-box h2{color:var(--royal-blue);font-size:1.5rem;margin-bottom:.3rem;}
-    .login-box p{color:#64748b;font-size:.85rem;margin-bottom:1.8rem;}
-    .field{margin-bottom:1.1rem;}
-    .field label{display:block;font-size:.82rem;font-weight:600;color:#374151;margin-bottom:.35rem;}
-    .field input{width:100%;padding:.75rem 1rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;outline:none;font-family:inherit;transition:border-color .2s;}
-    .field input:focus{border-color:var(--royal-blue);}
-    .btn-login{width:100%;padding:.85rem;background:linear-gradient(135deg,var(--royal-blue),var(--blue-mid));color:white;border:none;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;}
-    .btn-login:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(30,58,138,.3);}
-    .login-error{background:#fee2e2;color:var(--error);border:1px solid #fecaca;padding:.7rem 1rem;border-radius:8px;font-size:.85rem;margin-bottom:1rem;display:none;}
+/* ══ LOGIN ══ */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--sidebar-bg) 0%,var(--blue-mid) 100%);}
+.login-card{background:var(--white);border-radius:20px;padding:2.5rem;width:380px;box-shadow:0 24px 64px rgba(0,0,0,.35);position:relative;overflow:hidden;}
+.login-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),#f4e4b6,var(--gold));}
+.login-logo{display:flex;align-items:center;gap:.8rem;margin-bottom:2rem;}
+.login-logo-icon{width:48px;height:48px;background:linear-gradient(135deg,var(--blue),var(--blue-mid));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.login-logo h2{font-size:1rem;font-weight:700;color:var(--blue);line-height:1.3;}
+.login-logo p{font-size:.72rem;color:var(--muted);}
+.lfield{margin-bottom:1.1rem;}
+.lfield label{display:block;font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em;}
+.lfield input{width:100%;padding:.78rem 1rem;border:1.5px solid var(--border);border-radius:10px;font-size:.9rem;outline:none;font-family:inherit;transition:border-color .2s,box-shadow .2s;}
+.lfield input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(30,58,138,.1);}
+.btn-login{width:100%;padding:.88rem;background:linear-gradient(135deg,var(--blue),var(--blue-mid));color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:.4rem;}
+.btn-login:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(30,58,138,.3);}
+.login-error{background:var(--red-bg);color:var(--red);border:1px solid #fecaca;padding:.7rem 1rem;border-radius:8px;font-size:.83rem;margin-bottom:1rem;display:none;}
 
-    /* Dashboard */
-    #dashboard{display:none;min-height:100vh;}
-    .layout{display:flex;min-height:100vh;}
-    .sidebar{width:240px;background:var(--sidebar);color:white;display:flex;flex-direction:column;flex-shrink:0;}
-    .sidebar-logo{padding:1.5rem;border-bottom:1px solid rgba(255,255,255,.1);}
-    .sidebar-logo .crown{font-size:1.6rem;}
-    .sidebar-logo h2{font-size:.85rem;font-weight:700;margin-top:.4rem;line-height:1.3;}
-    .sidebar-logo p{font-size:.7rem;color:var(--gold);margin-top:.2rem;text-transform:uppercase;letter-spacing:.06em;}
-    .sidebar-nav{padding:1rem 0;flex:1;}
-    .nav-item{display:flex;align-items:center;gap:.7rem;padding:.8rem 1.5rem;font-size:.88rem;color:rgba(255,255,255,.7);cursor:pointer;transition:all .2s;border-left:3px solid transparent;}
-    .nav-item:hover,.nav-item.active{background:rgba(255,255,255,.1);color:white;}
-    .nav-item.active{border-left-color:var(--gold);}
-    .badge-notif{background:var(--error);color:white;border-radius:20px;padding:.1rem .45rem;font-size:.7rem;font-weight:700;margin-left:auto;}
-    .sidebar-footer{padding:1.2rem 1.5rem;border-top:1px solid rgba(255,255,255,.1);font-size:.8rem;color:rgba(255,255,255,.5);}
-    .btn-logout{background:none;border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.7);padding:.5rem 1rem;border-radius:6px;font-size:.8rem;cursor:pointer;font-family:inherit;width:100%;margin-top:.5rem;transition:all .2s;}
-    .btn-logout:hover{background:rgba(255,255,255,.1);color:white;}
+/* ══ LAYOUT ══ */
+#dashboard{display:none;min-height:100vh;}
+.layout{display:flex;min-height:100vh;}
 
-    /* Main */
-    .main{flex:1;padding:2rem;overflow-x:hidden;}
-    .main-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;}
-    .main-header h1{font-size:1.5rem;color:var(--royal-blue);}
-    .main-header p{color:#64748b;font-size:.85rem;margin-top:.2rem;}
-    .badge-admin{background:var(--light-gold);color:#92400e;padding:.3rem .8rem;border-radius:20px;font-size:.78rem;font-weight:700;}
+/* ══ SIDEBAR ══ */
+.sidebar{width:var(--sidebar-w);background:var(--sidebar-bg);display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;height:100vh;z-index:200;overflow-y:auto;}
+.sb-logo{padding:1.4rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.08);}
+.sb-logo-inner{display:flex;align-items:center;gap:.7rem;}
+.sb-logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--gold),#e8c840);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.sb-logo h2{font-size:.82rem;font-weight:700;color:#fff;line-height:1.3;}
+.sb-logo p{font-size:.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-top:.1rem;}
+.sb-section-label{padding:.9rem 1.2rem .3rem;font-size:.65rem;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;}
+.nav-item{display:flex;align-items:center;gap:.75rem;padding:.72rem 1.2rem;font-size:.84rem;color:rgba(255,255,255,.6);cursor:pointer;transition:all .18s;border-left:3px solid transparent;position:relative;}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,.1);color:#fff;border-left-color:var(--gold);}
+.nav-item .ni-icon{width:20px;text-align:center;font-size:1rem;flex-shrink:0;}
+.badge-n{background:var(--red);color:#fff;border-radius:20px;padding:.1rem .42rem;font-size:.67rem;font-weight:700;margin-left:auto;}
+.sb-footer{padding:1.1rem 1.2rem;border-top:1px solid rgba(255,255,255,.08);margin-top:auto;}
+.sb-user{display:flex;align-items:center;gap:.7rem;margin-bottom:.8rem;}
+.sb-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#c9a227);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:var(--sidebar-bg);flex-shrink:0;}
+.sb-user-info{flex:1;min-width:0;}
+.sb-user-name{font-size:.82rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sb-user-role{font-size:.68rem;color:rgba(255,255,255,.5);}
+.btn-logout{width:100%;padding:.55rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.65);border-radius:8px;font-size:.78rem;cursor:pointer;font-family:inherit;transition:all .18s;}
+.btn-logout:hover{background:rgba(255,255,255,.13);color:#fff;}
 
-    /* Pages */
-    .page{display:none;}
-    .page.active{display:block;}
+/* ══ MAIN ══ */
+.main{flex:1;margin-left:var(--sidebar-w);min-width:0;}
 
-    /* Stats */
-    .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:2rem;}
-    .stat-card{background:white;border-radius:12px;padding:1.2rem 1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.06);border-left:4px solid var(--royal-blue);}
-    .stat-card:nth-child(2){border-left-color:var(--gold);}
-    .stat-card:nth-child(3){border-left-color:var(--success);}
-    .stat-card:nth-child(4){border-left-color:#7c3aed;}
-    .stat-card:nth-child(5){border-left-color:var(--error);}
-    .stat-label{font-size:.75rem;color:#64748b;text-transform:uppercase;letter-spacing:.05em;font-weight:600;}
-    .stat-value{font-size:2rem;font-weight:800;color:var(--royal-blue);margin:.3rem 0;}
-    .stat-sub{font-size:.75rem;color:#94a3b8;}
+/* ══ TOPBAR ══ */
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--border);}
+.topbar-left h1{font-size:1.15rem;font-weight:700;color:var(--text);}
+.topbar-left p{font-size:.75rem;color:var(--muted);}
+.topbar-right{display:flex;align-items:center;gap:.8rem;}
+.badge-role{padding:.28rem .75rem;border-radius:20px;font-size:.72rem;font-weight:700;}
+.badge-role.admin{background:var(--gold-light);color:#92400e;}
+.badge-role.moderateur{background:var(--purple-bg);color:var(--purple);}
+.badge-role.editeur{background:var(--green-bg);color:var(--green);}
+.notif-bell{position:relative;width:38px;height:38px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1.05rem;cursor:pointer;transition:background .2s;}
+.notif-bell:hover{background:var(--border);}
+.notif-dot{position:absolute;top:7px;right:8px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--white);display:none;}
+.notif-panel{position:fixed;top:70px;right:1.5rem;width:310px;max-height:380px;overflow-y:auto;background:var(--white);border-radius:var(--radius);box-shadow:0 12px 40px rgba(0,0,0,.18);display:none;z-index:1500;border:1px solid var(--border);}
+.notif-panel.open{display:block;}
+.notif-header{padding:.9rem 1.1rem;border-bottom:1px solid var(--border);font-size:.8rem;font-weight:700;color:var(--text);}
+.notif-item{padding:.8rem 1.1rem;border-bottom:1px solid var(--border);font-size:.8rem;color:var(--text);display:flex;gap:.7rem;align-items:flex-start;}
+.notif-item .ni{font-size:1.1rem;}
+.notif-item strong{color:var(--blue);}
+.notif-time{font-size:.68rem;color:var(--muted);margin-top:.15rem;}
+.notif-empty{padding:2rem;text-align:center;color:var(--muted);font-size:.83rem;}
 
-    /* Table */
-    .table-card{background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden;margin-bottom:1.5rem;}
-    .table-header{padding:1.2rem 1.5rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f1f5f9;}
-    .table-header h3{font-size:1rem;color:var(--royal-blue);}
-    .btn-refresh{background:var(--light-gold);color:#92400e;border:none;padding:.45rem 1rem;border-radius:6px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;}
-    .btn-refresh:hover{background:var(--gold);color:white;}
-    .search-bar{padding:.8rem 1.5rem;border-bottom:1px solid #f1f5f9;}
-    .search-bar input{width:100%;padding:.6rem 1rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.88rem;outline:none;font-family:inherit;}
-    .search-bar input:focus{border-color:var(--royal-blue);}
-    table{width:100%;border-collapse:collapse;}
-    thead{background:#f8fafc;}
-    th{padding:.8rem 1.5rem;text-align:left;font-size:.75rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;}
-    td{padding:.9rem 1.5rem;font-size:.88rem;border-top:1px solid #f1f5f9;}
-    tr:hover td{background:#f8fafc;}
-    .role-badge{display:inline-block;padding:.2rem .6rem;border-radius:20px;font-size:.72rem;font-weight:700;}
-    .role-user{background:#dbeafe;color:#1e40af;}
-    .role-admin{background:var(--light-gold);color:#92400e;}
-    .btn-delete{background:#fee2e2;color:var(--error);border:none;padding:.35rem .75rem;border-radius:6px;font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;}
-    .btn-delete:hover{background:var(--error);color:white;}
-    .btn-read{background:#ede9fe;color:#7c3aed;border:none;padding:.35rem .75rem;border-radius:6px;font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-right:.3rem;}
-    .btn-read:hover{background:#7c3aed;color:white;}
-    .unread-row td{font-weight:600;background:#fefce8;}
-    .unread-dot{display:inline-block;width:8px;height:8px;background:var(--error);border-radius:50%;margin-right:.4rem;}
-    .empty-state{text-align:center;padding:3rem;color:#94a3b8;}
-    .empty-state p{font-size:.9rem;margin-top:.5rem;}
-    #loadingMsg,#loadingMsgMsg{text-align:center;padding:2rem;color:#64748b;font-size:.9rem;}
+/* ══ CONTENT ══ */
+.content{padding:1.8rem 2rem;}
+.page{display:none;}
+.page.active{display:block;}
 
-    /* Message detail */
-    .msg-preview{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1rem;margin-top:.5rem;font-size:.85rem;line-height:1.6;color:#374151;white-space:pre-wrap;}
-  </style>
+/* ══ STATS CARDS — Style Modernize ══ */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem;margin-bottom:1.4rem;}
+@media(max-width:1200px){.stats-row{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.stats-row{grid-template-columns:1fr;}}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:1.3rem 1.4rem;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;transition:transform .2s,box-shadow .2s;border:1px solid var(--border);}
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.1);}
+.stat-card.featured{background:linear-gradient(135deg,#2563eb,#1d4ed8);border:none;}
+.stat-card.green{background:linear-gradient(135deg,#059669,#047857);border:none;}
+.stat-card.orange{background:linear-gradient(135deg,#ea580c,#c2410c);border:none;}
+.stat-card.purple{background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;}
+.stat-left{flex:1;}
+.stat-label{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.25rem;}
+.stat-card.featured .stat-label,.stat-card.green .stat-label,.stat-card.orange .stat-label,.stat-card.purple .stat-label{color:rgba(255,255,255,.75);}
+.stat-value{font-size:2rem;font-weight:900;color:var(--text);line-height:1;}
+.stat-card.featured .stat-value,.stat-card.green .stat-value,.stat-card.orange .stat-value,.stat-card.purple .stat-value{color:#fff;}
+.stat-sub{font-size:.68rem;color:var(--muted);margin-top:.15rem;}
+.stat-card.featured .stat-sub,.stat-card.green .stat-sub,.stat-card.orange .stat-sub,.stat-card.purple .stat-sub{color:rgba(255,255,255,.65);}
+.stat-trend{display:inline-flex;align-items:center;gap:.25rem;font-size:.68rem;font-weight:700;padding:.18rem .5rem;border-radius:20px;margin-top:.4rem;}
+.stat-trend.up{background:var(--green-bg);color:var(--green);}
+.stat-trend.down{background:var(--red-bg);color:var(--red);}
+.stat-card.featured .stat-trend,.stat-card.green .stat-trend,.stat-card.orange .stat-trend,.stat-card.purple .stat-trend{background:rgba(255,255,255,.2);color:#fff;}
+.stat-right{width:80px;height:50px;flex-shrink:0;margin-left:.8rem;}
+
+/* ══ GRAND CHART ══ */
+.main-chart-card{background:var(--card);border-radius:var(--radius);padding:1.5rem 1.8rem;box-shadow:var(--shadow);margin-bottom:1.4rem;border:1px solid var(--border);}
+.mcc-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.4rem;flex-wrap:wrap;gap:.8rem;}
+.mcc-label{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;}
+.mcc-value{font-size:2.4rem;font-weight:900;color:var(--text);line-height:1.1;margin:.2rem 0;}
+.mcc-trend{display:inline-flex;align-items:center;gap:.3rem;font-size:.75rem;font-weight:700;background:var(--green-bg);color:var(--green);padding:.2rem .6rem;border-radius:20px;}
+.mcc-legend{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;margin-top:.4rem;}
+.mcc-leg-item{display:flex;align-items:center;gap:.4rem;font-size:.74rem;color:var(--muted);}
+.mcc-leg-dot{width:9px;height:9px;border-radius:50%;}
+.mcc-period{display:flex;gap:.4rem;}
+.period-btn{padding:.32rem .75rem;border-radius:8px;border:1px solid var(--border);background:var(--bg);font-size:.73rem;font-weight:600;cursor:pointer;font-family:inherit;color:var(--muted);transition:all .18s;}
+.period-btn.active,.period-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
+.main-chart-canvas{width:100%;height:220px;}
+
+/* ══ MINI WIDGETS ROW ══ */
+.mini-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem;margin-bottom:1.4rem;}
+@media(max-width:1100px){.mini-row{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.mini-row{grid-template-columns:1fr;}}
+.mini-card{background:var(--card);border-radius:var(--radius);padding:1.2rem 1.3rem;box-shadow:var(--shadow);border:1px solid var(--border);}
+.mini-card-label{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;}
+.mini-card-value{font-size:1.6rem;font-weight:900;color:var(--text);line-height:1;}
+.mini-card-sub{font-size:.68rem;color:var(--muted);margin-top:.2rem;}
+.mini-chart{height:48px;margin-top:.7rem;}
+
+/* ══ BOTTOM GRID ══ */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-bottom:1.4rem;}
+@media(max-width:900px){.bottom-grid{grid-template-columns:1fr;}}
+.donut-card{background:var(--card);border-radius:var(--radius);padding:1.3rem 1.5rem;box-shadow:var(--shadow);border:1px solid var(--border);}
+.donut-card-title{font-size:.82rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:1rem;}
+.donut-wrap{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+.donut-legend{display:flex;flex-direction:column;gap:.5rem;flex:1;}
+.donut-leg-item{display:flex;align-items:center;justify-content:space-between;font-size:.78rem;}
+.donut-leg-left{display:flex;align-items:center;gap:.5rem;}
+.donut-leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.donut-leg-label{color:var(--text);font-weight:500;}
+.donut-leg-val{font-weight:700;color:var(--text);}
+
+/* ══ RECENTS LIST ══ */
+.recents-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--border);}
+.rc-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.rc-title{font-size:.88rem;font-weight:700;color:var(--text);}
+.rc-link{font-size:.75rem;color:var(--blue);cursor:pointer;font-weight:600;}
+.rc-link:hover{text-decoration:underline;}
+.rc-item{display:flex;align-items:center;gap:1rem;padding:.85rem 1.4rem;border-bottom:1px solid #f8fafc;transition:background .15s;}
+.rc-item:last-child{border-bottom:none;}
+.rc-item:hover{background:#fafbff;}
+.rc-avatar{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.rc-info{flex:1;min-width:0;}
+.rc-name{font-size:.84rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rc-sub{font-size:.71rem;color:var(--muted);}
+.rc-right{text-align:right;}
+.rc-badge{display:inline-block;padding:.18rem .55rem;border-radius:20px;font-size:.67rem;font-weight:700;}
+.rc-date{font-size:.7rem;color:var(--muted);margin-top:.15rem;}
+
+/* ══ TABLE CARD ══ */
+.table-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:1.5rem;}
+.tc-header{padding:1.1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);gap:.8rem;flex-wrap:wrap;}
+.tc-title{font-size:.95rem;font-weight:700;color:var(--text);}
+.tc-actions{display:flex;gap:.5rem;flex-wrap:wrap;}
+.btn-sm{padding:.42rem .9rem;border-radius:8px;border:none;font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .18s;display:inline-flex;align-items:center;gap:.35rem;}
+.btn-primary{background:var(--blue);color:#fff;}
+.btn-primary:hover{background:var(--blue-mid);}
+.btn-secondary{background:var(--bg);color:var(--text);border:1px solid var(--border);}
+.btn-secondary:hover{background:var(--border);}
+.btn-gold{background:var(--gold-light);color:#92400e;}
+.btn-gold:hover{background:var(--gold);color:#fff;}
+.btn-danger{background:var(--red-bg);color:var(--red);}
+.btn-danger:hover{background:var(--red);color:#fff;}
+.btn-success{background:var(--green-bg);color:var(--green);}
+.btn-success:hover{background:var(--green);color:#fff;}
+.btn-purple{background:var(--purple-bg);color:var(--purple);}
+.btn-purple:hover{background:var(--purple);color:#fff;}
+
+.filters-bar{padding:.8rem 1.4rem;border-bottom:1px solid var(--border);display:flex;gap:.6rem;flex-wrap:wrap;background:#fafbfc;}
+.filters-bar input,.filters-bar select{padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:.82rem;outline:none;font-family:inherit;background:var(--white);transition:border-color .2s;}
+.filters-bar input{flex:1;min-width:180px;}
+.filters-bar input:focus,.filters-bar select:focus{border-color:var(--blue);}
+
+table{width:100%;border-collapse:collapse;}
+thead{background:#f8fafc;}
+th{padding:.75rem 1.4rem;text-align:left;font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;}
+td{padding:.85rem 1.4rem;font-size:.84rem;border-top:1px solid #f1f5f9;}
+tr:hover td{background:#fafbff;}
+.badge{display:inline-flex;align-items:center;padding:.2rem .6rem;border-radius:20px;font-size:.7rem;font-weight:700;gap:.3rem;}
+.badge-user{background:var(--blue-light);color:var(--blue);}
+.badge-admin{background:var(--gold-light);color:#92400e;}
+.badge-moderateur{background:var(--purple-bg);color:var(--purple);}
+.badge-editeur{background:var(--green-bg);color:var(--green);}
+.badge-nouveau{background:var(--blue-light);color:var(--blue);}
+.badge-en_cours{background:var(--orange-bg);color:var(--orange);}
+.badge-accepte{background:var(--green-bg);color:var(--green);}
+.badge-refuse{background:var(--red-bg);color:var(--red);}
+.role-select{padding:.32rem .6rem;border-radius:7px;border:1.5px solid var(--border);font-size:.78rem;font-family:inherit;background:var(--white);outline:none;cursor:pointer;}
+.role-select:focus{border-color:var(--blue);}
+.unread-row td{font-weight:600;background:#fffbeb;}
+.dot-unread{display:inline-block;width:7px;height:7px;background:var(--red);border-radius:50%;margin-right:.4rem;}
+.empty-state{text-align:center;padding:3.5rem 2rem;color:var(--muted);}
+.empty-icon{font-size:2.8rem;margin-bottom:.7rem;}
+.empty-state p{font-size:.85rem;}
+.loading-row{text-align:center;padding:2rem;color:var(--muted);}
+
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.4rem;border-top:1px solid var(--border);font-size:.78rem;color:var(--muted);}
+.pag-btns{display:flex;gap:.4rem;}
+.pag-btns button{padding:.4rem .8rem;border-radius:7px;border:1px solid var(--border);background:var(--white);font-size:.78rem;font-weight:600;color:var(--blue);cursor:pointer;transition:all .18s;font-family:inherit;}
+.pag-btns button:hover:not(:disabled){background:var(--blue);color:#fff;border-color:var(--blue);}
+.pag-btns button:disabled{opacity:.4;cursor:not-allowed;}
+
+/* ══ MODAL ══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;z-index:1800;padding:1rem;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:var(--white);border-radius:16px;padding:2rem;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.3);}
+.modal-box h3{color:var(--blue);margin-bottom:1.4rem;font-size:1.1rem;display:flex;align-items:center;gap:.5rem;}
+.mfield{margin-bottom:1rem;}
+.mfield label{display:block;font-size:.75rem;font-weight:700;color:var(--text);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.04em;}
+.mfield input,.mfield select,.mfield textarea{width:100%;padding:.72rem .9rem;border:1.5px solid var(--border);border-radius:9px;font-size:.88rem;outline:none;font-family:inherit;transition:border-color .2s;}
+.mfield input:focus,.mfield select:focus,.mfield textarea:focus{border-color:var(--blue);}
+.modal-actions{display:flex;gap:.8rem;margin-top:1.3rem;}
+.btn-cancel{flex:1;padding:.78rem;background:var(--bg);border:1px solid var(--border);border-radius:9px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .18s;}
+.btn-cancel:hover{background:var(--border);}
+.btn-save{flex:2;padding:.78rem;background:var(--blue);color:#fff;border:none;border-radius:9px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .18s;}
+.btn-save:hover{background:var(--blue-mid);}
+
+/* ══ TOAST ══ */
+#toastWrap{position:fixed;top:1.2rem;right:1.5rem;z-index:3000;display:flex;flex-direction:column;gap:.5rem;}
+.toast{background:var(--blue);color:#fff;padding:.85rem 1.2rem;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.2);font-size:.83rem;max-width:300px;animation:slideIn .3s ease;}
+.toast.success{background:#065f46;}
+.toast.error{background:#991b1b;}
+@keyframes slideIn{from{transform:translateX(120%);opacity:0;}to{transform:translateX(0);opacity:1;}}
+
+/* ══ CARDS GRILLES ══ */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.1rem;}
+.content-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;transition:transform .2s;}
+.content-card:hover{transform:translateY(-3px);}
+.content-card-img{width:100%;height:140px;object-fit:cover;background:#e2e8f0;display:block;}
+.content-card-img-placeholder{width:100%;height:140px;background:linear-gradient(135deg,#e2e8f0,#cbd5e1);display:flex;align-items:center;justify-content:center;font-size:2.2rem;}
+.content-card-body{padding:1rem;flex:1;display:flex;flex-direction:column;}
+.content-card-body h4{font-size:.92rem;font-weight:700;color:var(--text);margin-bottom:.3rem;}
+.content-card-meta{font-size:.7rem;color:var(--muted);margin-bottom:.6rem;}
+.content-card-body p{font-size:.8rem;color:var(--muted);flex:1;margin-bottom:.8rem;line-height:1.5;}
+.content-card-actions{display:flex;gap:.5rem;flex-wrap:wrap;}
+
+/* ══ ACTIVITY FEED ══ */
+.activity-feed{padding:.5rem 0;}
+.activity-item{display:flex;gap:1rem;padding:.9rem 1.4rem;border-bottom:1px solid #f1f5f9;align-items:flex-start;}
+.activity-item:last-child{border-bottom:none;}
+.ai-icon{width:34px;height:34px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.ai-text{flex:1;}
+.ai-text strong{color:var(--blue);}
+.ai-time{font-size:.68rem;color:var(--muted);margin-top:.15rem;}
+
+/* ══ MESSAGE DETAIL ══ */
+.msg-preview{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:.9rem;margin-top:.5rem;font-size:.82rem;line-height:1.7;color:var(--text);white-space:pre-wrap;}
+
+/* ══ FAQ accordion preview ══ */
+.faq-item-admin{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin-bottom:.7rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;}
+.faq-q{font-size:.87rem;font-weight:700;color:var(--text);}
+.faq-a{font-size:.78rem;color:var(--muted);margin-top:.25rem;}
+.faq-actions{display:flex;gap:.4rem;flex-shrink:0;}
+</style>
 </head>
 <body>
 
-<!-- Login -->
+<!-- ══ LOGIN ══ -->
 <div id="loginScreen">
-  <div class="login-box">
-    <div class="crown" style="font-size:2rem;">👑</div>
-    <h2>Panel Administrateur</h2>
-    <p>King's School International — Accès réservé</p>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">👑</div>
+      <div>
+        <h2>King's School<br>International</h2>
+        <p>Panel Administrateur</p>
+      </div>
+    </div>
     <div class="login-error" id="adminLoginError"></div>
-    <div class="field">
-      <label>Email administrateur</label>
+    <div class="lfield">
+      <label>Email</label>
       <input type="email" id="adminEmailInput" placeholder="admin@kingsschool.cd" value="admin@kingsschool.cd">
     </div>
-    <div class="field">
+    <div class="lfield">
       <label>Mot de passe</label>
       <input type="password" id="adminPasswordInput" placeholder="••••••••">
     </div>
-    <button class="btn-login" onclick="adminLogin()">Accéder au panel</button>
+    <button class="btn-login" onclick="adminLogin()">Accéder au panel →</button>
   </div>
 </div>
 
-<!-- Dashboard -->
+<!-- ══ DASHBOARD ══ -->
 <div id="dashboard">
   <div class="layout">
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="sidebar-logo">
-        <div class="crown">👑</div>
-        <h2>King's School<br>International</h2>
-        <p>Administration</p>
-      </div>
-      <nav class="sidebar-nav">
-        <div class="nav-item active" onclick="showPage('pageStats',this)">📊 Tableau de bord</div>
-        <div class="nav-item" onclick="showPage('pageUsers',this)">👥 Utilisateurs</div>
-        <div class="nav-item" id="navMessages" onclick="showPage('pageMessages',this)">
-          ✉️ Messages
-          <span class="badge-notif" id="unreadBadge" style="display:none">0</span>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sb-logo">
+        <div class="sb-logo-inner">
+          <div class="sb-logo-icon">👑</div>
+          <div>
+            <h2>King's School</h2>
+            <p>Administration</p>
+          </div>
         </div>
-        <div class="nav-item" onclick="window.open('portail.html')">🚪 Portail</div>
-        <div class="nav-item" onclick="window.open('index.html')">🌐 Voir le site</div>
-      </nav>
-      <div class="sidebar-footer">
-        <div id="adminNameLabel" style="font-weight:600;color:white;margin-bottom:.3rem;"></div>
-        <div>Administrateur</div>
+      </div>
+
+      <div class="sb-section-label">Principal</div>
+      <div class="nav-item active" data-roles="admin,moderateur,editeur" onclick="showPage('pageStats',this)">
+        <span class="ni-icon">📊</span> Tableau de bord
+      </div>
+
+      <div class="sb-section-label">Gestion</div>
+      <div class="nav-item" data-roles="admin" onclick="showPage('pageUsers',this)">
+        <span class="ni-icon">👥</span> Utilisateurs
+      </div>
+      <div class="nav-item" data-roles="admin,moderateur" onclick="showPage('pageMessages',this)">
+        <span class="ni-icon">✉️</span> Messages
+        <span class="badge-n" id="unreadBadge" style="display:none">0</span>
+      </div>
+      <div class="nav-item" data-roles="admin,moderateur" onclick="showPage('pagePreinsc',this)">
+        <span class="ni-icon">📋</span> Pré-inscriptions
+        <span class="badge-n" id="preinscBadge" style="display:none">0</span>
+      </div>
+
+      <div class="sb-section-label">Sections du site</div>
+      <div class="nav-item" data-roles="admin,editeur" onclick="showPage('pageContenu',this);loadContenuSection('hero')">
+        <span class="ni-icon">🏠</span> Accueil / Hero
+      </div>
+      <div class="nav-item" data-roles="admin,editeur" onclick="showPage('pageContenu',this);loadContenuSection('chiffres')">
+        <span class="ni-icon">📊</span> Chiffres clés
+      </div>
+      <div class="nav-item" data-roles="admin,editeur" onclick="showPage('pageContenu',this);loadContenuSection('apropos')">
+        <span class="ni-icon">ℹ️</span> À propos
+      </div>
+      <div class="nav-item" data-roles="admin,editeur" onclick="showPage('pageEquipe',this)">
+        <span class="ni-icon">👨‍🏫</span> Équipe
+      </div>
+
+      <div class="nav-item" data-roles="admin,editeur" onclick="showPage('pageActualites',this)">
+        <span class="ni-icon">📰</span> Actualités
+      </div>
+      <div class="nav-item" data-roles="admin,editeur" onclick="showPage('pageTemoignages',this)">
+        <span class="ni-icon">💬</span> Témoignages
+      </div>
+      <div class="nav-item" data-roles="admin,editeur" onclick="showPage('pageGalerie',this);loadGalerie()">
+        <span class="ni-icon">🖼️</span> Galerie
+      </div>
+      <div class="nav-item" data-roles="admin,editeur" onclick="showPage('pageFaq',this)">
+        <span class="ni-icon">❓</span> FAQ
+      </div>
+      <div class="nav-item" data-roles="admin,editeur" onclick="showPage('pageMessages',this)">
+        <span class="ni-icon">📞</span> Contact (messages)
+      </div>
+
+      <div class="sb-section-label">Système</div>
+      <div class="nav-item" data-roles="admin" onclick="showPage('pageActivity',this)">
+        <span class="ni-icon">🕒</span> Journal d'activité
+      </div>
+      <div class="nav-item" onclick="window.open('index.html')">
+        <span class="ni-icon">🌐</span> Voir le site
+      </div>
+
+      <div class="sb-footer">
+        <div class="sb-user">
+          <div class="sb-avatar" id="sbAvatar">A</div>
+          <div class="sb-user-info">
+            <div class="sb-user-name" id="sbName">—</div>
+            <div class="sb-user-role" id="sbRole">—</div>
+          </div>
+        </div>
         <button class="btn-logout" onclick="logout()">🚪 Déconnexion</button>
       </div>
-    </div>
+    </aside>
 
-    <!-- Main -->
+    <!-- MAIN -->
     <div class="main">
-      <div class="main-header">
-        <div>
+      <!-- TOPBAR -->
+      <div class="topbar">
+        <div class="topbar-left">
           <h1 id="pageTitle">Tableau de bord</h1>
-          <p id="pageSubtitle">Vue d'ensemble du portail King's School</p>
+          <p id="pageSubtitle">Vue d'ensemble · King's School International</p>
         </div>
-        <span class="badge-admin">👑 Administrateur</span>
+        <div class="topbar-right">
+          <span class="badge-role" id="roleBadgeTop">—</span>
+          <div class="notif-bell" onclick="toggleNotifPanel()">
+            🔔
+            <div class="notif-dot" id="notifDot"></div>
+          </div>
+        </div>
+      </div>
+      <div class="notif-panel" id="notifPanel">
+        <div class="notif-header">🔔 Notifications</div>
+        <div class="notif-empty" id="notifEmpty">Aucune notification</div>
       </div>
 
-      <!-- Page Stats -->
-      <div class="page active" id="pageStats">
-        <div class="stats-grid">
-          <div class="stat-card"><div class="stat-label">Total inscrits</div><div class="stat-value" id="statTotal">—</div><div class="stat-sub">utilisateurs</div></div>
-          <div class="stat-card"><div class="stat-label">Aujourd'hui</div><div class="stat-value" id="statToday">—</div><div class="stat-sub">nouvelles inscriptions</div></div>
-          <div class="stat-card"><div class="stat-label">Cette semaine</div><div class="stat-value" id="statWeek">—</div><div class="stat-sub">inscriptions (7j)</div></div>
-          <div class="stat-card"><div class="stat-label">Messages reçus</div><div class="stat-value" id="statMessages">—</div><div class="stat-sub">total</div></div>
-          <div class="stat-card"><div class="stat-label">Non lus</div><div class="stat-value" id="statUnread">—</div><div class="stat-sub">messages</div></div>
-        </div>
-        <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.06);">
-          <h3 style="color:var(--royal-blue);margin-bottom:1rem;">📋 Accès rapide</h3>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-            <div onclick="showPage('pageUsers',document.querySelectorAll('.nav-item')[1])" style="padding:1rem;border:2px solid #e2e8f0;border-radius:10px;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='#1e3a8a'" onmouseout="this.style.borderColor='#e2e8f0'">
-              <div style="font-size:1.5rem;margin-bottom:.5rem;">👥</div>
-              <div style="font-weight:600;color:var(--royal-blue);">Gérer les utilisateurs</div>
-              <div style="font-size:.82rem;color:#64748b;margin-top:.2rem;">Voir, chercher, supprimer</div>
+      <div class="content">
+
+        <!-- ══ DASHBOARD STATS ══ -->
+        <div class="page active" id="pageStats">
+
+          <!-- Ligne 1 : 4 stat cards avec sparklines -->
+          <div class="stats-row">
+            <div class="stat-card featured">
+              <div class="stat-left">
+                <div class="stat-label">Inscriptions semaine</div>
+                <div class="stat-value" id="statWeek">—</div>
+                <div class="stat-sub">7 derniers jours</div>
+                <div class="stat-trend up" id="trendWeek">↑ +0%</div>
+              </div>
+              <div class="stat-right"><canvas id="sparkWeek"></canvas></div>
             </div>
-            <div onclick="showPage('pageMessages',document.querySelectorAll('.nav-item')[2])" style="padding:1rem;border:2px solid #e2e8f0;border-radius:10px;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='#1e3a8a'" onmouseout="this.style.borderColor='#e2e8f0'">
-              <div style="font-size:1.5rem;margin-bottom:.5rem;">✉️</div>
-              <div style="font-weight:600;color:var(--royal-blue);">Lire les messages</div>
-              <div style="font-size:.82rem;color:#64748b;margin-top:.2rem;">Formulaire de contact</div>
+            <div class="stat-card green">
+              <div class="stat-left">
+                <div class="stat-label">Total utilisateurs</div>
+                <div class="stat-value" id="statTotal">—</div>
+                <div class="stat-sub">Comptes actifs</div>
+                <div class="stat-trend up" id="trendTotal">↑ croissance</div>
+              </div>
+              <div class="stat-right"><canvas id="sparkTotal"></canvas></div>
+            </div>
+            <div class="stat-card orange">
+              <div class="stat-left">
+                <div class="stat-label">Pré-inscriptions</div>
+                <div class="stat-value" id="statPreinsc">—</div>
+                <div class="stat-sub"><span id="statPreinscNew">—</span> nouvelles</div>
+                <div class="stat-trend up">↑ à traiter</div>
+              </div>
+              <div class="stat-right"><canvas id="sparkPreinsc"></canvas></div>
+            </div>
+            <div class="stat-card purple">
+              <div class="stat-left">
+                <div class="stat-label">Messages reçus</div>
+                <div class="stat-value" id="statMessages">—</div>
+                <div class="stat-sub"><span id="statUnread" style="font-weight:700;">—</span> non lus</div>
+                <div class="stat-trend up">● en attente</div>
+              </div>
+              <div class="stat-right"><canvas id="sparkMessages"></canvas></div>
+            </div>
+          </div>
+
+          <!-- Grand graphique inscriptions -->
+          <div class="main-chart-card">
+            <div class="mcc-header">
+              <div>
+                <div class="mcc-label">Vue d'ensemble — Inscriptions</div>
+                <div class="mcc-value" id="statTotal2">—</div>
+                <div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;">
+                  <span class="mcc-trend" id="mccTrend">↑ +0 cette semaine</span>
+                  <div class="mcc-legend">
+                    <div class="mcc-leg-item"><div class="mcc-leg-dot" style="background:#2563eb;"></div>Inscriptions</div>
+                    <div class="mcc-leg-item"><div class="mcc-leg-dot" style="background:#d4af37;"></div>Messages</div>
+                  </div>
+                </div>
+              </div>
+              <div class="mcc-period">
+                <button class="period-btn active" onclick="setPeriod(this,14)">2 sem.</button>
+                <button class="period-btn" onclick="setPeriod(this,30)">Mois</button>
+              </div>
+            </div>
+            <canvas id="chartMain" class="main-chart-canvas"></canvas>
+          </div>
+
+          <!-- Mini widgets row -->
+          <div class="mini-row">
+            <div class="mini-card">
+              <div class="mini-card-label">Aujourd'hui</div>
+              <div class="mini-card-value" id="statToday">—</div>
+              <div class="mini-card-sub">Nouvelles inscriptions</div>
+              <div class="mini-chart"><canvas id="miniToday"></canvas></div>
+            </div>
+            <div class="mini-card">
+              <div class="mini-card-label">Actualités publiées</div>
+              <div class="mini-card-value" id="statActus">—</div>
+              <div class="mini-card-sub">Sur le site</div>
+              <div class="mini-chart"><canvas id="miniActus"></canvas></div>
+            </div>
+            <div class="mini-card">
+              <div class="mini-card-label">Équipe</div>
+              <div class="mini-card-value" id="statEquipe">—</div>
+              <div class="mini-card-sub">Membres affichés</div>
+              <div class="mini-chart"><canvas id="miniEquipe"></canvas></div>
+            </div>
+            <div class="mini-card">
+              <div class="mini-card-label">Messages lus</div>
+              <div class="mini-card-value" id="statLus">—</div>
+              <div class="mini-card-sub">Sur <span id="statTotalMsg2">—</span> total</div>
+              <div class="mini-chart"><canvas id="miniLus"></canvas></div>
+            </div>
+          </div>
+
+          <!-- Bottom : donut + recents -->
+          <div class="bottom-grid">
+            <!-- Rôles donut -->
+            <div class="donut-card">
+              <div class="donut-card-title">Répartition des rôles</div>
+              <div class="donut-wrap">
+                <canvas id="chartRoles" style="max-width:160px;max-height:160px;"></canvas>
+                <div class="donut-legend" id="rolesLegend"></div>
+              </div>
+            </div>
+
+            <!-- Activité récente -->
+            <div class="recents-card">
+              <div class="rc-header">
+                <span class="rc-title">Dernières inscriptions</span>
+                <span class="rc-link" onclick="showPage('pageUsers',document.querySelector('[onclick*=pageUsers]'))">Voir tout →</span>
+              </div>
+              <div id="recentsList">
+                <div class="rc-item"><span style="color:var(--muted);font-size:.83rem;padding:.5rem 0;">Chargement...</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ══ UTILISATEURS ══ -->
+        <div class="page" id="pageUsers">
+          <div class="table-card">
+            <div class="tc-header">
+              <span class="tc-title">Comptes inscrits</span>
+              <div class="tc-actions">
+                <button class="btn-sm btn-gold" onclick="exportData('users','xlsx')">⬇️ Excel</button>
+                <button class="btn-sm btn-gold" onclick="exportData('users','pdf')">⬇️ PDF</button>
+                <button class="btn-sm btn-secondary" onclick="loadUsers(1)">🔄</button>
+              </div>
+            </div>
+            <div class="filters-bar">
+              <input type="text" id="usersSearch" placeholder="🔍 Rechercher nom ou email..." oninput="debouncedUsers()">
+              <select id="usersRoleFilter" onchange="loadUsers(1)">
+                <option value="">Tous les rôles</option>
+                <option value="user">Utilisateur</option>
+                <option value="moderateur">Modérateur</option>
+                <option value="editeur">Éditeur</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <div class="loading-row" id="loadingUsers">Chargement...</div>
+            <div style="overflow-x:auto;">
+            <table id="usersTable" style="display:none;">
+              <thead><tr><th>#</th><th>Nom</th><th>Email</th><th>Rôle</th><th>Inscrit le</th><th>Actions</th></tr></thead>
+              <tbody id="usersBody"></tbody>
+            </table>
+            </div>
+            <div class="empty-state" id="emptyUsers" style="display:none;"><div class="empty-icon">👥</div><p>Aucun utilisateur trouvé.</p></div>
+            <div class="pagination" id="usersPagination" style="display:none;"></div>
+          </div>
+        </div>
+
+        <!-- ══ MESSAGES ══ -->
+        <div class="page" id="pageMessages">
+          <div class="table-card">
+            <div class="tc-header">
+              <span class="tc-title">Messages de contact</span>
+              <div class="tc-actions">
+                <button class="btn-sm btn-gold" onclick="exportData('messages','xlsx')">⬇️ Excel</button>
+                <button class="btn-sm btn-gold" onclick="exportData('messages','pdf')">⬇️ PDF</button>
+                <button class="btn-sm btn-secondary" onclick="loadMessages(1)">🔄</button>
+              </div>
+            </div>
+            <div class="filters-bar">
+              <input type="text" id="msgsSearch" placeholder="🔍 Rechercher..." oninput="debouncedMessages()">
+              <select id="msgsLuFilter" onchange="loadMessages(1)">
+                <option value="">Tous</option>
+                <option value="0">Non lus</option>
+                <option value="1">Lus</option>
+              </select>
+            </div>
+            <div class="loading-row" id="loadingMessages">Chargement...</div>
+            <div style="overflow-x:auto;">
+            <table id="msgsTable" style="display:none;">
+              <thead><tr><th>De</th><th>Téléphone</th><th>Message</th><th>Date</th><th>Statut</th><th>Actions</th></tr></thead>
+              <tbody id="msgsBody"></tbody>
+            </table>
+            </div>
+            <div class="empty-state" id="emptyMessages" style="display:none;"><div class="empty-icon">✉️</div><p>Aucun message.</p></div>
+            <div class="pagination" id="msgsPagination" style="display:none;"></div>
+          </div>
+        </div>
+
+        <!-- ══ PRÉ-INSCRIPTIONS ══ -->
+        <div class="page" id="pagePreinsc">
+          <div class="table-card">
+            <div class="tc-header">
+              <span class="tc-title">Pré-inscriptions</span>
+              <div class="tc-actions">
+                <button class="btn-sm btn-gold" onclick="exportData('preinscriptions','xlsx')">⬇️ Excel</button>
+                <button class="btn-sm btn-secondary" onclick="loadPreinsc(1)">🔄</button>
+              </div>
+            </div>
+            <div class="filters-bar">
+              <select id="preinscStatut" onchange="loadPreinsc(1)">
+                <option value="">Tous les statuts</option>
+                <option value="nouveau">Nouveau</option>
+                <option value="en_cours">En cours</option>
+                <option value="accepte">Accepté</option>
+                <option value="refuse">Refusé</option>
+              </select>
+            </div>
+            <div class="loading-row" id="loadingPreinsc">Chargement...</div>
+            <div style="overflow-x:auto;">
+            <table id="preinscTable" style="display:none;">
+              <thead><tr><th>Enfant</th><th>Âge</th><th>Classe</th><th>Parent</th><th>Email</th><th>Téléphone</th><th>Message</th><th>Statut</th><th>Date</th><th>Actions</th></tr></thead>
+              <tbody id="preinscBody"></tbody>
+            </table>
+            </div>
+            <div class="empty-state" id="emptyPreinsc" style="display:none;"><div class="empty-icon">📋</div><p>Aucune pré-inscription.</p></div>
+            <div class="pagination" id="preinscPagination" style="display:none;"></div>
+          </div>
+        </div>
+
+        <!-- ══ ACTUALITÉS ══ -->
+        <div class="page" id="pageActualites">
+          <div class="table-card">
+            <div class="tc-header">
+              <span class="tc-title">Actualités publiées</span>
+              <div class="tc-actions">
+                <button class="btn-sm btn-primary" onclick="openActuModal()">+ Nouvelle actualité</button>
+                <button class="btn-sm btn-secondary" onclick="loadActualites(1)">🔄</button>
+              </div>
+            </div>
+          </div>
+          <div class="loading-row" id="loadingActus" style="background:var(--card);border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow);">Chargement...</div>
+          <div class="cards-grid" id="actusGrid"></div>
+          <div class="empty-state" id="emptyActus" style="display:none;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);"><div class="empty-icon">📰</div><p>Aucune actualité publiée.</p></div>
+          <div class="pagination" id="actusPagination" style="display:none;background:var(--card);border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow);margin-top:-1rem;"></div>
+        </div>
+
+        <!-- ══ ÉQUIPE ══ -->
+        <div class="page" id="pageEquipe">
+          <div class="table-card">
+            <div class="tc-header">
+              <span class="tc-title">Membres de l'équipe</span>
+              <div class="tc-actions">
+                <button class="btn-sm btn-primary" onclick="openEquipeModal()">+ Ajouter un membre</button>
+                <button class="btn-sm btn-secondary" onclick="loadEquipe()">🔄</button>
+              </div>
+            </div>
+          </div>
+          <div class="loading-row" id="loadingEquipe" style="background:var(--card);border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow);">Chargement...</div>
+          <div class="cards-grid" id="equipeGrid"></div>
+          <div class="empty-state" id="emptyEquipe" style="display:none;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);"><div class="empty-icon">👨‍🏫</div><p>Aucun membre. Ajoutez l'équipe !</p></div>
+        </div>
+
+        <!-- ══ TÉMOIGNAGES ══ -->
+        <div class="page" id="pageTemoignages">
+          <div class="table-card">
+            <div class="tc-header">
+              <span class="tc-title">Témoignages</span>
+              <div class="tc-actions">
+                <button class="btn-sm btn-primary" onclick="openTemoModal()">+ Ajouter</button>
+                <button class="btn-sm btn-secondary" onclick="loadTemoignages()">🔄</button>
+              </div>
+            </div>
+          </div>
+          <div class="loading-row" id="loadingTemo" style="background:var(--card);border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow);">Chargement...</div>
+          <div class="cards-grid" id="temoGrid"></div>
+          <div class="empty-state" id="emptyTemo" style="display:none;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);"><div class="empty-icon">💬</div><p>Aucun témoignage.</p></div>
+        </div>
+
+        <!-- ══ FAQ ══ -->
+        <div class="page" id="pageFaq">
+          <div class="table-card">
+            <div class="tc-header">
+              <span class="tc-title">Questions fréquentes (FAQ)</span>
+              <div class="tc-actions">
+                <button class="btn-sm btn-primary" onclick="openFaqModal()">+ Ajouter</button>
+                <button class="btn-sm btn-secondary" onclick="loadFaq()">🔄</button>
+              </div>
+            </div>
+          </div>
+          <div class="loading-row" id="loadingFaq" style="background:var(--card);border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow);">Chargement...</div>
+          <div id="faqList" style="margin-top:1rem;"></div>
+          <div class="empty-state" id="emptyFaq" style="display:none;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);"><div class="empty-icon">❓</div><p>Aucune FAQ.</p></div>
+        </div>
+
+        <!-- ══ GALERIE — PAGE DÉDIÉE ══ -->
+        <div class="page" id="pageGalerie">
+
+          <div style="background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.4rem 1.8rem;margin-bottom:1.2rem;">
+            <h3 style="font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:1rem;">➕ Ajouter une photo au slider</h3>
+            <div style="display:flex;gap:.8rem;align-items:flex-start;flex-wrap:wrap;">
+              <div style="flex:2;min-width:200px;">
+                <label style="font-size:.78rem;font-weight:600;color:var(--muted);display:block;margin-bottom:.3rem;">Image * (depuis votre ordinateur)</label>
+                <div id="gal-drop-zone" onclick="document.getElementById('gal-file-input').click()" ondragover="event.preventDefault();this.style.borderColor='var(--blue)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleGalDrop(event)" style="border:2px dashed var(--border);border-radius:8px;padding:.8rem;text-align:center;cursor:pointer;background:var(--bg);transition:border-color .2s;min-height:70px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.3rem;">
+                  <img id="gal-new-preview" src="" alt="" style="max-height:56px;border-radius:5px;object-fit:cover;display:none;">
+                  <span id="gal-drop-label" style="font-size:.8rem;color:var(--muted);">📁 Cliquer ou glisser une photo ici</span>
+                </div>
+                <input type="file" id="gal-file-input" accept="image/*" style="display:none" onchange="handleGalFile(this)">
+                <input type="hidden" id="gal-new-image">
+              </div>
+              <div style="flex:2;min-width:140px;">
+                <label style="font-size:.78rem;font-weight:600;color:var(--muted);display:block;margin-bottom:.3rem;">Titre (affiché sur le slide)</label>
+                <input type="text" id="gal-new-titre" placeholder="Ex : Vie scolaire 2024" style="width:100%;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'">
+              </div>
+              <div style="flex:1;min-width:110px;">
+                <label style="font-size:.78rem;font-weight:600;color:var(--muted);display:block;margin-bottom:.3rem;">Catégorie (badge)</label>
+                <select id="gal-new-cat" style="width:100%;padding:.7rem .8rem;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;background:var(--bg);">
+                  <option value="general">Général</option>
+                  <option value="vie-scolaire">Vie scolaire</option>
+                  <option value="evenements">Événements</option>
+                  <option value="infrastructure">Infrastructure</option>
+                  <option value="humanitaire">Humanitaire</option>
+                  <option value="sport">Sport</option>
+                  <option value="ceremonie">Cérémonie</option>
+                </select>
+              </div>
+              <div style="flex:2;min-width:160px;">
+                <label style="font-size:.78rem;font-weight:600;color:var(--muted);display:block;margin-bottom:.3rem;">Description (texte sous le titre)</label>
+                <input type="text" id="gal-new-desc" placeholder="Courte description affichée sur le slide" style="width:100%;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'">
+              </div>
+              <button onclick="ajouterPhotoGalerie()" style="padding:.7rem 1.4rem;background:var(--blue);color:white;border:none;border-radius:8px;font-size:.85rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">+ Ajouter au slider</button>
+            </div>
+            <div id="gal-add-feedback" style="margin-top:.5rem;font-size:.82rem;display:none;"></div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem;">
+            <div style="font-size:.84rem;color:var(--muted);"><span id="gal-count">—</span> photo(s) dans le slider · <span style="font-size:.78rem;">✏️ modifier · 🗑️ supprimer</span></div>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+              <select id="gal-filtre-cat" onchange="filtrerGalerie()" style="padding:.4rem .8rem;border:1.5px solid var(--border);border-radius:7px;font-size:.82rem;font-family:inherit;outline:none;background:var(--card);">
+                <option value="">Toutes les catégories</option>
+                <option value="general">Général</option>
+                <option value="vie-scolaire">Vie scolaire</option>
+                <option value="evenements">Événements</option>
+                <option value="infrastructure">Infrastructure</option>
+                <option value="humanitaire">Humanitaire</option>
+                <option value="sport">Sport</option>
+                <option value="ceremonie">Cérémonie</option>
+              </select>
+              <button class="btn-sm btn-secondary" onclick="loadGalerie()">🔄 Actualiser</button>
+            </div>
+          </div>
+
+          <div id="gal-loading" style="background:var(--card);border-radius:var(--radius);padding:3rem;text-align:center;color:var(--muted);box-shadow:var(--shadow);">Chargement de la galerie...</div>
+          <div id="gal-empty" style="display:none;background:var(--card);border-radius:var(--radius);padding:3rem;text-align:center;color:var(--muted);box-shadow:var(--shadow);">
+            <div style="font-size:2.5rem;margin-bottom:.6rem;">🖼️</div><p>Aucune photo. Ajoutez-en une ci-dessus !</p>
+          </div>
+          <div id="gal-grid" style="display:none;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1rem;"></div>
+        </div>
+
+        <!-- Modal édition photo slider -->
+        <div class="modal-overlay" id="galModal">
+          <div class="modal-box" style="max-width:500px;">
+            <h3>✏️ Modifier le slide</h3>
+            <input type="hidden" id="galId">
+            <div class="mfield">
+              <label>Image * (depuis votre ordinateur)</label>
+              <div id="gal-edit-drop" onclick="document.getElementById('gal-edit-file').click()" ondragover="event.preventDefault();this.style.borderColor='var(--blue)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleGalEditDrop(event)" style="border:2px dashed var(--border);border-radius:8px;padding:.8rem;text-align:center;cursor:pointer;background:var(--bg);transition:border-color .2s;min-height:80px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.4rem;">
+                <img id="galPreview" src="" alt="aperçu" style="max-height:80px;border-radius:6px;object-fit:cover;display:none;">
+                <span id="gal-edit-drop-label" style="font-size:.8rem;color:var(--muted);">📁 Cliquer ou glisser une nouvelle photo</span>
+              </div>
+              <input type="file" id="gal-edit-file" accept="image/*" style="display:none" onchange="handleGalEditFile(this)">
+              <input type="hidden" id="galImage">
+            </div>
+            <div class="mfield"><label>Titre (grand texte sur le slide)</label><input type="text" id="galTitre" placeholder="Titre affiché en grand"></div>
+            <div class="mfield">
+              <label>Catégorie (badge coloré)</label>
+              <select id="galCategorie" style="width:100%;padding:.72rem .8rem;border:1.5px solid var(--border);border-radius:9px;font-size:.88rem;font-family:inherit;outline:none;background:var(--bg);">
+                <option value="general">Général</option>
+                <option value="vie-scolaire">Vie scolaire</option>
+                <option value="evenements">Événements</option>
+                <option value="infrastructure">Infrastructure</option>
+                <option value="humanitaire">Humanitaire</option>
+                <option value="sport">Sport</option>
+                <option value="ceremonie">Cérémonie</option>
+              </select>
+            </div>
+            <div class="mfield"><label>Description (texte sous le titre)</label><textarea id="galDesc" rows="2" placeholder="Description visible sur le slide…"></textarea></div>
+            <div class="modal-actions">
+              <button class="btn-cancel" onclick="closeModal('galModal')">Annuler</button>
+              <button class="btn-save" onclick="savePhotoGalerie()">💾 Enregistrer</button>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Page Utilisateurs -->
-      <div class="page" id="pageUsers">
-        <div class="table-card">
-          <div class="table-header">
-            <h3>👥 Utilisateurs inscrits</h3>
-            <button class="btn-refresh" onclick="loadUsers()">🔄 Actualiser</button>
-          </div>
-          <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="🔍 Rechercher par nom ou email..." oninput="filterTable()">
-          </div>
-          <div id="loadingMsg">Chargement...</div>
-          <table id="usersTable" style="display:none;">
-            <thead><tr><th>#</th><th>Nom</th><th>Email</th><th>Rôle</th><th>Date inscription</th><th>Action</th></tr></thead>
-            <tbody id="usersBody"></tbody>
-          </table>
-          <div class="empty-state" id="emptyState" style="display:none;"><div style="font-size:2.5rem">👥</div><p>Aucun utilisateur inscrit.</p></div>
+        <!-- ══ CONTENU DU SITE ══ -->
+        <div class="page" id="pageContenu">
+          <div id="contenu-loading" style="background:var(--card);border-radius:var(--radius);padding:3rem;text-align:center;color:var(--muted);box-shadow:var(--shadow);">Chargement du contenu...</div>
+          <div id="contenu-editor" style="display:none;"></div>
         </div>
-      </div>
 
-      <!-- Page Messages -->
-      <div class="page" id="pageMessages">
-        <div class="table-card">
-          <div class="table-header">
-            <h3>✉️ Messages reçus</h3>
-            <button class="btn-refresh" onclick="loadMessages()">🔄 Actualiser</button>
+        <!-- ══ JOURNAL ══ -->
+        <div class="page" id="pageActivity">
+          <div class="table-card">
+            <div class="tc-header">
+              <span class="tc-title">Journal d'activité</span>
+              <button class="btn-sm btn-secondary" onclick="loadActivity(1)">🔄</button>
+            </div>
+            <div class="loading-row" id="loadingActivity">Chargement...</div>
+            <div class="activity-feed" id="activityList"></div>
+            <div class="empty-state" id="emptyActivity" style="display:none;"><div class="empty-icon">🕒</div><p>Aucune activité enregistrée.</p></div>
+            <div class="pagination" id="activityPagination" style="display:none;"></div>
           </div>
-          <div id="loadingMsgMsg">Chargement...</div>
-          <table id="messagesTable" style="display:none;">
-            <thead><tr><th>#</th><th>Nom</th><th>Email</th><th>Sujet</th><th>Date</th><th>Actions</th></tr></thead>
-            <tbody id="messagesBody"></tbody>
-          </table>
-          <div class="empty-state" id="emptyMsgState" style="display:none;"><div style="font-size:2.5rem">✉️</div><p>Aucun message reçu.</p></div>
         </div>
+
+      </div><!-- /content -->
+    </div><!-- /main -->
+  </div><!-- /layout -->
+</div><!-- /dashboard -->
+
+<!-- ══ MODALS ══ -->
+<!-- Actualité -->
+<div class="modal-overlay" id="actuModal">
+  <div class="modal-box">
+    <h3 id="actuModalTitle">📰 Nouvelle actualité</h3>
+    <input type="hidden" id="actuId">
+    <div class="mfield"><label>Titre</label><input type="text" id="actuTitre" placeholder="Titre de l'actualité"></div>
+    <div class="mfield">
+      <label>Image (depuis votre ordinateur)</label>
+      <div id="actu-drop" onclick="document.getElementById('actu-file').click()" ondragover="event.preventDefault();this.style.borderColor='var(--blue)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleActuDrop(event)" style="border:2px dashed var(--border);border-radius:8px;padding:.8rem;text-align:center;cursor:pointer;background:var(--bg);transition:border-color .2s;min-height:72px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.35rem;">
+        <img id="actuPreview" src="" alt="" style="max-height:60px;border-radius:5px;object-fit:cover;display:none;">
+        <span id="actu-drop-label" style="font-size:.8rem;color:var(--muted);">📁 Cliquer ou glisser une photo</span>
       </div>
+      <input type="file" id="actu-file" accept="image/*" style="display:none" onchange="handleActuFile(this)">
+      <input type="hidden" id="actuImage">
+    </div>
+    <div class="mfield"><label>Contenu</label><textarea id="actuContenu" rows="6" placeholder="Texte de l'actualité..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('actuModal')">Annuler</button>
+      <button class="btn-save" onclick="saveActualite()">Publier</button>
     </div>
   </div>
 </div>
 
-<script>
-let adminEmail=''; let allUsers=[]; let allMessages=[];
+<!-- Équipe -->
+<div class="modal-overlay" id="equipeModal">
+  <div class="modal-box">
+    <h3 id="equipeModalTitle">👨‍🏫 Nouveau membre</h3>
+    <input type="hidden" id="equipeId">
+    <div class="mfield"><label>Nom complet</label><input type="text" id="equipeNom" placeholder="Prénom Nom"></div>
+    <div class="mfield"><label>Poste / Titre</label><input type="text" id="equipePoste" placeholder="Directeur Académique"></div>
+    <div class="mfield">
+      <label>Photo (depuis votre ordinateur)</label>
+      <div id="equipe-drop" onclick="document.getElementById('equipe-file').click()" ondragover="event.preventDefault();this.style.borderColor='var(--blue)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleEquipeDrop(event)" style="border:2px dashed var(--border);border-radius:8px;padding:.8rem;text-align:center;cursor:pointer;background:var(--bg);transition:border-color .2s;min-height:72px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.35rem;">
+        <img id="equipePreview" src="" alt="" style="max-height:60px;border-radius:5px;object-fit:cover;display:none;">
+        <span id="equipe-drop-label" style="font-size:.8rem;color:var(--muted);">📁 Cliquer ou glisser une photo</span>
+      </div>
+      <input type="file" id="equipe-file" accept="image/*" style="display:none" onchange="handleEquipeFile(this)">
+      <input type="hidden" id="equipePhoto">
+    </div>
+    <div class="mfield"><label>Biographie</label><textarea id="equipeBio" rows="4" placeholder="Diplômes, expérience..."></textarea></div>
+    <div class="mfield"><label>Ordre d'affichage</label><input type="number" id="equipeOrdre" placeholder="0" min="0"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('equipeModal')">Annuler</button>
+      <button class="btn-save" onclick="saveMembre()">Enregistrer</button>
+    </div>
+  </div>
+</div>
 
+<!-- Témoignage -->
+<div class="modal-overlay" id="temoModal">
+  <div class="modal-box">
+    <h3 id="temoModalTitle">💬 Nouveau témoignage</h3>
+    <input type="hidden" id="temoId">
+    <div class="mfield"><label>Nom</label><input type="text" id="temoNom" placeholder="Jean Mukendi"></div>
+    <div class="mfield"><label>Rôle (parent, élève…)</label><input type="text" id="temoRole" placeholder="Parent d'élève"></div>
+    <div class="mfield"><label>Témoignage</label><textarea id="temoTexte" rows="4" placeholder="Texte du témoignage..."></textarea></div>
+    <div class="mfield">
+      <label>Photo (depuis votre ordinateur)</label>
+      <div id="temo-drop" onclick="document.getElementById('temo-file').click()" ondragover="event.preventDefault();this.style.borderColor='var(--blue)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleTemoDrop(event)" style="border:2px dashed var(--border);border-radius:8px;padding:.8rem;text-align:center;cursor:pointer;background:var(--bg);transition:border-color .2s;min-height:72px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.35rem;">
+        <img id="temoPreview" src="" alt="" style="max-height:60px;border-radius:5px;object-fit:cover;display:none;">
+        <span id="temo-drop-label" style="font-size:.8rem;color:var(--muted);">📁 Cliquer ou glisser une photo</span>
+      </div>
+      <input type="file" id="temo-file" accept="image/*" style="display:none" onchange="handleTemoFile(this)">
+      <input type="hidden" id="temoPhoto">
+    </div>
+    <div class="mfield"><label>Note (1–5)</label><input type="number" id="temoNote" value="5" min="1" max="5"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('temoModal')">Annuler</button>
+      <button class="btn-save" onclick="saveTemoignage()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="modal-overlay" id="faqModal">
+  <div class="modal-box">
+    <h3 id="faqModalTitle">❓ Nouvelle FAQ</h3>
+    <input type="hidden" id="faqId">
+    <div class="mfield"><label>Question</label><input type="text" id="faqQuestion" placeholder="Comment s'inscrire ?"></div>
+    <div class="mfield"><label>Réponse</label><textarea id="faqReponse" rows="5" placeholder="Réponse détaillée..."></textarea></div>
+    <div class="mfield"><label>Catégorie</label>
+      <select id="faqCategorie">
+        <option value="general">Général</option>
+        <option value="inscription">Inscription</option>
+        <option value="scolarite">Scolarité</option>
+        <option value="religion">Religion</option>
+        <option value="transport">Transport</option>
+      </select>
+    </div>
+    <div class="mfield"><label>Ordre</label><input type="number" id="faqOrdre" value="0" min="0"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('faqModal')">Annuler</button>
+      <button class="btn-save" onclick="saveFaq()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ MODAL EDIT UTILISATEUR ══ -->
+<div class="modal-overlay" id="editUserModal">
+  <div class="modal-box">
+    <h3>✏️ Modifier l'utilisateur</h3>
+    <input type="hidden" id="editUserId">
+    <div class="mfield"><label>Nom complet</label><input type="text" id="editUserName" placeholder="Nom complet"></div>
+    <div class="mfield"><label>Email</label><input type="email" id="editUserEmail" placeholder="email@exemple.com"></div>
+    <div class="mfield"><label>Nouveau mot de passe <span style="color:var(--muted);font-weight:400;">(laisser vide pour ne pas changer)</span></label>
+      <input type="password" id="editUserPassword" placeholder="Min. 6 caractères"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('editUserModal')">Annuler</button>
+      <button class="btn-save" onclick="sauvegarderUser()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL EDIT PRÉ-INSCRIPTION ══ -->
+<div class="modal-overlay" id="editPreinscModal">
+  <div class="modal-box" style="max-width:580px;">
+    <h3>✏️ Modifier la pré-inscription</h3>
+    <input type="hidden" id="epId">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div class="mfield"><label>Nom de l'enfant *</label><input type="text" id="epEnfant" placeholder="Prénom Nom"></div>
+      <div class="mfield"><label>Âge</label><input type="number" id="epAge" placeholder="8" min="3" max="20"></div>
+      <div class="mfield"><label>Classe visée *</label>
+        <select id="epClasse" style="width:100%;padding:.72rem .9rem;border:1.5px solid var(--border);border-radius:9px;font-size:.88rem;font-family:inherit;outline:none;">
+          <option value="Maternelle">Maternelle</option>
+          <option value="1ère primaire">1ère primaire</option>
+          <option value="2ème primaire">2ème primaire</option>
+          <option value="3ème primaire">3ème primaire</option>
+          <option value="4ème primaire">4ème primaire</option>
+          <option value="5ème primaire">5ème primaire</option>
+          <option value="6ème primaire">6ème primaire</option>
+          <option value="1ère secondaire">1ère secondaire</option>
+          <option value="2ème secondaire">2ème secondaire</option>
+          <option value="3ème secondaire">3ème secondaire</option>
+          <option value="4ème secondaire">4ème secondaire</option>
+          <option value="5ème secondaire">5ème secondaire</option>
+          <option value="6ème secondaire">6ème secondaire</option>
+        </select>
+      </div>
+      <div class="mfield"><label>Statut</label>
+        <select id="epStatut" style="width:100%;padding:.72rem .9rem;border:1.5px solid var(--border);border-radius:9px;font-size:.88rem;font-family:inherit;outline:none;">
+          <option value="nouveau">🆕 Nouveau</option>
+          <option value="en_cours">⏳ En cours</option>
+          <option value="accepte">✅ Accepté</option>
+          <option value="refuse">❌ Refusé</option>
+        </select>
+      </div>
+      <div class="mfield"><label>Nom du parent *</label><input type="text" id="epParent" placeholder="Nom complet"></div>
+      <div class="mfield"><label>Email parent *</label><input type="email" id="epEmail" placeholder="parent@email.com"></div>
+      <div class="mfield" style="grid-column:1/-1;"><label>Téléphone / WhatsApp</label><input type="tel" id="epTel" placeholder="+243 XXX XXX XXX"></div>
+      <div class="mfield" style="grid-column:1/-1;"><label>Message</label><textarea id="epMessage" rows="3"></textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('editPreinscModal')">Annuler</button>
+      <button class="btn-save" onclick="sauvegarderPreinsc()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="voirPreinscModal">
+  <div class="modal-box" style="max-width:520px;">
+    <h3>👁️ Détails de la pré-inscription</h3>
+    <div id="voirPreinscContent" style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem 1.5rem;font-size:.9rem;"></div>
+    <div class="modal-actions" style="margin-top:1.5rem;">
+      <button class="btn-cancel" onclick="closeModal('voirPreinscModal')">Fermer</button>
+      <button class="btn-save" onclick="ouvrirEditPreinsc(currentVoirId);closeModal('voirPreinscModal')">✏️ Modifier</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="voirMessageModal">
+  <div class="modal-box" style="max-width:520px;">
+    <h3>✉️ Message de contact</h3>
+    <div id="voirMessageContent" style="font-size:.9rem;"></div>
+    <div class="modal-actions" style="margin-top:1.5rem;">
+      <button class="btn-cancel" onclick="closeModal('voirMessageModal')">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastWrap"></div>
+
+<script>
+let adminToken=localStorage.getItem('ksi_admin_token')||'', currentUser=null, notifications=[];
+const usersMap = new Map();
+let usersState={page:1,totalPages:1}, msgsState={page:1,totalPages:1};
+let actusState={page:1,totalPages:1}, activityState={page:1,totalPages:1};
+const preinscMap = new Map();
+const msgsMap = new Map();
+let preinscState={page:1,totalPages:1};
+// charts déclarés dans renderCharts
+
+// ══ Utilitaires ══
+const esc = str => { const d=document.createElement('div'); d.textContent=str==null?'':String(str); return d.innerHTML; };
+const debounce=(fn,d=400)=>{ let t; return(...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),d); }; };
+const debouncedUsers=debounce(()=>loadUsers(1));
+const debouncedMessages=debounce(()=>loadMessages(1));
+
+async function apiFetch(url,opts={}) {
+  opts.headers=Object.assign({},opts.headers,{'Authorization':'Bearer '+adminToken});
+  const res=await fetch(url,opts);
+  if(res.status===401||res.status===403){
+    if(res.status===403){ showToast('⛔ Accès refusé pour votre rôle.','error'); throw new Error('forbidden'); }
+    logout(); alert('Session expirée.'); throw new Error('unauthorized');
+  }
+  return res;
+}
+
+function showToast(msg,type='') {
+  const w=document.getElementById('toastWrap');
+  const el=document.createElement('div');
+  el.className='toast'+(type?' '+type:'');
+  el.textContent=msg; w.appendChild(el);
+  setTimeout(()=>el.remove(),4500);
+}
+
+function buildPagination(container,state,loadFn) {
+  container.style.display='flex';
+  container.innerHTML=`<span>Page ${state.page} / ${state.totalPages} · ${state.total||''} résultats</span>
+  <div class="pag-btns">
+    <button ${state.page<=1?'disabled':''} onclick="${loadFn}(${state.page-1})">← Préc.</button>
+    <button ${state.page>=state.totalPages?'disabled':''} onclick="${loadFn}(${state.page+1})">Suiv. →</button>
+  </div>`;
+}
+
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+// ══ Connexion ══
 async function adminLogin() {
   const email=document.getElementById('adminEmailInput').value.trim();
-  const password=document.getElementById('adminPasswordInput').value;
-  const errBox=document.getElementById('adminLoginError');
-  errBox.style.display='none';
+  const pass=document.getElementById('adminPasswordInput').value;
+  const err=document.getElementById('adminLoginError');
+  err.style.display='none';
   try {
-    const res=await fetch('http://localhost:3000/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+    const res=await fetch('http://localhost:3000/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
     const data=await res.json();
-    if(!res.ok||data.user.role!=='admin'){errBox.textContent='❌ Accès refusé.';errBox.style.display='block';return;}
-    adminEmail=email;
-    document.getElementById('adminNameLabel').textContent=data.user.name;
+    if(!res.ok){ err.textContent='❌ '+(data.message||'Accès refusé.'); err.style.display='block'; return; }
+    if(!['admin','moderateur','editeur'].includes(data.user.role)){ err.textContent='❌ Ce compte n\'a pas accès au panel.'; err.style.display='block'; return; }
+    adminToken=data.token; currentUser=data.user;
+    localStorage.setItem('ksi_admin_token', data.token);
+    localStorage.setItem('ksi_admin_user', JSON.stringify(data.user));
+    document.getElementById('sbName').textContent=data.user.name;
+    document.getElementById('sbAvatar').textContent=data.user.name[0].toUpperCase();
+    document.getElementById('sbRole').textContent=libelleRole(data.user.role);
+    document.getElementById('roleBadgeTop').textContent=libelleRole(data.user.role);
+    document.getElementById('roleBadgeTop').className='badge-role '+data.user.role;
     document.getElementById('loginScreen').style.display='none';
     document.getElementById('dashboard').style.display='block';
-    loadStats(); loadUsers(); loadMessages();
-  } catch(err) {
-    errBox.textContent='⚠️ Serveur inaccessible. Lancez node server.js.';errBox.style.display='block';
-  }
+    appliquerRole(data.user.role);
+    connecterSSE();
+    loadStats();
+    if(data.user.role==='admin') loadUsers(1);
+    if(['admin','moderateur'].includes(data.user.role)){ loadMessages(1); loadPreinsc(1); }
+    if(['admin','editeur'].includes(data.user.role)){ loadActualites(1); loadEquipe(); loadTemoignages(); loadFaq(); contenuLoaded=false; }
+  } catch(e){ err.textContent='⚠️ Serveur inaccessible. Lancez node server.js.'; err.style.display='block'; }
 }
 
-function showPage(pageId, navEl) {
+function libelleRole(r){ return{admin:'👑 Administrateur',moderateur:'🛡️ Modérateur',editeur:'✏️ Éditeur',user:'Utilisateur'}[r]||r; }
+
+// ══ Restauration de session au chargement ══
+(function restaurerSession() {
+  const savedToken = localStorage.getItem('ksi_admin_token');
+  const savedUser  = localStorage.getItem('ksi_admin_user');
+  if (!savedToken || !savedUser) return;
+  try {
+    const user = JSON.parse(savedUser);
+    if (!['admin','moderateur','editeur'].includes(user.role)) return;
+    adminToken   = savedToken;
+    currentUser  = user;
+    document.getElementById('sbName').textContent     = user.name;
+    document.getElementById('sbAvatar').textContent   = user.name[0].toUpperCase();
+    document.getElementById('sbRole').textContent     = libelleRole(user.role);
+    document.getElementById('roleBadgeTop').textContent  = libelleRole(user.role);
+    document.getElementById('roleBadgeTop').className    = 'badge-role ' + user.role;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display   = 'block';
+    appliquerRole(user.role);
+    connecterSSE();
+    loadStats();
+    if(user.role==='admin') loadUsers(1);
+    if(['admin','moderateur'].includes(user.role)){ loadMessages(1); loadPreinsc(1); }
+    if(['admin','editeur'].includes(user.role)){ loadActualites(1); loadEquipe(); loadTemoignages(); loadFaq(); contenuLoaded=false; }
+  } catch(e) { localStorage.removeItem('ksi_admin_token'); localStorage.removeItem('ksi_admin_user'); }
+})();
+
+function appliquerRole(role) {
+  document.querySelectorAll('.nav-item[data-roles]').forEach(item=>{
+    item.style.display=item.dataset.roles.split(',').includes(role)?'flex':'none';
+  });
+  const first=document.querySelector('.nav-item[data-roles]:not([style*="none"])');
+  if(first) showPage(first.getAttribute('onclick').match(/'(\w+)'/)[1],first);
+}
+
+function showPage(id,nav) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById(pageId).classList.add('active');
-  if(navEl) navEl.classList.add('active');
-  const titles={pageStats:['Tableau de bord','Vue d\'ensemble du portail King\'s School'],pageUsers:['Utilisateurs','Gérer les comptes inscrits'],pageMessages:['Messages','Formulaire de contact reçus']};
-  const t=titles[pageId]||['',''];
-  document.getElementById('pageTitle').textContent=t[0];
-  document.getElementById('pageSubtitle').textContent=t[1];
+  document.getElementById(id).classList.add('active');
+  if(nav) nav.classList.add('active');
+  const titles={
+    pageStats:['Tableau de bord',"Vue d'ensemble · King's School International"],
+    pageUsers:['Utilisateurs','Gérer les comptes et les rôles'],
+    pageMessages:['Messages','Formulaires de contact reçus'],
+    pagePreinsc:['Pré-inscriptions','Demandes de pré-inscription des parents'],
+    pageActualites:['Actualités','Gérer le contenu publié sur le site'],
+    pageEquipe:["Équipe",'Gérer les membres visibles sur le site'],
+    pageTemoignages:['Témoignages','Avis de parents et anciens élèves'],
+    pageFaq:['FAQ','Questions fréquentes affichées sur le site'],
+    pageActivity:["Journal d'activité",'Historique des actions administrateur'],
+    pageGalerie:['🖼️ Galerie','Gérer les photos du slider fullscreen — ajout, modification, suppression'],
+    pageContenu:['Contenu du site','Modifier les textes, images et données de toutes les sections'],
+    pageConfigHero:['Hero / Accueil','Modifier le titre, texte et boutons de la page d\'accueil'],
+    pageConfigApropos:['À propos','Modifier le texte, image et citation de la section À propos'],
+    pageConfigChiffres:['Chiffres clés','Modifier les statistiques affichées'],
+    pageConfigValeurs:['Valeurs','Gérer les valeurs fondamentales'],
+    pageConfigProgrammes:['Programmes','Gérer les programmes scolaires'],
+    pageConfigGalerie:['Galerie','Gérer les photos de la galerie'],
+    pageConfigContact:['Contact','Modifier les coordonnées de l\'école']
+  };
+  const [t,s]=titles[id]||['—','—'];
+  document.getElementById('pageTitle').textContent=t;
+  document.getElementById('pageSubtitle').textContent=s;
 }
 
+function logout(){
+  adminToken=''; currentUser=null;
+  localStorage.removeItem('ksi_admin_token');
+  localStorage.removeItem('ksi_admin_user');
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+}
+
+// ══ Notifications SSE ══
+function connecterSSE() {
+  const es=new EventSource('http://localhost:3000/api/admin/notifications/stream',{headers:{Authorization:'Bearer '+adminToken}});
+  es.onmessage=e=>{ const d=JSON.parse(e.data); ajouterNotif(d); };
+}
+
+function ajouterNotif(data) {
+  notifications.unshift(data);
+  document.getElementById('notifDot').style.display='block';
+  const panel=document.getElementById('notifPanel');
+  const empty=document.getElementById('notifEmpty');
+  if(empty) empty.remove();
+  const el=document.createElement('div'); el.className='notif-item';
+  const msgs={nouveau_message:'✉️ Nouveau message de contact',nouvelle_preinscription:'📋 Nouvelle pré-inscription',nouvelle_actualite:'📰 Nouvelle actualité publiée'};
+  el.innerHTML=`<span class="ni">${msgs[data.type]?.split(' ')[0]||'📌'}</span><div><strong>${msgs[data.type]||data.type}</strong><div class="notif-time">${new Date().toLocaleTimeString('fr-FR')}</div></div>`;
+  panel.insertBefore(el,panel.firstElementChild.nextSibling);
+  showToast(msgs[data.type]||data.type,'success');
+  loadStats();
+}
+
+function toggleNotifPanel() {
+  const p=document.getElementById('notifPanel');
+  p.classList.toggle('open');
+  document.getElementById('notifDot').style.display='none';
+}
+document.addEventListener('click',e=>{ if(!e.target.closest('.notif-bell')&&!e.target.closest('#notifPanel')) document.getElementById('notifPanel').classList.remove('open'); });
+
+// ══ Stats + Charts ══
 async function loadStats() {
   try {
-    const res=await fetch('http://localhost:3000/api/admin/stats',{headers:{'x-admin-email':adminEmail}});
-    const data=await res.json();
-    document.getElementById('statTotal').textContent=data.total;
-    document.getElementById('statToday').textContent=data.today;
-    document.getElementById('statWeek').textContent=data.thisWeek;
-    document.getElementById('statMessages').textContent=data.messages;
-    document.getElementById('statUnread').textContent=data.unread;
-    // Badge non lus
-    const badge=document.getElementById('unreadBadge');
-    if(data.unread>0){badge.textContent=data.unread;badge.style.display='inline';}
-    else{badge.style.display='none';}
+    const res=await apiFetch('http://localhost:3000/api/admin/stats');
+    const d=await res.json();
+    document.getElementById('statTotal').textContent=d.total;
+    document.getElementById('statToday').textContent=d.today;
+    document.getElementById('statWeek').textContent=d.week;
+    document.getElementById('statMessages').textContent=d.messages;
+    document.getElementById('statUnread').textContent=d.unread;
+    document.getElementById('statActus').textContent=d.actus||0;
+    document.getElementById('statPreinsc').textContent=d.preinscriptions||0;
+    document.getElementById('statPreinscNew').textContent=d.preinscriptionsNouvelles||0;
+    if(d.unread>0){ document.getElementById('unreadBadge').textContent=d.unread; document.getElementById('unreadBadge').style.display='inline'; }
+    if(d.preinscriptionsNouvelles>0){ document.getElementById('preinscBadge').textContent=d.preinscriptionsNouvelles; document.getElementById('preinscBadge').style.display='inline'; }
+    renderCharts(d);
   } catch(e){}
 }
 
-async function loadUsers() {
-  document.getElementById('loadingMsg').style.display='block';
-  document.getElementById('usersTable').style.display='none';
-  document.getElementById('emptyState').style.display='none';
-  try {
-    const res=await fetch('http://localhost:3000/api/admin/users',{headers:{'x-admin-email':adminEmail}});
-    const data=await res.json();
-    allUsers=data.users; renderTable(allUsers);
-  } catch(e){document.getElementById('loadingMsg').textContent='⚠️ Erreur de chargement.';}
+// Stockage des charts pour destroy/recreate
+let chartMain=null, chartRoles=null;
+let sparkWeek=null, sparkTotal=null, sparkPreinsc=null, sparkMessages=null;
+let miniToday=null, miniActus=null, miniEquipe=null, miniLus=null;
+let currentPeriod=14, lastStatsData=null;
+
+function setPeriod(btn,days) {
+  document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentPeriod=days;
+  if(lastStatsData) renderMainChart(lastStatsData);
 }
 
-function renderTable(users) {
-  document.getElementById('loadingMsg').style.display='none';
-  const tbody=document.getElementById('usersBody');
-  tbody.innerHTML='';
-  if(users.length===0){document.getElementById('emptyState').style.display='block';return;}
-  document.getElementById('usersTable').style.display='table';
-  users.forEach((u,i)=>{
-    const date=new Date(u.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    const badge=u.role==='admin'?'<span class="role-badge role-admin">👑 Admin</span>':'<span class="role-badge role-user">Utilisateur</span>';
-    const del=u.role!=='admin'?`<button class="btn-delete" onclick="deleteUser(${u.id},'${u.name}')">Supprimer</button>`:'—';
-    tbody.innerHTML+=`<tr><td style="color:#94a3b8">${i+1}</td><td><strong>${u.name}</strong></td><td style="color:#2563eb">${u.email}</td><td>${badge}</td><td style="color:#64748b">${date}</td><td>${del}</td></tr>`;
+function sparkline(canvasId, vals, color, fill=true) {
+  const el=document.getElementById(canvasId);
+  if(!el) return null;
+  const existing=Chart.getChart(el);
+  if(existing) existing.destroy();
+  return new Chart(el,{
+    type:'line',
+    data:{
+      labels:vals.map((_,i)=>i),
+      datasets:[{data:vals,borderColor:color,backgroundColor:fill?color.replace(')',',0.15)').replace('rgb','rgba'):'transparent',
+        borderWidth:2,fill:fill,tension:.4,pointRadius:0}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},
+      scales:{x:{display:false},y:{display:false,beginAtZero:true}},animation:{duration:600}}
   });
 }
 
-function filterTable() {
-  const q=document.getElementById('searchInput').value.toLowerCase();
-  renderTable(allUsers.filter(u=>u.name.toLowerCase().includes(q)||u.email.toLowerCase().includes(q)));
+function barchart(canvasId, vals, color) {
+  const el=document.getElementById(canvasId);
+  if(!el) return null;
+  const existing=Chart.getChart(el);
+  if(existing) existing.destroy();
+  return new Chart(el,{
+    type:'bar',
+    data:{labels:vals.map((_,i)=>i),datasets:[{data:vals,backgroundColor:color,borderRadius:3,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},
+      scales:{x:{display:false},y:{display:false,beginAtZero:true}},animation:{duration:600}}
+  });
 }
 
-async function deleteUser(id,name) {
-  if(!confirm(`Supprimer "${name}" ? Action irréversible.`)) return;
-  await fetch(`http://localhost:3000/api/admin/users/${id}`,{method:'DELETE',headers:{'x-admin-email':adminEmail}});
-  loadUsers(); loadStats();
+function renderMainChart(d) {
+  const el=document.getElementById('chartMain');
+  if(!el) return;
+  const existing=Chart.getChart(el);
+  if(existing) existing.destroy();
+
+  // Préparer données selon période
+  const insc=d.inscriptions14||[];
+  const msgs=d.msgParMois||[];
+
+  // Générer labels sur la période
+  const labels=[];
+  const vals=[];
+  for(let i=currentPeriod-1;i>=0;i--) {
+    const d2=new Date(); d2.setDate(d2.getDate()-i);
+    const k=d2.toISOString().slice(0,10);
+    labels.push(d2.toLocaleDateString('fr-FR',{day:'2-digit',month:'short'}));
+    const found=insc.find(r=>r.jour===k);
+    vals.push(found?found.nb:0);
+  }
+
+  // Ligne messages (mensuelle → on flat sur les jours)
+  const msgTotal=d.messages||0;
+  const msgVals=vals.map(()=>Math.round(msgTotal/Math.max(currentPeriod,1)));
+
+  chartMain=new Chart(el,{
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {label:'Inscriptions',data:vals,borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,.08)',
+          fill:true,tension:.45,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:'#2563eb',borderWidth:2.5},
+        {label:'Messages/j',data:msgVals,borderColor:'#d4af37',backgroundColor:'rgba(212,175,55,.05)',
+          fill:true,tension:.45,pointRadius:0,pointHoverRadius:4,borderWidth:1.8,borderDash:[4,3]}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{intersect:false,mode:'index'},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'rgba(15,31,74,.92)',titleColor:'#fff',bodyColor:'rgba(255,255,255,.8)',
+          padding:10,cornerRadius:8,
+          callbacks:{label:ctx=>' '+ctx.dataset.label+': '+ctx.parsed.y}
+        }
+      },
+      scales:{
+        x:{grid:{color:'#f1f5f9',drawBorder:false},ticks:{color:'#94a3b8',font:{size:11}}},
+        y:{beginAtZero:true,grid:{color:'#f1f5f9',drawBorder:false},ticks:{color:'#94a3b8',stepSize:1,font:{size:11}}}
+      }
+    }
+  });
 }
 
-async function loadMessages() {
-  document.getElementById('loadingMsgMsg').style.display='block';
-  document.getElementById('messagesTable').style.display='none';
-  document.getElementById('emptyMsgState').style.display='none';
-  try {
-    const res=await fetch('http://localhost:3000/api/admin/messages',{headers:{'x-admin-email':adminEmail}});
-    const data=await res.json();
-    allMessages=data.messages; renderMessages(allMessages);
-  } catch(e){document.getElementById('loadingMsgMsg').textContent='⚠️ Erreur.';}
-}
+function renderCharts(d) {
+  lastStatsData=d;
 
-function renderMessages(msgs) {
-  document.getElementById('loadingMsgMsg').style.display='none';
-  const tbody=document.getElementById('messagesBody');
-  tbody.innerHTML='';
-  if(msgs.length===0){document.getElementById('emptyMsgState').style.display='block';return;}
-  document.getElementById('messagesTable').style.display='table';
-  msgs.forEach((m,i)=>{
-    const date=new Date(m.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    const dot=m.lu===0?'<span class="unread-dot"></span>':'';
-    const readBtn=m.lu===0?`<button class="btn-read" onclick="markRead(${m.id},this)">✓ Lu</button>`:'';
-    const tr=document.createElement('tr');
-    if(m.lu===0) tr.className='unread-row';
-    tr.innerHTML=`
-      <td style="color:#94a3b8">${i+1}</td>
-      <td>${dot}<strong>${m.name}</strong></td>
-      <td style="color:#2563eb">${m.email}</td>
-      <td>${m.subject}</td>
-      <td style="color:#64748b">${date}</td>
-      <td>${readBtn}<button class="btn-delete" onclick="deleteMessage(${m.id})">Supprimer</button></td>
-    `;
-    // Afficher le message au clic sur la ligne
-    tr.style.cursor='pointer';
-    tr.addEventListener('click',(e)=>{
-      if(e.target.tagName==='BUTTON') return;
-      const existing=tr.nextElementSibling;
-      if(existing&&existing.classList.contains('msg-detail-row')){existing.remove();return;}
-      const detailRow=document.createElement('tr');
-      detailRow.className='msg-detail-row';
-      detailRow.innerHTML=`<td colspan="6"><div class="msg-preview">${m.message}</div></td>`;
-      tr.after(detailRow);
+  // Mise à jour champs supplémentaires
+  document.getElementById('statTotal2').textContent=d.total;
+  document.getElementById('statEquipe').textContent=d.equipe||'—';
+  const lu=d.messages-(d.unread||0);
+  document.getElementById('statLus').textContent=lu;
+  document.getElementById('statTotalMsg2').textContent=d.messages;
+  document.getElementById('mccTrend').textContent='↑ +'+d.week+' cette semaine';
+
+  // Sparklines stat-cards (données simulées progressives)
+  const sparkData=(max,steps=8)=>Array.from({length:steps},(_,i)=>Math.round(max*(0.4+0.6*i/steps)+Math.random()*2));
+  sparkline('sparkWeek', sparkData(d.week||1), 'rgba(255,255,255,0.9)');
+  sparkline('sparkTotal', sparkData(d.total||10), 'rgba(255,255,255,0.9)');
+  barchart('sparkPreinsc', sparkData(d.preinscriptions||1), 'rgba(255,255,255,0.7)');
+  barchart('sparkMessages', sparkData(d.messages||1), 'rgba(255,255,255,0.7)');
+
+  // Mini widgets bars
+  const flatVals=(n,steps=10)=>Array.from({length:steps},()=>Math.max(0,Math.round(Math.random()*n)));
+  barchart('miniToday', flatVals(3), '#2563eb');
+  barchart('miniActus', flatVals(d.actus||1), '#d4af37');
+  barchart('miniEquipe', flatVals(d.equipe||1), '#059669');
+  barchart('miniLus', flatVals(lu), '#7c3aed');
+
+  // Grand graphique
+  renderMainChart(d);
+
+  // Donut rôles
+  const rolesColors={admin:'#d4af37',moderateur:'#7c3aed',editeur:'#059669',user:'#2563eb'};
+  const rolesLabels={admin:'Admin',moderateur:'Modérateur',editeur:'Éditeur',user:'Utilisateurs'};
+  const elRoles=document.getElementById('chartRoles');
+  const exRoles=Chart.getChart(elRoles);
+  if(exRoles) exRoles.destroy();
+  new Chart(elRoles,{
+    type:'doughnut',
+    data:{
+      labels:d.roles.map(r=>rolesLabels[r.role]||r.role),
+      datasets:[{data:d.roles.map(r=>r.nb),backgroundColor:d.roles.map(r=>rolesColors[r.role]||'#94a3b8'),borderWidth:3,borderColor:'#fff',hoverBorderColor:'#fff'}]
+    },
+    options:{responsive:true,maintainAspectRatio:true,cutout:'68%',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.label+': '+ctx.parsed}}}}
+  });
+
+  // Légende donut
+  const leg=document.getElementById('rolesLegend');
+  if(leg) {
+    leg.innerHTML='';
+    d.roles.forEach(r=>{
+      const label=rolesLabels[r.role]||r.role;
+      const color=rolesColors[r.role]||'#94a3b8';
+      leg.innerHTML+=`<div class="donut-leg-item"><div class="donut-leg-left"><div class="donut-leg-dot" style="background:${color}"></div><span class="donut-leg-label">${label}</span></div><span class="donut-leg-val">${r.nb}</span></div>`;
     });
-    tbody.appendChild(tr);
-  });
+  }
+
+  // Dernières inscriptions
+  loadRecentUsers();
 }
 
-async function markRead(id,btn) {
-  await fetch(`http://localhost:3000/api/admin/messages/${id}/lu`,{method:'PUT',headers:{'x-admin-email':adminEmail}});
-  loadMessages(); loadStats();
+async function loadRecentUsers() {
+  try {
+    const res=await apiFetch('http://localhost:3000/api/admin/users?page=1&limit=5');
+    const data=await res.json();
+    const list=document.getElementById('recentsList');
+    if(!list) return;
+    if(!data.users||!data.users.length){list.innerHTML='<div class="rc-item"><span style="color:var(--muted);font-size:.83rem;">Aucun utilisateur.</span></div>';return;}
+    const colors=['#2563eb','#059669','#7c3aed','#ea580c','#d4af37'];
+    list.innerHTML=data.users.map((u,i)=>{
+      const date=new Date(u.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'short'});
+      const initials=u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      return `<div class="rc-item">
+        <div class="rc-avatar" style="background:${colors[i%colors.length]}1a;color:${colors[i%colors.length]};font-weight:700;font-size:.82rem;">${initials}</div>
+        <div class="rc-info"><div class="rc-name">${u.name}</div><div class="rc-sub">${u.email}</div></div>
+        <div class="rc-right"><div class="rc-badge" style="background:${colors[i%colors.length]}1a;color:${colors[i%colors.length]};">${u.role}</div><div class="rc-date">${date}</div></div>
+      </div>`;
+    }).join('');
+  } catch(e){}
 }
 
-async function deleteMessage(id) {
+// ══ Utilisateurs ══
+async function loadUsers(page=1) {
+  document.getElementById('loadingUsers').style.display='block';
+  document.getElementById('usersTable').style.display='none';
+  document.getElementById('emptyUsers').style.display='none';
+  document.getElementById('usersPagination').style.display='none';
+  const search=document.getElementById('usersSearch').value;
+  const role=document.getElementById('usersRoleFilter').value;
+  try {
+    const res=await apiFetch(`http://localhost:3000/api/admin/users?page=${page}&limit=20&search=${encodeURIComponent(search)}&role=${role}`);
+    const data=await res.json();
+    usersState={page:data.page,totalPages:data.totalPages,total:data.total};
+    document.getElementById('loadingUsers').style.display='none';
+    if(data.users.length===0){ document.getElementById('emptyUsers').style.display='block'; return; }
+    document.getElementById('usersTable').style.display='table';
+    const tbody=document.getElementById('usersBody'); tbody.innerHTML='';
+    usersMap.clear();
+    data.users.forEach(u => usersMap.set(u.id, u));
+    data.users.forEach(u=>{
+      const date=new Date(u.created_at).toLocaleDateString('fr-FR');
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td style="color:var(--muted);font-size:.75rem;">#${u.id}</td>
+        <td style="font-weight:600;">${esc(u.name)}</td>
+        <td style="color:var(--muted);font-size:.82rem;">${esc(u.email)}</td>
+        <td>
+          ${u.role==='admin'?`<span class="badge badge-admin">👑 Admin</span>`:`
+          <select class="role-select" onchange="changerRole(${u.id},this.value)">
+            <option value="user" ${u.role==='user'?'selected':''}>Utilisateur</option>
+            <option value="moderateur" ${u.role==='moderateur'?'selected':''}>Modérateur</option>
+            <option value="editeur" ${u.role==='editeur'?'selected':''}>Éditeur</option>
+            <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
+          </select>`}
+        </td>
+        <td style="color:var(--muted);font-size:.8rem;">${date}</td>
+        <td style="white-space:nowrap;">
+          <button class="btn-sm btn-purple" onclick="ouvrirEditUser(${u.id})" title="Modifier">✏️</button>
+          ${u.role!=='admin'?`<button class="btn-sm btn-danger" onclick="supprimerUser(${u.id},'${esc(u.name).replace(/'/g,"\\'")}')">🗑️</button>`:''}
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+    buildPagination(document.getElementById('usersPagination'),usersState,'loadUsers');
+  } catch(e){ document.getElementById('loadingUsers').textContent='⚠️ Erreur de chargement.'; }
+}
+
+async function changerRole(id,role) {
+  try {
+    const res=await apiFetch(`http://localhost:3000/api/admin/users/${id}/role`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({role})});
+    if(res.ok) showToast('✅ Rôle mis à jour.','success'); else showToast('❌ Erreur.','error');
+    loadStats();
+  } catch(e){}
+}
+
+async function supprimerUser(id,nom) {
+  if(!confirm(`Supprimer "${nom}" ?`)) return;
+  await apiFetch(`http://localhost:3000/api/admin/users/${id}`,{method:'DELETE'});
+  showToast('🗑️ Utilisateur supprimé.'); loadUsers(usersState.page); loadStats();
+}
+
+function ouvrirEditUser(id) {
+  const u = usersMap.get(id);
+  if(!u) return;
+  document.getElementById('editUserModal').classList.add('open');
+  document.getElementById('editUserId').value = u.id;
+  document.getElementById('editUserName').value = u.name;
+  document.getElementById('editUserEmail').value = u.email;
+  document.getElementById('editUserPassword').value = '';
+}
+
+async function sauvegarderUser() {
+  const id = document.getElementById('editUserId').value;
+  const name = document.getElementById('editUserName').value.trim();
+  const email = document.getElementById('editUserEmail').value.trim();
+  const password = document.getElementById('editUserPassword').value;
+  if(!name || !email) { showToast('⚠️ Nom et email requis.','error'); return; }
+  try {
+    const res = await apiFetch(`http://localhost:3000/api/admin/users/${id}`, {
+      method:'PUT', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({name, email, password})
+    });
+    if(res.ok){ showToast('✅ Utilisateur mis à jour.','success'); closeModal('editUserModal'); loadUsers(usersState.page); }
+    else { const d=await res.json(); showToast('❌ '+d.message,'error'); }
+  } catch(e){ showToast('❌ Erreur.','error'); }
+}
+
+// ══ Messages ══
+async function loadMessages(page=1) {
+  document.getElementById('loadingMessages').style.display='block';
+  document.getElementById('msgsTable').style.display='none';
+  document.getElementById('emptyMessages').style.display='none';
+  document.getElementById('msgsPagination').style.display='none';
+  const search=document.getElementById('msgsSearch').value;
+  const lu=document.getElementById('msgsLuFilter').value;
+  try {
+    const res=await apiFetch(`http://localhost:3000/api/admin/messages?page=${page}&limit=20&search=${encodeURIComponent(search)}&lu=${lu}`);
+    const data=await res.json();
+    msgsState={page:data.page,totalPages:data.totalPages,total:data.total};
+    document.getElementById('loadingMessages').style.display='none';
+    if(data.messages.length===0){ document.getElementById('emptyMessages').style.display='block'; return; }
+    document.getElementById('msgsTable').style.display='table';
+    const tbody=document.getElementById('msgsBody'); tbody.innerHTML='';
+    msgsMap.clear();
+    data.messages.forEach(m=>{ msgsMap.set(m.id, m); });
+    data.messages.forEach(m=>{
+      const date=new Date(m.created_at).toLocaleDateString('fr-FR');
+      const tr=document.createElement('tr');
+      if(!m.lu) tr.className='unread-row';
+      tr.innerHTML=`
+        <td>
+          ${!m.lu?'<span class="dot-unread"></span>':''}
+          <strong>${esc(m.name)}</strong><br>
+          <span style="font-size:.74rem;color:var(--muted);">${esc(m.email)}</span>
+        </td>
+        <td style="font-size:.82rem;color:var(--muted);">${esc(m.telephone||'—')}</td>
+        <td>
+          <div style="font-weight:${m.lu?'400':'700'};font-size:.83rem;">${esc(m.message).slice(0,80)}${m.message.length>80?'…':''}</div>
+        </td>
+        <td style="font-size:.78rem;color:var(--muted);white-space:nowrap;">${date}</td>
+        <td>${m.lu?'<span class="badge badge-accepte">✓ Lu</span>':'<span class="badge badge-nouveau">● Non lu</span>'}</td>
+        <td style="white-space:nowrap;">
+          <button class="btn-sm btn-secondary" onclick="voirMessage(msgsMap.get(${m.id}))" title="Voir">👁️</button>
+          ${!m.lu?`<button class="btn-sm btn-success" onclick="marquerLu(${m.id})" title="Marquer lu">✓</button>`:''}
+          <button class="btn-sm btn-danger" onclick="supprimerMessage(${m.id})">🗑️</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+    buildPagination(document.getElementById('msgsPagination'),msgsState,'loadMessages');
+  } catch(e){ document.getElementById('loadingMessages').textContent='⚠️ Erreur.'; }
+}
+
+async function marquerLu(id) {
+  await apiFetch(`http://localhost:3000/api/admin/messages/${id}/lu`,{method:'PUT'});
+  showToast('✅ Marqué comme lu.','success'); loadMessages(msgsState.page); loadStats();
+}
+async function supprimerMessage(id) {
   if(!confirm('Supprimer ce message ?')) return;
-  await fetch(`http://localhost:3000/api/admin/messages/${id}`,{method:'DELETE',headers:{'x-admin-email':adminEmail}});
-  loadMessages(); loadStats();
+  await apiFetch(`http://localhost:3000/api/admin/messages/${id}`,{method:'DELETE'});
+  showToast('🗑️ Message supprimé.'); loadMessages(msgsState.page); loadStats();
 }
 
-function logout() {
-  adminEmail='';
-  document.getElementById('dashboard').style.display='none';
-  document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('adminPasswordInput').value='';
+// ══ Pré-inscriptions ══
+async function loadPreinsc(page=1) {
+  document.getElementById('loadingPreinsc').style.display='block';
+  document.getElementById('preinscTable').style.display='none';
+  document.getElementById('emptyPreinsc').style.display='none';
+  document.getElementById('preinscPagination').style.display='none';
+  const statut=document.getElementById('preinscStatut').value;
+  try {
+    const res=await apiFetch(`http://localhost:3000/api/admin/preinscriptions?page=${page}&limit=20&statut=${statut}`);
+    const data=await res.json();
+    preinscState={page:data.page,totalPages:data.totalPages,total:data.total};
+    document.getElementById('loadingPreinsc').style.display='none';
+    if(data.preinscriptions.length===0){ document.getElementById('emptyPreinsc').style.display='block'; return; }
+    document.getElementById('preinscTable').style.display='table';
+    const tbody=document.getElementById('preinscBody'); tbody.innerHTML='';
+    preinscMap.clear();
+    data.preinscriptions.forEach(p => preinscMap.set(p.id, p));
+    data.preinscriptions.forEach(p=>{
+      const date=new Date(p.created_at).toLocaleDateString('fr-FR');
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td style="font-weight:600;">${esc(p.nom_enfant)}</td>
+        <td>${p.age||'—'}</td>
+        <td>${esc(p.classe_visee)}</td>
+        <td>${esc(p.nom_parent)}</td>
+        <td style="font-size:.78rem;color:var(--muted);">${esc(p.email_parent)}</td>
+        <td style="font-size:.78rem;color:var(--muted);">${esc(p.telephone||'—')}</td>
+        <td style="font-size:.78rem;color:var(--muted);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(p.message||'')}">${esc(p.message||'—').slice(0,40)}${(p.message||'').length>40?'…':''}</td>
+        <td>
+          <select class="role-select" onchange="majStatutPreinsc(${p.id},this.value)">
+            <option value="nouveau" ${p.statut==='nouveau'?'selected':''}>🆕 Nouveau</option>
+            <option value="en_cours" ${p.statut==='en_cours'?'selected':''}>⏳ En cours</option>
+            <option value="accepte" ${p.statut==='accepte'?'selected':''}>✅ Accepté</option>
+            <option value="refuse" ${p.statut==='refuse'?'selected':''}>❌ Refusé</option>
+          </select>
+        </td>
+        <td style="font-size:.78rem;color:var(--muted);">${date}</td>
+        <td style="white-space:nowrap;">
+          <button class="btn-sm btn-secondary" onclick="voirPreinsc(${p.id})" title="Voir">👁️</button>
+          <button class="btn-sm btn-purple" onclick="ouvrirEditPreinsc(${p.id})" title="Modifier">✏️</button>
+          <button class="btn-sm btn-danger" onclick="supprimerPreinsc(${p.id})">🗑️</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+    buildPagination(document.getElementById('preinscPagination'),preinscState,'loadPreinsc');
+  } catch(e){ document.getElementById('loadingPreinsc').textContent='⚠️ Erreur.'; }
 }
 
-document.addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none') adminLogin();
-});
+async function majStatutPreinsc(id,statut) {
+  try {
+    const res=await apiFetch(`http://localhost:3000/api/admin/preinscriptions/${id}/statut`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({statut})});
+    if(res.ok) showToast('✅ Statut mis à jour.','success');
+    loadStats();
+  } catch(e){}
+}
+async function supprimerPreinsc(id) {
+  if(!confirm('Supprimer cette pré-inscription ?')) return;
+  await apiFetch(`http://localhost:3000/api/admin/preinscriptions/${id}`,{method:'DELETE'});
+  showToast('🗑️ Supprimée.'); loadPreinsc(preinscState.page);
+}
+
+let currentVoirId = null;
+
+function voirPreinsc(id) {
+  const p = preinscMap.get(id);
+  if(!p) return;
+  currentVoirId = id;
+  const statuts = {nouveau:'🆕 Nouveau', en_cours:'⏳ En cours', accepte:'✅ Accepté', refuse:'❌ Refusé'};
+  const date = new Date(p.created_at).toLocaleDateString('fr-FR');
+  document.getElementById('voirPreinscContent').innerHTML = `
+    <div><div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;">Nom de l'enfant</div><div style="font-weight:600;">${esc(p.nom_enfant)}</div></div>
+    <div><div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;">Âge</div><div>${p.age || '—'}</div></div>
+    <div><div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;">Classe visée</div><div>${esc(p.classe_visee)}</div></div>
+    <div><div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;">Statut</div><div>${statuts[p.statut]||p.statut}</div></div>
+    <div><div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;">Nom du parent</div><div>${esc(p.nom_parent)}</div></div>
+    <div><div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;">Email</div><div style="word-break:break-all;">${esc(p.email_parent)}</div></div>
+    <div style="grid-column:1/-1;"><div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;">Téléphone</div><div>${esc(p.telephone||'—')}</div></div>
+    <div style="grid-column:1/-1;"><div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;">Message</div><div style="background:var(--bg);padding:.8rem;border-radius:8px;border:1px solid var(--border);white-space:pre-wrap;line-height:1.6;">${esc(p.message||'Aucun message.')}</div></div>
+    <div style="grid-column:1/-1;"><div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;">Date</div><div>${date}</div></div>
+  `;
+  document.getElementById('voirPreinscModal').classList.add('open');
+}
+
+function voirMessage(m) {
+  const date = new Date(m.created_at).toLocaleDateString('fr-FR');
+  document.getElementById('voirMessageContent').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem 1.5rem;">
+      <div><div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;">Nom</div><div style="font-weight:600;">${esc(m.name)}</div></div>
+      <div><div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;">Date</div><div>${date}</div></div>
+      <div style="grid-column:1/-1;"><div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;">Email</div><div style="word-break:break-all;">${esc(m.email)}</div></div>
+      <div style="grid-column:1/-1;"><div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;">Téléphone</div><div>${esc(m.telephone||'—')}</div></div>
+      <div style="grid-column:1/-1;"><div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;">Message</div><div style="background:var(--bg);padding:.8rem;border-radius:8px;border:1px solid var(--border);white-space:pre-wrap;line-height:1.6;">${esc(m.message)}</div></div>
+      <div style="grid-column:1/-1;"><div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;">Statut</div><div>${m.lu?'<span class="badge badge-accepte">✓ Lu</span>':'<span class="badge badge-nouveau">● Non lu</span>'}</div></div>
+    </div>
+  `;
+  document.getElementById('voirMessageModal').classList.add('open');
+}
+
+function ouvrirEditPreinsc(id) {
+  const p = preinscMap.get(id);
+  if(!p) return;
+  document.getElementById('editPreinscModal').classList.add('open');
+  document.getElementById('epId').value = p.id;
+  document.getElementById('epEnfant').value = p.nom_enfant;
+  document.getElementById('epAge').value = p.age||'';
+  document.getElementById('epClasse').value = p.classe_visee;
+  document.getElementById('epParent').value = p.nom_parent;
+  document.getElementById('epEmail').value = p.email_parent;
+  document.getElementById('epTel').value = p.telephone||'';
+  document.getElementById('epMessage').value = p.message||'';
+  document.getElementById('epStatut').value = p.statut||'nouveau';
+}
+
+async function sauvegarderPreinsc() {
+  const id = document.getElementById('epId').value;
+  const body = {
+    nom_enfant: document.getElementById('epEnfant').value.trim(),
+    age: document.getElementById('epAge').value,
+    classe_visee: document.getElementById('epClasse').value,
+    nom_parent: document.getElementById('epParent').value.trim(),
+    email_parent: document.getElementById('epEmail').value.trim(),
+    telephone: document.getElementById('epTel').value.trim(),
+    message: document.getElementById('epMessage').value.trim(),
+    statut: document.getElementById('epStatut').value
+  };
+  if(!body.nom_enfant||!body.nom_parent||!body.email_parent) { showToast('⚠️ Champs requis manquants.','error'); return; }
+  try {
+    const res = await apiFetch(`http://localhost:3000/api/admin/preinscriptions/${id}`, {
+      method:'PUT', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+    if(res.ok){ showToast('✅ Mis à jour.','success'); closeModal('editPreinscModal'); loadPreinsc(preinscState.page); }
+    else { const d=await res.json(); showToast('❌ '+d.message,'error'); }
+  } catch(e){ showToast('❌ Erreur.','error'); }
+}
+
+// ══ Actualités ══
+async function loadActualites(page=1) {
+  document.getElementById('loadingActus').style.display='block';
+  document.getElementById('actusGrid').innerHTML='';
+  document.getElementById('emptyActus').style.display='none';
+  document.getElementById('actusPagination').style.display='none';
+  try {
+    const res=await apiFetch(`http://localhost:3000/api/admin/actualites?page=${page}&limit=9`);
+    const data=await res.json();
+    actusState={page:data.page,totalPages:data.totalPages,total:data.total};
+    document.getElementById('loadingActus').style.display='none';
+    if(data.actualites.length===0){ document.getElementById('emptyActus').style.display='block'; return; }
+    const grid=document.getElementById('actusGrid');
+    data.actualites.forEach(a=>{
+      const date=new Date(a.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'});
+      const card=document.createElement('div'); card.className='content-card';
+      card.innerHTML=`
+        ${a.image?`<img class="content-card-img" src="${esc(a.image)}" alt="" onerror="this.parentNode.querySelector('.content-card-img-placeholder')&&(this.style.display='none')">`:`<div class="content-card-img-placeholder">📰</div>`}
+        <div class="content-card-body">
+          <h4>${esc(a.titre)}</h4>
+          <div class="content-card-meta">Par ${esc(a.auteur)} · ${date}</div>
+          <p>${esc(a.contenu).slice(0,110)}${a.contenu.length>110?'…':''}</p>
+          <div class="content-card-actions">
+            <button class="btn-sm btn-purple" onclick='openActuModal(${JSON.stringify(a)})'>✏️ Modifier</button>
+            <button class="btn-sm btn-danger" onclick="deleteActualite(${a.id})">🗑️</button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+    buildPagination(document.getElementById('actusPagination'),actusState,'loadActualites');
+  } catch(e){ document.getElementById('loadingActus').textContent='⚠️ Erreur.'; }
+}
+
+function openActuModal(actu=null) {
+  document.getElementById('actuModal').classList.add('open');
+  document.getElementById('actuModalTitle').textContent=actu?'✏️ Modifier l\'actualité':'📰 Nouvelle actualité';
+  document.getElementById('actuId').value=actu?actu.id:'';
+  document.getElementById('actuTitre').value=actu?actu.titre:'';
+  document.getElementById('actuImage').value=actu?actu.image:'';
+  document.getElementById('actuContenu').value=actu?actu.contenu:'';
+}
+
+async function saveActualite() {
+  const id=document.getElementById('actuId').value;
+  const titre=document.getElementById('actuTitre').value.trim();
+  const image=document.getElementById('actuImage').value.trim();
+  const contenu=document.getElementById('actuContenu').value.trim();
+  if(!titre||!contenu){ showToast('⚠️ Titre et contenu requis.','error'); return; }
+  const url=id?`http://localhost:3000/api/admin/actualites/${id}`:'http://localhost:3000/api/admin/actualites';
+  try {
+    const res=await apiFetch(url,{method:id?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titre,image,contenu})});
+    if(res.ok){ showToast(id?'✅ Mise à jour.':'✅ Publiée.','success'); closeModal('actuModal'); loadActualites(actusState.page); loadStats(); }
+    else { const d=await res.json(); showToast('❌ '+d.message,'error'); }
+  } catch(e){}
+}
+
+async function deleteActualite(id) {
+  if(!confirm('Supprimer cette actualité ?')) return;
+  await apiFetch(`http://localhost:3000/api/admin/actualites/${id}`,{method:'DELETE'});
+  showToast('🗑️ Supprimée.'); loadActualites(actusState.page); loadStats();
+}
+
+// ══ Équipe ══
+async function loadEquipe() {
+  document.getElementById('loadingEquipe').style.display='block';
+  document.getElementById('equipeGrid').innerHTML='';
+  document.getElementById('emptyEquipe').style.display='none';
+  try {
+    const res=await apiFetch('http://localhost:3000/api/admin/equipe');
+    const data=await res.json();
+    document.getElementById('loadingEquipe').style.display='none';
+    if(!data.length){ document.getElementById('emptyEquipe').style.display='block'; return; }
+    const grid=document.getElementById('equipeGrid');
+    data.forEach(m=>{
+      const card=document.createElement('div'); card.className='content-card';
+      card.innerHTML=`
+        ${m.photo?`<img class="content-card-img" src="${esc(m.photo)}" alt="" style="object-position:top;">`:`<div class="content-card-img-placeholder">👤</div>`}
+        <div class="content-card-body">
+          <h4>${esc(m.nom)}</h4>
+          <div class="content-card-meta" style="color:var(--blue);font-weight:600;">${esc(m.poste)}</div>
+          <p>${esc(m.bio).slice(0,100)}${m.bio.length>100?'…':''}</p>
+          <div class="content-card-actions">
+            <button class="btn-sm btn-purple" onclick='openEquipeModal(${JSON.stringify(m)})'>✏️</button>
+            <button class="btn-sm btn-danger" onclick="deleteMembre(${m.id})">🗑️</button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  } catch(e){ document.getElementById('loadingEquipe').textContent='⚠️ Erreur.'; }
+}
+
+function openEquipeModal(m=null) {
+  document.getElementById('equipeModal').classList.add('open');
+  document.getElementById('equipeModalTitle').textContent=m?'✏️ Modifier le membre':'👨‍🏫 Nouveau membre';
+  document.getElementById('equipeId').value=m?m.id:'';
+  document.getElementById('equipeNom').value=m?m.nom:'';
+  document.getElementById('equipePoste').value=m?m.poste:'';
+  document.getElementById('equipePhoto').value=m?m.photo:'';
+  document.getElementById('equipeBio').value=m?m.bio:'';
+  document.getElementById('equipeOrdre').value=m?m.ordre:0;
+}
+
+async function saveMembre() {
+  const id=document.getElementById('equipeId').value;
+  const body={nom:document.getElementById('equipeNom').value.trim(),poste:document.getElementById('equipePoste').value.trim(),photo:document.getElementById('equipePhoto').value.trim(),bio:document.getElementById('equipeBio').value.trim(),ordre:document.getElementById('equipeOrdre').value};
+  if(!body.nom||!body.poste){ showToast('⚠️ Nom et poste requis.','error'); return; }
+  const url=id?`http://localhost:3000/api/admin/equipe/${id}`:'http://localhost:3000/api/admin/equipe';
+  try {
+    const res=await apiFetch(url,{method:id?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(res.ok){ showToast('✅ Enregistré.','success'); closeModal('equipeModal'); loadEquipe(); }
+    else { const d=await res.json(); showToast('❌ '+d.message,'error'); }
+  } catch(e){}
+}
+
+async function deleteMembre(id) {
+  if(!confirm('Supprimer ce membre ?')) return;
+  await apiFetch(`http://localhost:3000/api/admin/equipe/${id}`,{method:'DELETE'});
+  showToast('🗑️ Supprimé.'); loadEquipe();
+}
+
+// ══ Témoignages ══
+const temoMap = new Map(); // stocke les données pour éviter le bug JSON inline
+
+async function loadTemoignages() {
+  document.getElementById('loadingTemo').style.display='block';
+  document.getElementById('temoGrid').innerHTML='';
+  document.getElementById('emptyTemo').style.display='none';
+  try {
+    const res=await apiFetch('http://localhost:3000/api/admin/temoignages');
+    const data=await res.json();
+    document.getElementById('loadingTemo').style.display='none';
+    if(!data.length){ document.getElementById('emptyTemo').style.display='block'; return; }
+    temoMap.clear();
+    data.forEach(t => temoMap.set(t.id, t));
+    const grid=document.getElementById('temoGrid');
+    data.forEach(t=>{
+      const stars='⭐'.repeat(t.note||5);
+      const card=document.createElement('div'); card.className='content-card';
+      card.innerHTML=`
+        <div class="content-card-body">
+          <div style="font-size:1.2rem;margin-bottom:.5rem;">${stars}</div>
+          <p style="font-style:italic;color:var(--text);">"${esc(t.texte).slice(0,140)}${t.texte.length>140?'…':''}"</p>
+          <div style="display:flex;align-items:center;gap:.7rem;margin-top:.8rem;">
+            ${t.photo?`<img src="${esc(t.photo)}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" alt="">`:`<div style="width:36px;height:36px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">👤</div>`}
+            <div><strong style="font-size:.85rem;">${esc(t.nom)}</strong><div style="font-size:.75rem;color:var(--muted);">${esc(t.role)}</div></div>
+          </div>
+          <div class="content-card-actions" style="margin-top:.8rem;">
+            <button class="btn-sm btn-purple" onclick="openTemoModal(${t.id})">✏️ Modifier</button>
+            <button class="btn-sm btn-danger" onclick="deleteTemo(${t.id})">🗑️</button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  } catch(e){ document.getElementById('loadingTemo').textContent='⚠️ Erreur.'; }
+}
+
+function openTemoModal(idOrObj=null) {
+  // Accepte un ID (number) ou null (nouveau)
+  const t = typeof idOrObj === 'number' ? temoMap.get(idOrObj) : idOrObj;
+  document.getElementById('temoModal').classList.add('open');
+  document.getElementById('temoModalTitle').textContent=t?'✏️ Modifier le témoignage':'💬 Nouveau témoignage';
+  document.getElementById('temoId').value=t?t.id:'';
+  document.getElementById('temoNom').value=t?t.nom:'';
+  document.getElementById('temoRole').value=t?t.role:'';
+  document.getElementById('temoTexte').value=t?t.texte:'';
+  document.getElementById('temoPhoto').value=t?(t.photo||''):'';
+  document.getElementById('temoNote').value=t?t.note:5;
+}
+
+async function saveTemoignage() {
+  const id=document.getElementById('temoId').value;
+  const body={nom:document.getElementById('temoNom').value.trim(),role:document.getElementById('temoRole').value.trim(),texte:document.getElementById('temoTexte').value.trim(),photo:document.getElementById('temoPhoto').value.trim(),note:document.getElementById('temoNote').value};
+  if(!body.nom||!body.texte){ showToast('⚠️ Nom et texte requis.','error'); return; }
+  const url=id?`http://localhost:3000/api/admin/temoignages/${id}`:'http://localhost:3000/api/admin/temoignages';
+  try {
+    const res=await apiFetch(url,{method:id?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(res.ok){ showToast('✅ Enregistré.','success'); closeModal('temoModal'); loadTemoignages(); }
+    else { const d=await res.json(); showToast('❌ '+d.message,'error'); }
+  } catch(e){}
+}
+
+async function deleteTemo(id) {
+  if(!confirm('Supprimer ce témoignage ?')) return;
+  await apiFetch(`http://localhost:3000/api/admin/temoignages/${id}`,{method:'DELETE'});
+  showToast('🗑️ Supprimé.'); loadTemoignages();
+}
+
+// ══ FAQ ══
+async function loadFaq() {
+  document.getElementById('loadingFaq').style.display='block';
+  document.getElementById('faqList').innerHTML='';
+  document.getElementById('emptyFaq').style.display='none';
+  try {
+    const res=await apiFetch('http://localhost:3000/api/admin/faq');
+    const data=await res.json();
+    document.getElementById('loadingFaq').style.display='none';
+    if(!data.length){ document.getElementById('emptyFaq').style.display='block'; return; }
+    const list=document.getElementById('faqList');
+    data.forEach(f=>{
+      const div=document.createElement('div'); div.className='faq-item-admin';
+      div.innerHTML=`
+        <div>
+          <div class="faq-q">${esc(f.question)}</div>
+          <div class="faq-a">${esc(f.reponse).slice(0,120)}${f.reponse.length>120?'…':''}</div>
+          <span class="badge badge-user" style="margin-top:.4rem;">${esc(f.categorie)}</span>
+        </div>
+        <div class="faq-actions">
+          <button class="btn-sm btn-purple" onclick='openFaqModal(${JSON.stringify(f)})'>✏️</button>
+          <button class="btn-sm btn-danger" onclick="deleteFaq(${f.id})">🗑️</button>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  } catch(e){ document.getElementById('loadingFaq').textContent='⚠️ Erreur.'; }
+}
+
+function openFaqModal(f=null) {
+  document.getElementById('faqModal').classList.add('open');
+  document.getElementById('faqModalTitle').textContent=f?'✏️ Modifier FAQ':'❓ Nouvelle FAQ';
+  document.getElementById('faqId').value=f?f.id:'';
+  document.getElementById('faqQuestion').value=f?f.question:'';
+  document.getElementById('faqReponse').value=f?f.reponse:'';
+  document.getElementById('faqCategorie').value=f?f.categorie:'general';
+  document.getElementById('faqOrdre').value=f?f.ordre:0;
+}
+
+async function saveFaq() {
+  const id=document.getElementById('faqId').value;
+  const body={question:document.getElementById('faqQuestion').value.trim(),reponse:document.getElementById('faqReponse').value.trim(),categorie:document.getElementById('faqCategorie').value,ordre:document.getElementById('faqOrdre').value};
+  if(!body.question||!body.reponse){ showToast('⚠️ Question et réponse requises.','error'); return; }
+  const url=id?`http://localhost:3000/api/admin/faq/${id}`:'http://localhost:3000/api/admin/faq';
+  try {
+    const res=await apiFetch(url,{method:id?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(res.ok){ showToast('✅ Enregistré.','success'); closeModal('faqModal'); loadFaq(); }
+    else { const d=await res.json(); showToast('❌ '+d.message,'error'); }
+  } catch(e){}
+}
+
+async function deleteFaq(id) {
+  if(!confirm('Supprimer cette FAQ ?')) return;
+  await apiFetch(`http://localhost:3000/api/admin/faq/${id}`,{method:'DELETE'});
+  showToast('🗑️ Supprimée.'); loadFaq();
+}
+
+// ══ Journal ══
+const ICONES={connexion:'🔑',changement_role:'🛡️',suppression_utilisateur:'🗑️',suppression_message:'✉️',creation_actualite:'📰',modification_actualite:'✏️',suppression_actualite:'🗑️',export:'⬇️',creation_faq:'❓',creation_membre_equipe:'👨‍🏫',maj_preinscription:'📋'};
+
+async function loadActivity(page=1) {
+  document.getElementById('loadingActivity').style.display='block';
+  document.getElementById('activityList').innerHTML='';
+  document.getElementById('emptyActivity').style.display='none';
+  document.getElementById('activityPagination').style.display='none';
+  try {
+    const res=await apiFetch(`http://localhost:3000/api/admin/activity?page=${page}&limit=20`);
+    const data=await res.json();
+    activityState={page:data.page,totalPages:data.totalPages,total:data.total};
+    document.getElementById('loadingActivity').style.display='none';
+    if(!data.logs.length){ document.getElementById('emptyActivity').style.display='block'; return; }
+    const list=document.getElementById('activityList');
+    data.logs.forEach(l=>{
+      const date=new Date(l.created_at).toLocaleString('fr-FR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+      const div=document.createElement('div'); div.className='activity-item';
+      div.innerHTML=`
+        <div class="ai-icon">${ICONES[l.action]||'📌'}</div>
+        <div class="ai-text">
+          <div><strong>${esc(l.user_name)}</strong> · ${esc(l.action.replace(/_/g,' '))}${l.details?' · '+esc(l.details):''}</div>
+          <div class="ai-time">${date}</div>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+    buildPagination(document.getElementById('activityPagination'),activityState,'loadActivity');
+  } catch(e){ document.getElementById('loadingActivity').textContent='⚠️ Erreur.'; }
+}
+
+// ══ Export ══
+async function exportData(type,format) {
+  showToast('⏳ Génération du fichier...');
+  try {
+    const res=await apiFetch(`http://localhost:3000/api/admin/export/${type}/${format}`);
+    if(!res.ok){ showToast('❌ Échec de l\'export.','error'); return; }
+    const blob=await res.blob();
+    const url=window.URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download=`${type}.${format}`;
+    document.body.appendChild(a); a.click(); a.remove();
+    window.URL.revokeObjectURL(url);
+    showToast('✅ Export téléchargé.','success');
+  } catch(e){ showToast('❌ Erreur.','error'); }
+}
+
+// ══ Contenu du Site ══
+const SECTIONS_LABELS = {
+  hero:       { label: '🏠 Accueil / Hero', icon: '🏠' },
+  chiffres:   { label: '📊 Chiffres clés',  icon: '📊' },
+  apropos:    { label: 'ℹ️ À Propos',        icon: 'ℹ️' },
+  programmes: { label: '📚 Programmes',      icon: '📚' },
+  galerie:    { label: '🖼️ Galerie',         icon: '🖼️' },
+  contact:    { label: '📞 Contact',         icon: '📞' }
+};
+
+let siteContentData = {};
+let contenuSection = 'hero';
+let contenuLoaded = false;
+
+// Appelée depuis la sidebar — charge directement une section
+function loadContenuSection(section) {
+  contenuSection = section;
+  loadContenu();
+}
+
+async function loadContenu() {
+  if (contenuLoaded) { renderContenuSection(contenuSection); return; }
+  document.getElementById('contenu-loading').style.display = 'block';
+  document.getElementById('contenu-editor').style.display = 'none';
+  try {
+    const res = await apiFetch('http://localhost:3000/api/admin/site-content');
+    const rows = await res.json();
+    siteContentData = {};
+    rows.forEach(r => { siteContentData[r.cle] = r; });
+    contenuLoaded = true;
+    renderContenuNav();
+    document.getElementById('contenu-loading').style.display = 'none';
+    document.getElementById('contenu-editor').style.display = 'block';
+    renderContenuSection(contenuSection);
+  } catch(e) {
+    document.getElementById('contenu-loading').textContent = '⚠️ Erreur de chargement.';
+  }
+}
+
+function renderContenuNav() {
+  // Sous-nav interne supprimée — navigation via la sidebar principale
+}
+
+function renderContenuSection(section) {
+  const editor = document.getElementById('contenu-editor');
+  const fields = Object.values(siteContentData).filter(r => r.section === section);
+  if (!fields.length) { editor.innerHTML = '<div style="background:var(--card);border-radius:var(--radius);padding:3rem;text-align:center;color:var(--muted);box-shadow:var(--shadow);">Aucun champ pour cette section.</div>'; return; }
+
+  // Séparer champs simples et champs JSON
+  const simples = fields.filter(f => f.type !== 'json');
+  const jsonFields = fields.filter(f => f.type === 'json');
+
+  let html = `<div style="background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.8rem 2rem;margin-bottom:1.2rem;">
+    <h3 style="font-size:1rem;font-weight:700;color:var(--text);margin-bottom:1.5rem;padding-bottom:.8rem;border-bottom:1px solid var(--border);">${SECTIONS_LABELS[section]?.label || section}</h3>`;
+
+  simples.forEach(f => {
+    const inputId = 'sc_' + f.cle;
+    const escapedVal = f.valeur.replace(/"/g, '&quot;');
+    const isImage = f.cle.includes('image') || f.cle.includes('photo');
+
+    if (f.type === 'textarea') {
+      html += `<div class="mfield">
+        <label style="display:flex;justify-content:space-between;align-items:center;">${esc(f.libelle)}<span style="font-size:.68rem;color:var(--muted);font-family:monospace;">${esc(f.cle)}</span></label>
+        <textarea id="${inputId}" rows="3" style="width:100%;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:9px;font-size:.88rem;font-family:inherit;resize:vertical;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'">${esc(f.valeur)}</textarea>
+        <button onclick="saveContenuField('${f.cle}','${inputId}','textarea')" style="margin-top:.4rem;padding:.45rem 1.1rem;background:var(--blue);color:white;border:none;border-radius:7px;font-size:.8rem;font-weight:600;cursor:pointer;">💾 Enregistrer</button>
+      </div>`;
+    } else if (isImage) {
+      // Zone drag & drop pour les champs image
+      const dropId  = 'drop_' + inputId;
+      const lblId   = 'lbl_'  + inputId;
+      const prevId  = 'prev_' + inputId;
+      const fileId  = 'file_' + inputId;
+      const hasSrc  = f.valeur ? 'block' : 'none';
+      const imgSrc  = f.valeur ? (f.valeur.startsWith('/') ? 'http://localhost:3000' + f.valeur : f.valeur) : '';
+      const lblTxt  = f.valeur ? '✅ Image actuelle — cliquer pour changer' : '📁 Cliquer ou glisser une photo ici';
+      html += `<div class="mfield">
+        <label style="display:flex;justify-content:space-between;align-items:center;">${esc(f.libelle)}<span style="font-size:.68rem;color:var(--muted);font-family:monospace;">${esc(f.cle)}</span></label>
+        <div id="${dropId}"
+          onclick="document.getElementById('${fileId}').click()"
+          ondragover="event.preventDefault();this.style.borderColor='var(--blue)'"
+          ondragleave="this.style.borderColor='var(--border)'"
+          ondrop="handleContenuDrop(event,'${f.cle}','${inputId}')"
+          style="border:2px dashed var(--border);border-radius:9px;padding:.9rem;text-align:center;cursor:pointer;background:var(--bg);transition:border-color .2s;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.4rem;min-height:80px;">
+          <img id="${prevId}" src="${imgSrc}" alt="" style="max-height:70px;border-radius:6px;object-fit:cover;display:${hasSrc};" onerror="this.style.display='none'">
+          <span id="${lblId}" style="font-size:.8rem;color:var(--muted);">${lblTxt}</span>
+        </div>
+        <input type="file" id="${fileId}" accept="image/*" style="display:none" onchange="handleContenuFile(this,'${f.cle}','${inputId}')">
+        <input type="hidden" id="${inputId}" value="${escapedVal}">
+      </div>`;
+    } else {
+      html += `<div class="mfield">
+        <label style="display:flex;justify-content:space-between;align-items:center;">${esc(f.libelle)}<span style="font-size:.68rem;color:var(--muted);font-family:monospace;">${esc(f.cle)}</span></label>
+        <div style="display:flex;gap:.5rem;">
+          <input type="text" id="${inputId}" value="${escapedVal}" style="flex:1;padding:.72rem 1rem;border:1.5px solid var(--border);border-radius:9px;font-size:.88rem;font-family:inherit;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'">
+          <button onclick="saveContenuField('${f.cle}','${inputId}','text')" style="padding:.45rem 1.1rem;background:var(--blue);color:white;border:none;border-radius:7px;font-size:.8rem;font-weight:600;cursor:pointer;white-space:nowrap;">💾</button>
+        </div>
+      </div>`;
+    }
+  });
+
+  html += '</div>';
+
+  // Champs JSON — éditeur visuel par cartes
+  jsonFields.forEach(f => {
+    html += renderJsonEditor(f);
+  });
+
+  editor.innerHTML = html;
+}
+
+const inputStyle = 'width:100%;padding:.6rem .85rem;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;font-family:inherit;outline:none;';
+
+function renderJsonEditor(field) {
+  let items = [];
+  try { items = JSON.parse(field.valeur); } catch(e) { items = []; }
+  const isProgrammes = field.cle === 'programmes_items';
+
+  const cardsHtml = items.map((item, idx) => {
+    let fieldHtml = '';
+    if (isProgrammes) {
+      const listeItems = (item.items||[]).join('\n');
+      fieldHtml = `
+        <div style="display:grid;grid-template-columns:60px 1fr;gap:.6rem;">
+          <div><label style="font-size:.75rem;font-weight:600;color:var(--muted);">Icône</label><input value="${esc(item.icon||'')}" onchange="updateJsonItem('${field.cle}',${idx},'icon',this.value)" style="${inputStyle}"></div>
+          <div><label style="font-size:.75rem;font-weight:600;color:var(--muted);">Titre</label><input value="${esc(item.titre||'')}" onchange="updateJsonItem('${field.cle}',${idx},'titre',this.value)" style="${inputStyle}"></div>
+          <div style="grid-column:1/-1;"><label style="font-size:.75rem;font-weight:600;color:var(--muted);">Éléments (un par ligne)</label><textarea rows="4" onchange="updateJsonItemList('${field.cle}',${idx},'items',this.value)" style="${inputStyle}resize:vertical;">${esc(listeItems)}</textarea></div>
+        </div>`;
+    }
+    return `<div style="background:var(--bg);border-radius:9px;padding:1rem 1.1rem;border:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem;">
+        <span style="font-size:.78rem;font-weight:700;color:var(--blue);">#${idx+1} ${esc(item.titre||'')}</span>
+        <button onclick="deleteJsonItem('${field.cle}',${idx})" style="background:var(--red-bg);color:var(--red);border:none;border-radius:6px;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;">✕ Supprimer</button>
+      </div>${fieldHtml}</div>`;
+  }).join('');
+
+  return `<div style="background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.8rem 2rem;margin-bottom:1.2rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;padding-bottom:.8rem;border-bottom:1px solid var(--border);">
+      <h3 style="font-size:1rem;font-weight:700;color:var(--text);">${esc(field.libelle)}</h3>
+      <div style="display:flex;gap:.5rem;">
+        <button onclick="addJsonItem('${field.cle}')" style="padding:.42rem 1rem;background:var(--green-bg);color:var(--green);border:1px solid var(--green);border-radius:7px;font-size:.8rem;font-weight:600;cursor:pointer;">+ Ajouter</button>
+        <button onclick="saveJsonField('${field.cle}')" style="padding:.42rem 1rem;background:var(--blue);color:white;border:none;border-radius:7px;font-size:.8rem;font-weight:600;cursor:pointer;">💾 Tout sauvegarder</button>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.7rem;">${cardsHtml||'<p style="color:var(--muted);text-align:center;padding:1.5rem;">Aucun élément. Cliquez sur + Ajouter.</p>'}</div>
+  </div>`;
+}
+
+let jsonState = {};
+function getJsonState(cle) {
+  if (!jsonState[cle]) { try { jsonState[cle] = JSON.parse(siteContentData[cle].valeur); } catch(e) { jsonState[cle] = []; } }
+  return jsonState[cle];
+}
+function updateJsonItem(cle, idx, prop, val) { const arr=getJsonState(cle); if(!arr[idx])arr[idx]={}; arr[idx][prop]=val; }
+function updateJsonItemList(cle, idx, prop, val) { const arr=getJsonState(cle); if(!arr[idx])arr[idx]={}; arr[idx][prop]=val.split('\n').map(s=>s.trim()).filter(Boolean); }
+function addJsonItem(cle) {
+  const arr = getJsonState(cle);
+  if (cle === 'programmes_items') arr.push({icon:'📌',titre:'Nouveau programme',items:['Élément 1','Élément 2']});
+  siteContentData[cle].valeur = JSON.stringify(arr);
+  jsonState[cle] = arr;
+  renderContenuSection(contenuSection);
+}
+function deleteJsonItem(cle, idx) {
+  if (!confirm('Supprimer cet élément ?')) return;
+  const arr = getJsonState(cle);
+  arr.splice(idx, 1);
+  siteContentData[cle].valeur = JSON.stringify(arr);
+  jsonState[cle] = arr;
+  renderContenuSection(contenuSection);
+}
+
+async function saveJsonField(cle) {
+  const arr = getJsonState(cle);
+  const valeur = JSON.stringify(arr);
+  try {
+    const res = await apiFetch(`http://localhost:3000/api/admin/site-content/${cle}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({valeur})});
+    if (res.ok) { siteContentData[cle].valeur = valeur; showToast('✅ Sauvegardé !','success'); }
+    else { const d=await res.json(); showToast('❌ '+d.message,'error'); }
+  } catch(e) { showToast('❌ Erreur réseau.','error'); }
+}
+
+async function saveContenuField(cle, inputId, type) {
+  let valeur;
+  if (type === 'textarea') valeur = document.getElementById(inputId).value;
+  else valeur = document.getElementById(inputId).value;
+  try {
+    const res = await apiFetch(`http://localhost:3000/api/admin/site-content/${cle}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({valeur})});
+    if (res.ok) {
+      siteContentData[cle].valeur = valeur;
+      showToast('✅ Enregistré !','success');
+      // Preview image si applicable
+      const prev = document.getElementById('preview_' + inputId);
+      if (prev) { prev.src = valeur; prev.style.display = valeur ? 'inline-block' : 'none'; }
+    } else { const d=await res.json(); showToast('❌ '+d.message,'error'); }
+  } catch(e) { showToast('❌ Erreur réseau.','error'); }
+}
+
+// Entrer avec Enter sur le login
+document.addEventListener('keydown',e=>{ if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none') adminLogin(); });
+
+// ══════════════════════════════════════════════
+//  GALERIE — Gestion complète du slider
+// ══════════════════════════════════════════════
+let galerieData = [];
+const GAL_CAT_LABELS = {general:'Général','vie-scolaire':'Vie scolaire',evenements:'Événements',infrastructure:'Infrastructure',humanitaire:'Humanitaire',sport:'Sport',ceremonie:'Cérémonie'};
+const GAL_CAT_COLORS = {general:'#64748b','vie-scolaire':'#2563eb',evenements:'#d97706',infrastructure:'#0891b2',humanitaire:'#dc2626',sport:'#16a34a',ceremonie:'#7c3aed'};
+
+async function loadGalerie() {
+  document.getElementById('gal-loading').style.display='block';
+  document.getElementById('gal-grid').style.display='none';
+  document.getElementById('gal-empty').style.display='none';
+  try {
+    const res=await apiFetch('http://localhost:3000/api/admin/galerie');
+    galerieData=await res.json();
+    renderGalerieGrid(galerieData);
+  } catch(e){ document.getElementById('gal-loading').textContent='⚠️ Erreur de chargement.'; }
+}
+
+function filtrerGalerie() {
+  const cat=document.getElementById('gal-filtre-cat').value;
+  renderGalerieGrid(cat?galerieData.filter(p=>p.categorie===cat):galerieData);
+}
+
+function renderGalerieGrid(photos) {
+  document.getElementById('gal-loading').style.display='none';
+  document.getElementById('gal-count').textContent=galerieData.length;
+  if (!photos.length) {
+    document.getElementById('gal-empty').style.display='block';
+    document.getElementById('gal-grid').style.display='none';
+    return;
+  }
+  const grid=document.getElementById('gal-grid');
+  grid.style.display='grid';
+  grid.innerHTML=photos.map(p=>{
+    const cl=GAL_CAT_COLORS[p.categorie]||'#64748b';
+    const lb=GAL_CAT_LABELS[p.categorie]||p.categorie;
+    return `<div style="background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;transition:transform .15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+      <div style="position:relative;height:150px;background:#e2e8f0;overflow:hidden;">
+        <img src="${esc(p.image)}" alt="${esc(p.titre)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:2rem;background:var(--bg);">🖼️</div>
+        <span style="position:absolute;top:.4rem;left:.4rem;background:${cl};color:#fff;font-size:.62rem;font-weight:700;padding:.18rem .45rem;border-radius:4px;text-transform:uppercase;">${esc(lb)}</span>
+        <div style="position:absolute;top:.35rem;right:.35rem;display:flex;gap:.25rem;">
+          <button onclick="openGalModal(${p.id})" title="Modifier" style="width:27px;height:27px;background:rgba(255,255,255,.93);border:none;border-radius:5px;cursor:pointer;font-size:.82rem;">✏️</button>
+          <button onclick="supprimerPhotoGalerie(${p.id})" title="Supprimer" style="width:27px;height:27px;background:rgba(255,255,255,.93);border:none;border-radius:5px;cursor:pointer;font-size:.82rem;">🗑️</button>
+        </div>
+      </div>
+      <div style="padding:.65rem .85rem .8rem;">
+        <div style="font-weight:700;font-size:.83rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${esc(p.titre)}">${esc(p.titre)||'<em style="color:var(--muted);font-weight:400">Sans titre</em>'}</div>
+        ${p.description?`<div style="font-size:.73rem;color:var(--muted);margin-top:.12rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${esc(p.description)}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openGalModal(id) {
+  const p=galerieData.find(x=>x.id===id);
+  if(!p) return;
+  document.getElementById('galModal').classList.add('open');
+  document.getElementById('galId').value=p.id;
+  document.getElementById('galImage').value=p.image||'';
+  document.getElementById('galTitre').value=p.titre||'';
+  document.getElementById('galDesc').value=p.description||'';
+  document.getElementById('galCategorie').value=p.categorie||'general';
+  // Afficher la photo existante dans la zone drop
+  const prev=document.getElementById('galPreview');
+  const lbl=document.getElementById('gal-edit-drop-label');
+  if(p.image){
+    const src=p.image.startsWith('/')?'http://localhost:3000'+p.image:p.image;
+    prev.src=src; prev.style.display='block';
+    if(lbl) lbl.textContent='✅ Photo actuelle — cliquer pour changer';
+  } else {
+    prev.src=''; prev.style.display='none';
+    if(lbl) lbl.textContent='📁 Cliquer ou glisser une nouvelle photo';
+  }
+}
+
+async function savePhotoGalerie() {
+  const id=document.getElementById('galId').value;
+  const p=galerieData.find(x=>x.id==id);
+  const body={image:document.getElementById('galImage').value.trim(),titre:document.getElementById('galTitre').value.trim(),description:document.getElementById('galDesc').value.trim(),categorie:document.getElementById('galCategorie').value,ordre:p?p.ordre:0};
+  if(!body.image){showToast('⚠️ Veuillez choisir une photo depuis votre ordinateur.','error');return;}
+  try {
+    const res=await apiFetch(`http://localhost:3000/api/admin/galerie/${id}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(res.ok){showToast('✅ Slide mis à jour.','success');closeModal('galModal');await loadGalerie();}
+    else{const d=await res.json();showToast('❌ '+d.message,'error');}
+  } catch(e){showToast('❌ Erreur réseau.','error');}
+}
+
+async function ajouterPhotoGalerie() {
+  const image=document.getElementById('gal-new-image').value.trim();
+  const titre=document.getElementById('gal-new-titre').value.trim();
+  const desc=document.getElementById('gal-new-desc').value.trim();
+  const cat=document.getElementById('gal-new-cat').value;
+  const fb=document.getElementById('gal-add-feedback');
+  if(!image){fb.textContent='⚠️ Veuillez d\'abord choisir une photo depuis votre ordinateur.';fb.style.cssText='display:block;color:var(--red);';return;}
+  try {
+    const res=await apiFetch('http://localhost:3000/api/admin/galerie',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image,titre,description:desc,categorie:cat})});
+    if(res.ok){
+      fb.textContent='✅ Photo ajoutée au slider !';fb.style.cssText='display:block;color:var(--green);';
+      // Reset champs texte
+      document.getElementById('gal-new-image').value='';
+      document.getElementById('gal-new-titre').value='';
+      document.getElementById('gal-new-desc').value='';
+      document.getElementById('gal-new-cat').value='general';
+      // Reset zone drop
+      const prev=document.getElementById('gal-new-preview');
+      const lbl=document.getElementById('gal-drop-label');
+      if(prev){prev.src='';prev.style.display='none';}
+      if(lbl) lbl.textContent='📁 Cliquer ou glisser une photo ici';
+      await loadGalerie();
+      setTimeout(()=>{fb.style.display='none';},3000);
+    } else{const d=await res.json();fb.textContent='❌ '+d.message;fb.style.cssText='display:block;color:var(--red)';}
+  } catch(e){fb.textContent='❌ Erreur réseau.';fb.style.cssText='display:block;color:var(--red);';}
+}
+
+async function supprimerPhotoGalerie(id) {
+  if(!confirm('Supprimer définitivement ce slide ?')) return;
+  try {
+    const res=await apiFetch(`http://localhost:3000/api/admin/galerie/${id}`,{method:'DELETE'});
+    if(res.ok){showToast('🗑️ Photo supprimée.','success');await loadGalerie();}
+    else{const d=await res.json();showToast('❌ '+d.message,'error');}
+  } catch(e){showToast('❌ Erreur réseau.','error');}
+}
+
+// ══════════════════════════════════════════════
+//  FIX APOSTROPHES — Actualités (Map safe)
+// ══════════════════════════════════════════════
+const actusMap=new Map();
+
+function renderActuCard(a) {
+  actusMap.set(a.id,a);
+  const date=new Date(a.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'});
+  const card=document.createElement('div');
+  card.className='content-card';
+  card.innerHTML=`
+    <div class="content-card-img-wrap">
+      ${a.image?`<img class="content-card-img" src="${esc(a.image)}" alt="" onerror="this.style.display='none'">`:`<div class="content-card-img-placeholder">📰</div>`}
+    </div>
+    <div class="content-card-body">
+      <h4>${esc(a.titre)}</h4>
+      <div class="content-card-meta">Par ${esc(a.auteur||'')} · ${date}</div>
+      <p>${esc(a.contenu||'').slice(0,110)}${(a.contenu||'').length>110?'…':''}</p>
+      <div class="content-card-actions">
+        <button class="btn-sm btn-purple" onclick="openActuById(${a.id})">✏️ Modifier</button>
+        <button class="btn-sm btn-danger" onclick="deleteActualite(${a.id})">🗑️</button>
+      </div>
+    </div>`;
+  return card;
+}
+
+function openActuById(id) {
+  const a=actusMap.get(id);
+  if(!a) return;
+  document.getElementById('actuModal').classList.add('open');
+  document.getElementById('actuModalTitle').textContent='✏️ Modifier l\'actualité';
+  document.getElementById('actuId').value=a.id;
+  document.getElementById('actuTitre').value=a.titre||'';
+  document.getElementById('actuImage').value=a.image||'';
+  document.getElementById('actuContenu').value=a.contenu||'';
+}
+
+async function loadActualites(page=1) {
+  const grid=document.getElementById('actusGrid');
+  const loadingEl=document.getElementById('loadingActus');
+  const emptyEl=document.getElementById('emptyActus');
+  if(loadingEl) loadingEl.style.display='block';
+  if(grid) grid.innerHTML='';
+  if(emptyEl) emptyEl.style.display='none';
+  try {
+    const res=await apiFetch(`http://localhost:3000/api/admin/actualites?page=${page}&limit=9`);
+    const data=await res.json();
+    actusState={page:data.page,totalPages:data.totalPages,total:data.total};
+    if(loadingEl) loadingEl.style.display='none';
+    if(!data.actualites.length){if(emptyEl)emptyEl.style.display='block';return;}
+    actusMap.clear();
+    data.actualites.forEach(a=>{if(grid)grid.appendChild(renderActuCard(a));});
+    buildPagination(document.getElementById('actusPagination'),actusState,'loadActualites');
+  } catch(e){if(loadingEl)loadingEl.textContent='⚠️ Erreur.';}
+}
+
+// ════════════════════════════════════════════════════
+//  SYSTÈME D'UPLOAD IMAGE — Drag & Drop + Parcourir
+// ════════════════════════════════════════════════════
+
+// Fonction centrale : envoie le fichier au serveur et retourne l'URL
+async function uploadImage(file) {
+  const formData = new FormData();
+  formData.append('image', file);
+  const res = await fetch('http://localhost:3000/api/admin/upload', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + adminToken },
+    body: formData
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || 'Erreur upload.');
+  }
+  const data = await res.json();
+  return data.url;
+}
+
+// Utilitaire : mettre à jour la zone drop après upload réussi
+function setDropZoneSuccess(zoneId, labelId, previewId, url) {
+  const prev = document.getElementById(previewId);
+  const label = document.getElementById(labelId);
+  if (prev) { prev.src = 'http://localhost:3000' + url; prev.style.display = 'block'; }
+  if (label) label.textContent = '✅ Photo chargée — cliquer pour changer';
+}
+
+// Utilitaire : afficher "chargement..."
+function setDropZoneLoading(labelId) {
+  const label = document.getElementById(labelId);
+  if (label) label.textContent = '⏳ Envoi en cours...';
+}
+
+// Utilitaire : afficher erreur
+function setDropZoneError(labelId, msg) {
+  const label = document.getElementById(labelId);
+  if (label) label.textContent = '❌ ' + msg;
+}
+
+// ── CONTENU SITE (hero_image, apropos_image, etc.) ──
+async function handleContenuFile(input, cle, inputId) {
+  if (!input.files[0]) return;
+  const lblId  = 'lbl_sc_'  + cle;
+  const prevId = 'prev_sc_' + cle;
+  const lbl  = document.getElementById(lblId);
+  const prev = document.getElementById(prevId);
+  if (lbl) lbl.textContent = '⏳ Envoi en cours...';
+  try {
+    const url = await uploadImage(input.files[0]);
+    document.getElementById(inputId).value = url;
+    if (prev) { prev.src = 'http://localhost:3000' + url; prev.style.display = 'block'; }
+    if (lbl)  lbl.textContent = '✅ Photo chargée — cliquer pour changer';
+    // Sauvegarder automatiquement dans la base
+    await saveContenuField(cle, inputId, 'text');
+  } catch(e) {
+    if (lbl) lbl.textContent = '❌ ' + e.message;
+  }
+}
+function handleContenuDrop(e, cle, inputId) {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
+  // Créer un faux input pour réutiliser handleContenuFile
+  const fakeInput = { files: [file] };
+  handleContenuFile(fakeInput, cle, inputId);
+}
+
+// ── GALERIE (ajout) ──
+async function handleGalFile(input) {
+  if (!input.files[0]) return;
+  setDropZoneLoading('gal-drop-label');
+  try {
+    const url = await uploadImage(input.files[0]);
+    document.getElementById('gal-new-image').value = url;
+    setDropZoneSuccess('gal-drop-zone', 'gal-drop-label', 'gal-new-preview', url);
+  } catch(e) { setDropZoneError('gal-drop-label', e.message); }
+}
+function handleGalDrop(e) {
+  e.preventDefault();
+  document.getElementById('gal-drop-zone').style.borderColor = 'var(--border)';
+  const file = e.dataTransfer.files[0];
+  if (file) { document.getElementById('gal-file-input').files; handleGalFileRaw(file); }
+}
+async function handleGalFileRaw(file) {
+  setDropZoneLoading('gal-drop-label');
+  try {
+    const url = await uploadImage(file);
+    document.getElementById('gal-new-image').value = url;
+    setDropZoneSuccess('gal-drop-zone', 'gal-drop-label', 'gal-new-preview', url);
+  } catch(e) { setDropZoneError('gal-drop-label', e.message); }
+}
+
+// ── GALERIE (édition modal) ──
+async function handleGalEditFile(input) {
+  if (!input.files[0]) return;
+  setDropZoneLoading('gal-edit-drop-label');
+  try {
+    const url = await uploadImage(input.files[0]);
+    document.getElementById('galImage').value = url;
+    setDropZoneSuccess('gal-edit-drop', 'gal-edit-drop-label', 'galPreview', url);
+  } catch(e) { setDropZoneError('gal-edit-drop-label', e.message); }
+}
+function handleGalEditDrop(e) {
+  e.preventDefault();
+  document.getElementById('gal-edit-drop').style.borderColor = 'var(--border)';
+  const file = e.dataTransfer.files[0];
+  if (file) handleGalEditFileRaw(file);
+}
+async function handleGalEditFileRaw(file) {
+  setDropZoneLoading('gal-edit-drop-label');
+  try {
+    const url = await uploadImage(file);
+    document.getElementById('galImage').value = url;
+    setDropZoneSuccess('gal-edit-drop', 'gal-edit-drop-label', 'galPreview', url);
+  } catch(e) { setDropZoneError('gal-edit-drop-label', e.message); }
+}
+
+// ── ACTUALITÉS ──
+async function handleActuFile(input) {
+  if (!input.files[0]) return;
+  setDropZoneLoading('actu-drop-label');
+  try {
+    const url = await uploadImage(input.files[0]);
+    document.getElementById('actuImage').value = url;
+    setDropZoneSuccess('actu-drop', 'actu-drop-label', 'actuPreview', url);
+  } catch(e) { setDropZoneError('actu-drop-label', e.message); }
+}
+function handleActuDrop(e) {
+  e.preventDefault();
+  document.getElementById('actu-drop').style.borderColor = 'var(--border)';
+  const file = e.dataTransfer.files[0];
+  if (file) handleActuFile({ files: [file] });
+}
+
+// ── ÉQUIPE ──
+async function handleEquipeFile(input) {
+  if (!input.files[0]) return;
+  setDropZoneLoading('equipe-drop-label');
+  try {
+    const url = await uploadImage(input.files[0]);
+    document.getElementById('equipePhoto').value = url;
+    setDropZoneSuccess('equipe-drop', 'equipe-drop-label', 'equipePreview', url);
+  } catch(e) { setDropZoneError('equipe-drop-label', e.message); }
+}
+function handleEquipeDrop(e) {
+  e.preventDefault();
+  document.getElementById('equipe-drop').style.borderColor = 'var(--border)';
+  const file = e.dataTransfer.files[0];
+  if (file) handleEquipeFile({ files: [file] });
+}
+
+// ── TÉMOIGNAGES ──
+async function handleTemoFile(input) {
+  if (!input.files[0]) return;
+  setDropZoneLoading('temo-drop-label');
+  try {
+    const url = await uploadImage(input.files[0]);
+    document.getElementById('temoPhoto').value = url;
+    setDropZoneSuccess('temo-drop', 'temo-drop-label', 'temoPreview', url);
+  } catch(e) { setDropZoneError('temo-drop-label', e.message); }
+}
+function handleTemoDrop(e) {
+  e.preventDefault();
+  document.getElementById('temo-drop').style.borderColor = 'var(--border)';
+  const file = e.dataTransfer.files[0];
+  if (file) handleTemoFile({ files: [file] });
+}
+
+// ── Reset zones drop à la fermeture des modals ──
+// Patch closeModal (défini plus haut comme: function closeModal(id){...})
+const _closeModalOrig = closeModal;
+closeModal = function(id) {
+  _closeModalOrig(id);
+  const map = {
+    actuModal:   ['actu-drop-label',   'actuPreview',  '📁 Cliquer ou glisser une photo'],
+    equipeModal: ['equipe-drop-label', 'equipePreview','📁 Cliquer ou glisser une photo'],
+    temoModal:   ['temo-drop-label',   'temoPreview',  '📁 Cliquer ou glisser une photo'],
+    galModal:    ['gal-edit-drop-label','galPreview',  '📁 Cliquer ou glisser une nouvelle photo'],
+  };
+  if (map[id]) {
+    const [lblId, prevId, txt] = map[id];
+    const lbl = document.getElementById(lblId);
+    const prv = document.getElementById(prevId);
+    if (lbl) lbl.textContent = txt;
+    if (prv) { prv.src = ''; prv.style.display = 'none'; }
+  }
+};
+
+// ── Patch openActuById pour afficher la preview image existante ──
+const _openActuByIdOrig = openActuById;
+openActuById = function(id) {
+  _openActuByIdOrig(id);
+  const a = actusMap.get(id);
+  if (a && a.image) {
+    const prev = document.getElementById('actuPreview');
+    const lbl  = document.getElementById('actu-drop-label');
+    if (prev) { prev.src = a.image.startsWith('/') ? 'http://localhost:3000'+a.image : a.image; prev.style.display='block'; }
+    if (lbl)  lbl.textContent = '✅ Photo actuelle — cliquer pour changer';
+  }
+};
 </script>
 </body>
 </html>

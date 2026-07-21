@@ -119,6 +119,56 @@
             cursor: pointer;
         }
 
+        /* Bouton Connexion / Compte dans la nav */
+        .btn-nav-auth {
+            background: var(--gold);
+            color: var(--white);
+            border: none;
+            padding: 0.45rem 1.1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.2s;
+            white-space: nowrap;
+        
+        }
+        
+        .btn-nav-auth:hover {
+            background: #b9982de5;
+            transform: translateY(-1px);
+        }
+
+        /* Bannière optionnelle en haut */
+        #banniere-inscription {
+            background: linear-gradient(90deg, var(--royal-blue), #2563eb);
+            color: var(--white);
+            text-align: center;
+            padding: 0.6rem 5%;
+            font-size: 0.85rem;
+            position: relative;
+        }
+        #banniere-inscription a {
+            color: var(--gold);
+            font-weight: 700;
+            text-decoration: underline;
+            margin-left: 0.5rem;
+        }
+        #banniere-close {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            font-size: 1.1rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+        #banniere-close:hover { color: white; }
+
         .mobile-nav {
             display: none;
             position: fixed;
@@ -160,23 +210,20 @@
         /* Hero Section */
         .hero {
             background: linear-gradient(135deg, var(--royal-blue) 0%, #2563eb 100%);
+            background-size: cover !important;
+            background-position: center center !important;
+            background-repeat: no-repeat !important;
+            background-attachment: scroll !important;
             color: var(--white);
             padding: 10rem 5% 6rem;
             text-align: center;
             position: relative;
             overflow: hidden;
-            margin-top: 90px;
+            margin-top: 0;
         }
 
         .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('images/jo1.jpg');
-            opacity: 0.3;
+            content: none;
         }
 
         .hero-content {
@@ -406,264 +453,265 @@
         }
 
         /* Programs Section */
-        .programs-section {
-            padding: 5rem 5%;
-            background: var(--white);
-        }
-
-        .programs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 3rem auto 0;
-        }
-
-        .program-card {
-            background: var(--light-gray);
-            padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-
-        .program-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-        }
-
-        .program-card h3 {
-            color: var(--royal-blue);
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .program-card ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .program-card li {
-            padding: 0.5rem 0;
-            padding-left: 1.5rem;
-            position: relative;
-        }
-
-        .program-card li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--gold);
-            font-weight: bold;
-        }
-
-        /* Gallery Section — Slider */
-        .gallery-section {
-            padding: 5rem 5%;
-            background: var(--light-gray);
-        }
-
-        .gallery-slider-wrap {
-            max-width: 1000px;
-            margin: 3rem auto 0;
-        }
-
-        /* Grande image principale */
-        .gallery-main {
+        /* ════ FULLSCREEN PHOTO SLIDER ════ */
+        #ksi-slider {
             position: relative;
             width: 100%;
-            height: 460px;
-            border-radius: 18px;
+            height: 100vh;
+            min-height: 650px;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.22);
-            cursor: pointer;
-            background: #111;
+            background: #0a0a1a;
         }
 
-        .gallery-main-img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            transition: opacity 0.4s ease, transform 0.5s ease;
-            display: block;
-        }
-
-        .gallery-main:hover .gallery-main-img { transform: scale(1.03); }
-
-        /* Légende en bas de la grande image */
-        .gallery-main-caption {
+        .ksi-slide {
             position: absolute;
-            bottom: 0; left: 0; right: 0;
-            background: linear-gradient(to top, rgba(10,20,60,0.88) 0%, transparent 100%);
-            padding: 2.5rem 2rem 1.4rem;
-            color: white;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.9s cubic-bezier(.4,0,.2,1);
             pointer-events: none;
         }
 
-        .gallery-main-caption h3 {
-            font-size: 1.3rem;
+        .ksi-slide.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .ksi-slide-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            transform: scale(1.06);
+            transition: transform 6s cubic-bezier(.4,0,.2,1);
+            will-change: transform;
+        }
+
+        .ksi-slide.active .ksi-slide-bg {
+            transform: scale(1);
+        }
+
+        .ksi-slide-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                105deg,
+                rgba(5,12,45,0.82) 0%,
+                rgba(5,12,45,0.55) 50%,
+                rgba(5,12,45,0.18) 100%
+            );
+        }
+
+        .ksi-slide-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 8% 0 8%;
+            max-width: 900px;
+        }
+
+        .ksi-slide-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: rgba(212,175,55,.18);
+            border: 1px solid rgba(212,175,55,.45);
+            color: #d4af37;
+            font-size: .72rem;
             font-weight: 700;
-            color: white;
-            margin-bottom: 0.3rem;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            padding: .42rem 1rem;
+            border-radius: 30px;
+            margin-bottom: 1.6rem;
+            width: fit-content;
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity .6s .1s, transform .6s .1s;
         }
 
-        .gallery-main-caption p {
-            font-size: 0.88rem;
-            color: rgba(255,255,255,0.78);
+        .ksi-slide.active .ksi-slide-badge { opacity:1; transform:translateY(0); }
+
+        .ksi-slide-title {
+            font-size: clamp(2.4rem, 5.5vw, 4.8rem);
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.08;
+            letter-spacing: -.02em;
+            margin-bottom: 1.2rem;
+            text-shadow: 0 2px 24px rgba(0,0,0,.4);
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity .65s .22s, transform .65s .22s;
         }
 
-        /* Flèches prev/next */
-        .gallery-arrow {
+        .ksi-slide.active .ksi-slide-title { opacity:1; transform:translateY(0); }
+
+        .ksi-slide-title span {
+            color: #d4af37;
+        }
+
+        .ksi-slide-desc {
+            font-size: clamp(1rem, 1.8vw, 1.22rem);
+            color: rgba(255,255,255,.82);
+            line-height: 1.72;
+            max-width: 560px;
+            margin-bottom: 2.4rem;
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity .6s .38s, transform .6s .38s;
+        }
+
+        .ksi-slide.active .ksi-slide-desc { opacity:1; transform:translateY(0); }
+
+        .ksi-slide-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: .7rem;
+            background: linear-gradient(135deg,#d4af37,#b8952a);
+            color: #0a0a1a;
+            font-size: .95rem;
+            font-weight: 800;
+            padding: 1rem 2.2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 8px 28px rgba(212,175,55,.4);
+            transition: transform .2s, box-shadow .2s;
+            width: fit-content;
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity .55s .52s, transform .55s .52s, box-shadow .2s;
+        }
+
+        .ksi-slide.active .ksi-slide-cta { opacity:1; transform:translateY(0); }
+        .ksi-slide-cta:hover { transform:translateY(-3px) !important; box-shadow:0 14px 36px rgba(212,175,55,.55); }
+
+        /* Contrôles */
+        .ksi-arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(255,255,255,0.18);
-            backdrop-filter: blur(4px);
-            border: 1.5px solid rgba(255,255,255,0.35);
+            width: 54px; height: 54px;
+            background: rgba(255,255,255,.12);
+            backdrop-filter: blur(8px);
+            border: 1.5px solid rgba(255,255,255,.25);
             color: white;
-            width: 46px; height: 46px;
             border-radius: 50%;
-            font-size: 1rem;
+            font-size: 1.3rem;
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s;
-            z-index: 3;
+            transition: all .22s;
+            z-index: 10;
+        }
+        .ksi-arrow:hover { background: #d4af37; border-color: #d4af37; color: #0a0a1a; }
+        .ksi-arrow.prev { left: 2rem; }
+        .ksi-arrow.next { right: 2rem; }
+
+        /* Dots */
+        .ksi-dots {
+            position: absolute;
+            bottom: 2.2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: .55rem;
+            z-index: 10;
         }
 
-        .gallery-arrow:hover {
-            background: var(--gold);
-            border-color: var(--gold);
-            color: var(--royal-blue);
+        .ksi-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.35);
+            cursor: pointer;
+            transition: all .3s;
+            border: none;
+            padding: 0;
         }
 
-        .gallery-arrow.prev { left: 1rem; }
-        .gallery-arrow.next { right: 1rem; }
+        .ksi-dot.active {
+            background: #d4af37;
+            width: 28px;
+            border-radius: 4px;
+        }
 
         /* Barre de progression */
-        .gallery-progress {
+        .ksi-progress {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
             height: 3px;
-            background: rgba(30,58,138,0.12);
-            border-radius: 2px;
-            overflow: hidden;
+            background: rgba(255,255,255,.12);
+            z-index: 10;
         }
 
-        .gallery-progress-bar {
+        .ksi-progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--royal-blue), var(--gold));
-            border-radius: 2px;
-            transition: width 0.08s linear;
+            background: linear-gradient(90deg, #1e3a8a, #d4af37);
+            transition: width .08s linear;
+            width: 0%;
         }
 
-        /* Thumbnails centrées et plus petites */
-        .gallery-thumbs {
+        /* Compteur */
+        .ksi-counter {
+            position: absolute;
+            top: 2rem;
+            right: 2.5rem;
+            color: rgba(255,255,255,.6);
+            font-size: .8rem;
+            font-weight: 600;
+            letter-spacing: .06em;
+            z-index: 10;
+        }
+
+        .ksi-counter strong {
+            color: #d4af37;
+            font-size: 1.1rem;
+        }
+
+        /* Thumbnails verticales (droite) */
+        .ksi-thumbs {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
-            justify-content: center;
-            gap: 0.7rem;
-            margin-top: 1.1rem;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: .6rem;
+            z-index: 10;
         }
 
-        .gallery-thumb {
-            width: 85px;
-            height: 58px;
+        .ksi-thumb {
+            width: 90px;
+            height: 64px;
             border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
-            border: 2.5px solid transparent;
-            transition: all 0.25s;
+            border: 2px solid transparent;
+            transition: all .25s;
             flex-shrink: 0;
-            position: relative;
         }
 
-        .gallery-thumb img {
+        .ksi-thumb img {
             width: 100%; height: 100%;
             object-fit: cover;
-            transition: transform 0.3s;
+            transition: transform .3s;
         }
 
-        .gallery-thumb:hover img { transform: scale(1.08); }
+        .ksi-thumb:hover img { transform: scale(1.08); }
 
-        .gallery-thumb.active {
-            border-color: var(--gold);
-            box-shadow: 0 3px 12px rgba(212,175,55,0.5);
+        .ksi-thumb.active {
+            border-color: #d4af37;
+            box-shadow: 0 0 0 1px rgba(212,175,55,.3);
         }
 
-        .gallery-thumb-label {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            font-size: 0.55rem;
-            text-align: center;
-            padding: 0.15rem 0.2rem;
-            line-height: 1.3;
+        @media (max-width: 768px) {
+            .ksi-slide-content { padding: 0 6% 8rem; max-width: 100%; }
+            .ksi-thumbs { display: none; }
+            .ksi-arrow.prev { left: .8rem; }
+            .ksi-arrow.next { right: .8rem; }
+            .ksi-arrow { width:42px; height:42px; font-size:1rem; }
         }
-
-        /* Modal for Gallery */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.95);
             animation: fadeIn 0.3s ease;
-        }
-
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            max-width: 90%;
-            max-height: 90%;
-            margin: auto;
-            display: block;
-            animation: zoomIn 0.3s ease;
-        }
-        .modal-content img {
-            display: block;
-            margin: 0 auto;
-            max-width: 90%;
-            max-height: 80vh;
-            border-radius: 10px;
-        }
-
-        .modal-info {
-            color: var(--white);
-            text-align: center;
-            padding: 2rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .modal-info h3 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: var(--gold);
-        }
-
-        .modal-info p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 30px;
-            right: 50px;
-            color: var(--white);
-            font-size: 3rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .close-modal:hover {
-            color: var(--gold);
         }
 
         /* Contact Section - Style El-Shaddai */
@@ -949,9 +997,104 @@
                 height: 50px;
             }
         }
+        /* ══ Chiffres clés ══ */
+        .chiffre-item { text-align:center; }
+        .chiffre-number { font-size:3rem; font-weight:900; color:var(--gold); line-height:1; margin-bottom:.4rem; }
+
+        /* ══ Actualités cards ══ */
+        .actu-card { background:white; border-radius:14px; box-shadow:0 4px 16px rgba(0,0,0,.07); overflow:hidden; display:flex; flex-direction:column; transition:transform .2s,box-shadow .2s; }
+        .actu-card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,.13); }
+        .actu-card img { width:100%; height:190px; object-fit:cover; }
+        .actu-card-img-ph { width:100%; height:190px; background:linear-gradient(135deg,#e2e8f0,#cbd5e1); display:flex; align-items:center; justify-content:center; font-size:3rem; }
+        .actu-card-body { padding:1.3rem; flex:1; display:flex; flex-direction:column; }
+        .actu-card-body h3 { font-size:1.05rem; font-weight:700; color:var(--royal-blue); margin-bottom:.5rem; line-height:1.35; }
+        .actu-card-meta { font-size:.75rem; color:#94a3b8; margin-bottom:.7rem; }
+        .actu-card-body p { font-size:.87rem; color:#555; flex:1; line-height:1.6; }
+
+        /* ══ Équipe cards ══ */
+        .equipe-card { background:white; border-radius:14px; box-shadow:0 4px 16px rgba(0,0,0,.07); overflow:hidden; text-align:center; transition:transform .2s; }
+        .equipe-card:hover { transform:translateY(-4px); }
+        .equipe-card img { width:100%; height:160px; object-fit:cover; object-position:top; }
+        .equipe-card-ph { width:100%; height:160px; background:linear-gradient(135deg,var(--royal-blue),#2563eb); display:flex; align-items:center; justify-content:center; font-size:4rem; }
+        .equipe-card-body { padding:.8rem 1rem; }
+        .equipe-card-body h3 { font-size:.88rem; font-weight:700; color:var(--royal-blue); }
+        .equipe-card-body .poste { font-size:.75rem; color:var(--gold); font-weight:600; margin:.15rem 0 .4rem; }
+        .equipe-card-body p { font-size:.8rem; color:#64748b; line-height:1.5; }
+
+        /* ══ Témoignages ══ */
+        .temo-card { background:white; border-radius:14px; box-shadow:0 4px 16px rgba(0,0,0,.07); padding:1.5rem; display:flex; flex-direction:column; gap:1rem; }
+        .temo-stars { color:var(--gold); font-size:1rem; }
+        .temo-text { font-size:.9rem; color:#374151; line-height:1.7; font-style:italic; flex:1; }
+        .temo-author { display:flex; align-items:center; gap:.8rem; }
+        .temo-author img { width:44px; height:44px; border-radius:50%; object-fit:cover; }
+        .temo-author-ph { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--royal-blue),#2563eb); display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
+        .temo-author-info strong { display:block; font-size:.87rem; color:var(--royal-blue); }
+        .temo-author-info span { font-size:.75rem; color:#94a3b8; }
+
+        /* ══ Pré-inscription ══ */
+        .pi-label { display:block; font-size:.78rem; font-weight:700; color:#374151; margin-bottom:.35rem; text-transform:uppercase; letter-spacing:.04em; }
+        .pi-input { width:100%; padding:.78rem .9rem; border:1.5px solid #e2e8f0; border-radius:9px; font-size:.9rem; outline:none; font-family:inherit; transition:border-color .2s; background:white; }
+        .pi-input:focus { border-color:var(--royal-blue); box-shadow:0 0 0 3px rgba(30,58,138,.1); }
+
+        /* ══ FAQ accordion ══ */
+        .faq-item { border:1px solid #e2e8f0; border-radius:12px; margin-bottom:.8rem; overflow:hidden; background:white; }
+        .faq-question { display:flex; justify-content:space-between; align-items:center; padding:1.1rem 1.3rem; cursor:pointer; font-weight:700; color:var(--royal-blue); font-size:.95rem; gap:1rem; }
+        .faq-question:hover { background:#f8fafc; }
+        .faq-arrow { font-size:.85rem; transition:transform .3s; flex-shrink:0; }
+        .faq-item.open .faq-arrow { transform:rotate(180deg); }
+        .faq-answer { display:none; padding:0 1.3rem 1.2rem; font-size:.88rem; color:#555; line-height:1.8; border-top:1px solid #f1f5f9; }
+        .faq-item.open .faq-answer { display:block; }
+        .faq-cat-badge { display:inline-block; padding:.2rem .6rem; border-radius:20px; font-size:.68rem; font-weight:700; background:#eff6ff; color:var(--royal-blue); margin-bottom:.7rem; }
+
+        /* ══ Page Actualités Overlay ══ */
+        .filtre-actus.active { background: var(--royal-blue) !important; color: white !important; border-color: var(--royal-blue) !important; }
+        .filtre-actus:hover:not(.active) { background: #f1f5f9 !important; border-color: #cbd5e1 !important; }
+
+        /* ══ Cards actualités — style école française ══ */
+        .actu-card {
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(0,0,0,.07);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform .25s, box-shadow .25s;
+            cursor: pointer;
+        }
+        .actu-card:hover { transform: translateY(-5px); box-shadow: 0 14px 36px rgba(0,0,0,.13); }
+        .actu-card img { width: 100%; height: 200px; object-fit: cover; display: block; }
+        .actu-card-img-ph { width: 100%; height: 200px; background: linear-gradient(135deg, var(--royal-blue), #2563eb); display: flex; align-items: center; justify-content: center; font-size: 3.5rem; }
+        .actu-card-body { padding: 1.4rem; flex: 1; display: flex; flex-direction: column; }
+        .actu-card-cat { display: inline-block; padding: .2rem .65rem; border-radius: 20px; font-size: .68rem; font-weight: 700; background: var(--royal-blue); color: white; margin-bottom: .6rem; text-transform: uppercase; letter-spacing: .05em; }
+        .actu-card-body h3 { font-size: 1.05rem; font-weight: 700; color: var(--royal-blue); margin-bottom: .5rem; line-height: 1.35; }
+        .actu-card-meta { font-size: .75rem; color: #94a3b8; margin-bottom: .7rem; display: flex; gap: .8rem; flex-wrap: wrap; }
+        .actu-card-body p { font-size: .87rem; color: #555; flex: 1; line-height: 1.65; margin-bottom: .9rem; }
+        .actu-card-link { display: inline-flex; align-items: center; gap: .4rem; font-size: .82rem; font-weight: 700; color: var(--royal-blue); transition: gap .2s; }
+        .actu-card:hover .actu-card-link { gap: .7rem; }
+
+        /* ══ Page detail article ══ */
+        #page-article-overlay { display: none; position: fixed; inset: 0; background: #f8fafc; z-index: 2100; overflow-y: auto; }
+        .article-hero-img { width: 100%; height: 360px; object-fit: cover; display: block; }
+        .article-hero-ph { width: 100%; height: 360px; background: linear-gradient(135deg, var(--royal-blue), #2563eb); display: flex; align-items: center; justify-content: center; font-size: 5rem; }
+        .article-body { max-width: 800px; margin: 0 auto; padding: 2.5rem 5%; }
+        .article-body h1 { font-size: 2rem; font-weight: 800; color: var(--royal-blue); line-height: 1.25; margin-bottom: 1rem; }
+        .article-meta { display: flex; gap: 1.2rem; flex-wrap: wrap; font-size: .82rem; color: #64748b; margin-bottom: 1.8rem; padding-bottom: 1.5rem; border-bottom: 2px solid #e2e8f0; }
+        .article-meta-item { display: flex; align-items: center; gap: .35rem; }
+        .article-contenu { font-size: 1rem; color: #374151; line-height: 1.85; white-space: pre-wrap; }
+        .article-back-btn { background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3); color: white; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; flex-shrink: 0; }
+        .article-back-btn:hover { background: rgba(255,255,255,.25); }
+        .article-sticky-header { background: linear-gradient(135deg, var(--royal-blue) 0%, #2563eb 100%); padding: 1.2rem 5%; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,.2); }
     </style>
 </head>
 <body>
+
+    <!-- ══ BANNIÈRE OPTIONNELLE (masquée si connecté) ══ -->
+    <div id="banniere-inscription">
+        📬 Créez un compte pour recevoir nos actualités et informations scolaires.
+        <a href="portail.html">Créer un compte gratuit →</a>
+        <button id="banniere-close" onclick="document.getElementById('banniere-inscription').style.display='none'" title="Fermer">✕</button>
+    </div>
+
     <!-- Header & Navigation -->
     <header>
         <nav>
@@ -965,9 +1108,12 @@
             <ul class="nav-links">
                 <li><a href="#accueil">Accueil</a></li>
                 <li><a href="#apropos">À propos</a></li>
-                <li><a href="#programmes">Programmes</a></li>
+                <li><a href="#actualites">Actualités</a></li>
+                <li><a href="#equipe">Équipe</a></li>
                 <li><a href="#galerie">Galerie</a></li>
+                <li><a href="#preinscription">Pré-inscription</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <li><a href="portail.html" id="nav-auth-btn" class="btn-nav-auth">Connexion</a></li>
             </ul>
             <button class="mobile-menu-btn">☰</button>
         </nav>
@@ -975,9 +1121,9 @@
             <ul>
                 <li><a href="#accueil">Accueil</a></li>
                 <li><a href="#apropos">À propos</a></li>
-                <li><a href="#programmes">Programmes</a></li>
                 <li><a href="#galerie">Galerie</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <li><a href="portail.html" style="color:var(--royal-blue);font-weight:700;">🔑 Connexion / Compte</a></li>
             </ul>
         </div>
     </header>
@@ -985,300 +1131,290 @@
     <!-- Hero Section -->
     <section id="accueil" class="hero">
         <div class="hero-content">
-            <h1>King's School International</h1>
+            <h1 id="hero-titre">King's School International</h1>
             <p class="tagline"><span id="typewriterEl"></span></p>
-            <p>Une éducation d'excellence basée sur la foi chrétienne, la discipline et le leadership pour préparer la prochaine génération à changer le monde.</p>
+            <p id="hero-description">Une éducation d'excellence basée sur la foi chrétienne, la discipline et le leadership pour préparer la prochaine génération à changer le monde.</p>
             <div class="cta-buttons">
-                <a href="#apropos" class="btn btn-primary">Découvrir l'école</a>
-                <a href="#contact" class="btn btn-secondary">Nous contacter</a>
+                <a href="#apropos" class="btn btn-primary" id="hero-btn1">Découvrir l'école</a>
+                <a href="#contact" class="btn btn-secondary" id="hero-btn2">Nous contacter</a>
             </div>
         </div>
     </section>
 
-    <!-- About Section - IMPROVED -->
+    <!-- ══ CHIFFRES CLÉS ══ -->
+    <section id="chiffres" style="background:linear-gradient(135deg,var(--royal-blue) 0%,#2563eb 100%);padding:5rem 5%;color:white;text-align:center;">
+      <h2 id="chiffres-titre" style="font-size:2rem;font-weight:800;margin-bottom:.5rem;">King's School en Chiffres</h2>
+      <p id="chiffres-sous-titre" style="color:rgba(255,255,255,.75);margin-bottom:3rem;">Une école qui grandit, des résultats qui parlent</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:2rem;max-width:900px;margin:0 auto;">
+        <div class="chiffre-item"><div class="chiffre-number" id="c-annee">2015</div><div style="font-size:.9rem;color:rgba(255,255,255,.7);">Année de fondation</div></div>
+        <div class="chiffre-item"><div class="chiffre-number" id="c-eleves">0</div><div style="font-size:.9rem;color:rgba(255,255,255,.7);">Élèves inscrits</div></div>
+        <div class="chiffre-item"><div class="chiffre-number" id="c-reussite">0%</div><div style="font-size:.9rem;color:rgba(255,255,255,.7);">Taux de réussite</div></div>
+        <div class="chiffre-item"><div class="chiffre-number" id="c-profs">0</div><div style="font-size:.9rem;color:rgba(255,255,255,.7);">Enseignants qualifiés</div></div>
+      </div>
+    </section>
+
     <section id="apropos" class="about-section">
         <div class="about-container">
             <div class="about-header">
-                <h2>À Propos de King's School International</h2>
+                <h2 id="apropos-titre">À Propos de King's School International</h2>
             </div>
             <div class="about-content">
                 <div class="about-text">
-                    <p>King's School International, membre de <strong>Metanoia Ministries International</strong>, est une école chrétienne engagée dans la formation internationale de la prochaine génération de leaders.</p>
-                    
-                    <p>Nous croyons que l'éducation ne consiste pas seulement à transmettre des connaissances, mais à <strong>façonner le caractère</strong>, développer l'esprit critique et préparer les jeunes à changer leur communauté, leur pays et le monde.</p>
-                    
+                    <p id="apropos-p1">King's School International, membre de <strong>Metanoia Ministries International</strong>, est une école chrétienne engagée dans la formation internationale de la prochaine génération de leaders.</p>
+                    <p id="apropos-p2">Nous croyons que l'éducation ne consiste pas seulement à transmettre des connaissances, mais à <strong>façonner le caractère</strong>, développer l'esprit critique et préparer les jeunes à changer leur communauté, leur pays et le monde.</p>
                     <div class="quote-box">
-                        <p>"L'éducation est l'arme la plus puissante pour changer le monde."</p>
-                        <p class="quote-author">— Nelson Mandela</p>
+                        <p id="apropos-citation">"L'éducation est l'arme la plus puissante pour changer le monde."</p>
+                        <p class="quote-author" id="apropos-citation-auteur">— Nelson Mandela</p>
                     </div>
-
-                    <p>À King's School International, cette arme est utilisée pour <strong>construire, servir et transformer</strong>. L'éducation demande du sacrifice, de la discipline, de la rigueur et un engagement partagé entre l'école, les parents et l'équipe pédagogique.</p>
-                    
-                    <p><strong>Nous n'éduquons pas seulement des élèves :</strong><br>
-                    ✔ Nous éduquons des leaders de demain<br>
-                    ✔ Nous transmettons des valeurs chrétiennes solides<br>
-                    ✔ Nous formons des citoyens responsables<br>
-                    ✔ Nous bâtissons un Congo prospère et un continent africain transformé</p>
+                    <p id="apropos-p3">À King's School International, cette arme est utilisée pour <strong>construire, servir et transformer</strong>. L'éducation demande du sacrifice, de la discipline, de la rigueur et un engagement partagé entre l'école, les parents et l'équipe pédagogique.</p>
                 </div>
                 <div class="about-image">
-                    <img src="images/jo20.jpg" alt="">
+                    <img id="apropos-image" src="images/jo20.jpg" alt="À propos de King's School">
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Values Section -->
-    <section class="values-section">
-        <h2 class="section-title">Nos Valeurs Fondamentales</h2>
-        <p class="section-subtitle">Ce qui nous guide chaque jour</p>
-        <div class="values-grid">
-            <div class="value-card">
-                <div class="value-icon">🎓</div>
-                <h3>Excellence Académique</h3>
-                <p>Nous visons l'excellence dans tous les domaines de l'apprentissage, préparant nos élèves aux défis nationaux et internationaux.</p>
-            </div>
-            <div class="value-card">
-                <div class="value-icon">✝️</div>
-                <h3>Foi Chrétienne</h3>
-                <p>Notre fondement spirituel guide notre mission éducative et façonne le caractère de nos élèves.</p>
-            </div>
-            <div class="value-card">
-                <div class="value-icon">⚖️</div>
-                <h3>Discipline & Intégrité</h3>
-                <p>Nous cultivons la rigueur, la responsabilité et l'honnêteté comme piliers de la réussite.</p>
-            </div>
-            <div class="value-card">
-                <div class="value-icon">❤️</div>
-                <h3>Amour & Compassion</h3>
-                <p>Nous enseignons l'empathie, le respect et le service envers les autres.</p>
-            </div>
-            <div class="value-card">
-                <div class="value-icon">🤝</div>
-                <h3>Service Communautaire</h3>
-                <p>Nos élèves apprennent à servir leur communauté et à faire une différence concrète.</p>
-            </div>
-            <div class="value-card">
-                <div class="value-icon">👑</div>
-                <h3>Leadership</h3>
-                <p>Nous formons des leaders qui transformeront le Congo, l'Afrique et le monde.</p>
-            </div>
-            <div class="value-card">
-                <div class="value-icon">🌍</div>
-                <h3>Vision Internationale</h3>
-                <p>Notre programme prépare les élèves à exceller partout dans le monde.</p>
-            </div>
-        </div>
-    </section>
+
 
     <!-- Programs Section -->
-    <section id="programmes" class="programs-section">
-        <h2 class="section-title">Nos Programmes</h2>
-        <p class="section-subtitle">Une formation complète pour un avenir brillant</p>
-        <div class="programs-grid">
-            <div class="program-card">
-                <h3>📚 Enseignement Général</h3>
-                <ul>
-                    <li>Programme primaire et secondaire</li>
-                    <li>Curriculum international</li>
-                    <li>Pédagogie moderne et innovante</li>
-                    <li>Suivi personnalisé</li>
-                </ul>
-            </div>
-            <div class="program-card">
-                <h3>🌐 Langues</h3>
-                <ul>
-                    <li>Anglais intensif</li>
-                    <li>Enseignement bilingue</li>
-                    <li>Français académique</li>
-                    <li>Communication internationale</li>
-                </ul>
-            </div>
-            <div class="program-card">
-                <h3>💻 Sciences & Technologies</h3>
-                <ul>
-                    <li>Initiation informatique</li>
-                    <li>Sciences appliquées</li>
-                    <li>Mathématiques avancées</li>
-                    <li>Innovation et créativité</li>
-                </ul>
-            </div>
-            <div class="program-card">
-                <h3>👑 Leadership</h3>
-                <ul>
-                    <li>Développement personnel</li>
-                    <li>Prise de parole en public</li>
-                    <li>Gestion de projets</li>
-                    <li>Esprit d'équipe</li>
-                </ul>
-            </div>
-            <div class="program-card">
-                <h3>✝️ Formation Chrétienne</h3>
-                <ul>
-                    <li>Enseignement biblique</li>
-                    <li>Éducation morale et spirituelle</li>
-                    <li>Valeurs chrétiennes</li>
-                    <li>Service et compassion</li>
-                </ul>
-            </div>
-            <div class="program-card">
-                <h3>🎨 Arts & Sport</h3>
-                <ul>
-                    <li>Éducation artistique</li>
-                    <li>Musique et chant</li>
-                    <li>Sport et activités physiques</li>
-                    <li>Expression créative</li>
-                </ul>
-            </div>
-        </div>
+    <!-- ══ NOTRE ÉQUIPE ══ -->
+    <section id="equipe" style="padding:5rem 5%;background:white;">
+      <h2 class="section-title">Notre Équipe</h2>
+      <p class="section-subtitle">Des enseignants passionnés et qualifiés</p>
+      <div id="equipe-container" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1.2rem;max-width:1100px;margin:0 auto;"></div>
+      <div id="equipe-loading" style="text-align:center;padding:3rem;color:#64748b;">Chargement...</div>
+      <div id="equipe-empty" style="display:none;text-align:center;padding:3rem;color:#94a3b8;"><div style="font-size:3rem;">👨‍🏫</div><p>L'équipe sera présentée très bientôt.</p></div>
     </section>
 
-    <!-- Gallery Section — Slider -->
-    <section id="galerie" class="gallery-section">
-        <h2 class="section-title">Galerie Photo</h2>
-        <p class="section-subtitle">Découvrez la vie à King's School</p>
-
-        <div class="gallery-slider-wrap">
-
-            <!-- Grande image -->
-            <div class="gallery-main" id="galleryMain" onclick="openModalCurrent()">
-                <img class="gallery-main-img" id="mainImg" src="images/classroom.jpg" alt="Galerie">
-                <button class="gallery-arrow prev" onclick="event.stopPropagation(); sliderGo(-1)">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="gallery-arrow next" onclick="event.stopPropagation(); sliderGo(1)">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-                <div class="gallery-main-caption">
-                    <h3 id="mainTitle">Salles de classe modernes</h3>
-                    <p id="mainDesc">Nos salles équipées pour un apprentissage optimal.</p>
-                </div>
-            </div>
-
-            <!-- Barre de progression -->
-            <div class="gallery-progress">
-                <div class="gallery-progress-bar" id="progressBar"></div>
-            </div>
-
-            <!-- Thumbnails centrées -->
-            <div class="gallery-thumbs" id="galleryThumbs">
-                <div class="gallery-thumb active" onclick="sliderGoTo(0)">
-                    <img src="images/classroom.jpg" alt="Salles de classe">
-                    <div class="gallery-thumb-label">Salles de classe</div>
-                </div>
-                <div class="gallery-thumb" onclick="sliderGoTo(1)">
-                    <img src="images/activities.jpg" alt="Activités">
-                    <div class="gallery-thumb-label">Activités scolaires</div>
-                </div>
-                <div class="gallery-thumb" onclick="sliderGoTo(2)">
-                    <img src="images/trips.jpg" alt="Sorties">
-                    <div class="gallery-thumb-label">Sorties éducatives</div>
-                </div>
-                <div class="gallery-thumb" onclick="sliderGoTo(3)">
-                    <img src="images/events.jpg" alt="Événements">
-                    <div class="gallery-thumb-label">Événements spéciaux</div>
-                </div>
-                <div class="gallery-thumb" onclick="sliderGoTo(4)">
-                    <img src="images/humanitarian.jpg" alt="Humanitaire">
-                    <div class="gallery-thumb-label">Visite Kanvivira</div>
-                </div>
-                <div class="gallery-thumb" onclick="sliderGoTo(5)">
-                    <img src="images/ceremonies.jpg" alt="Cérémonies">
-                    <div class="gallery-thumb-label">Cérémonies</div>
-                </div>
-            </div>
-        </div>
+    <!-- ══ ACTUALITÉS ══ -->
+    <section id="actualites" style="padding:5rem 5%;background:var(--light-gray);">
+      <h2 class="section-title">Actualités</h2>
+      <p class="section-subtitle">Restez informés de la vie scolaire</p>
+      <div id="actus-container" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;max-width:1200px;margin:0 auto 2.5rem;"></div>
+      <div id="actus-loading" style="text-align:center;padding:3rem;color:#64748b;">Chargement des actualités...</div>
+      <div id="actus-empty" style="display:none;text-align:center;padding:3rem;color:#94a3b8;"><div style="font-size:3rem;">📰</div><p>Aucune actualité publiée pour l'instant.</p></div>
+      <div style="text-align:center;">
+        <button id="btn-voir-plus-actus" onclick="ouvrirPageActualites()" style="display:none;background:linear-gradient(135deg,var(--royal-blue),#2563eb);color:white;border:none;padding:.9rem 2.5rem;border-radius:30px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .25s;box-shadow:0 4px 16px rgba(30,58,138,.3);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(30,58,138,.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(30,58,138,.3)'">
+          Voir toutes les actualités →
+        </button>
+      </div>
     </section>
 
-    <!-- Modal — image + texte comme avant -->
-    <div id="galleryModal" class="modal">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-        <div class="modal-info" id="modalContent"></div>
+    <!-- ══ PAGE ACTUALITÉS (overlay) ══ -->
+    <div id="page-actualites-overlay" style="display:none;position:fixed;inset:0;background:#f8fafc;z-index:2000;overflow-y:auto;">
+      <!-- Header de la page actualités -->
+      <div style="background:linear-gradient(135deg,var(--royal-blue) 0%,#2563eb 100%);padding:2rem 5%;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2);">
+        <button onclick="fermerPageActualites()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;" onmouseover="this.style.background='rgba(255,255,255,.25)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">←</button>
+        <div>
+          <div style="font-size:.75rem;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem;">King's School International</div>
+          <h2 style="color:white;font-size:1.4rem;font-weight:800;margin:0;">Toutes nos actualités</h2>
+        </div>
+        <div style="margin-left:auto;"><span style="font-size:1.6rem;">👑</span></div>
+      </div>
+
+      <!-- Filtres catégories -->
+      <div style="background:white;padding:1.2rem 5%;border-bottom:1px solid #e2e8f0;display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;">
+        <span style="font-size:.8rem;font-weight:700;color:#64748b;margin-right:.4rem;">Filtrer :</span>
+        <button class="filtre-actus active" onclick="filtrerActus('tous',this)" style="padding:.45rem 1.1rem;border-radius:20px;border:none;background:var(--royal-blue);color:white;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;">Tout</button>
+        <button class="filtre-actus" onclick="filtrerActus('recent',this)" style="padding:.45rem 1.1rem;border-radius:20px;border:1.5px solid #e2e8f0;background:white;color:#374151;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;">Récents</button>
+      </div>
+
+      <!-- Grille des actualités -->
+      <div style="max-width:1200px;margin:0 auto;padding:2.5rem 5%;">
+        <div id="actus-page-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:2rem;"></div>
+        <div id="actus-page-loading" style="text-align:center;padding:4rem;color:#64748b;">Chargement...</div>
+        <div id="actus-page-empty" style="display:none;text-align:center;padding:4rem;color:#94a3b8;"><div style="font-size:4rem;">📰</div><p style="font-size:1.1rem;">Aucune actualité pour le moment.</p></div>
+        <!-- Pagination -->
+        <div id="actus-page-pagination" style="display:none;text-align:center;margin-top:2.5rem;display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;"></div>
+      </div>
     </div>
 
-    <!-- Contact Section - Style El-Shaddai -->
+    <!-- ══ TÉMOIGNAGES ══ -->
+    <section id="temoignages" style="padding:5rem 5%;background:linear-gradient(135deg,#f8fafc,#eff6ff);">
+      <h2 class="section-title">Témoignages</h2>
+      <p class="section-subtitle">Ce que disent les parents et anciens élèves</p>
+      <div id="temo-container" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;max-width:1100px;margin:0 auto;"></div>
+      <div id="temo-loading" style="text-align:center;padding:3rem;color:#64748b;">Chargement...</div>
+      <div id="temo-empty" style="display:none;text-align:center;padding:3rem;color:#94a3b8;"><div style="font-size:3rem;">💬</div><p>Les témoignages seront affichés ici.</p></div>
+    </section>
+
+    <!-- ══ FULLSCREEN PHOTO SLIDER ══ -->
+    <section id="galerie">
+      <div id="ksi-slider">
+        <div id="ksi-slides-container"></div>
+        <button class="ksi-arrow prev" onclick="ksiGo(-1)" aria-label="Précédent">&#8249;</button>
+        <button class="ksi-arrow next" onclick="ksiGo(1)"  aria-label="Suivant">&#8250;</button>
+        <div class="ksi-counter"><strong id="ksi-cur">1</strong> / <span id="ksi-total">1</span></div>
+        <div class="ksi-thumbs" id="ksi-thumbs"></div>
+        <div class="ksi-dots" id="ksi-dots"></div>
+        <div class="ksi-progress"><div class="ksi-progress-bar" id="ksi-bar"></div></div>
+      </div>
+    </section>
+
+    <!-- ══ PRÉ-INSCRIPTION ══ -->
+    <section id="preinscription" style="padding:5rem 5%;background:var(--royal-blue);">
+      <div style="max-width:680px;margin:0 auto;">
+        <h2 style="text-align:center;font-size:2rem;font-weight:800;color:white;margin-bottom:.5rem;">Pré-inscription en ligne</h2>
+        <p style="text-align:center;color:rgba(255,255,255,.75);margin-bottom:2.5rem;">Remplissez ce formulaire pour exprimer votre intérêt — nous vous contacterons dans les plus brefs délais.</p>
+        <div style="background:white;border-radius:16px;padding:2.5rem;box-shadow:0 20px 60px rgba(0,0,0,.2);">
+          <div id="preinscFeedback" style="display:none;padding:.85rem 1rem;border-radius:8px;margin-bottom:1.2rem;font-size:.9rem;font-weight:500;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div style="grid-column:1/-1;"><label class="pi-label">Nom de l'enfant *</label><input class="pi-input" id="pi-enfant" placeholder="Prénom Nom de l'enfant"></div>
+            <div><label class="pi-label">Âge de l'enfant *</label><input class="pi-input" id="pi-age" type="number" placeholder="8" min="3" max="20"></div>
+            <div><label class="pi-label">Classe visée *</label>
+              <select class="pi-input" id="pi-classe">
+                <option value="">Choisir...</option>
+                <option>Maternelle</option><option>1ère primaire</option><option>2ème primaire</option>
+                <option>3ème primaire</option><option>4ème primaire</option><option>5ème primaire</option>
+                <option>6ème primaire</option><option>1ère secondaire</option><option>2ème secondaire</option>
+                <option>3ème secondaire</option><option>4ème secondaire</option><option>5ème secondaire</option><option>6ème secondaire</option>
+              </select>
+            </div>
+            <div><label class="pi-label">Nom du parent / tuteur *</label><input class="pi-input" id="pi-parent" placeholder="Votre nom complet"></div>
+            <div><label class="pi-label">Email *</label><input class="pi-input" id="pi-email" type="email" placeholder="votre@email.com"></div>
+            <div style="grid-column:1/-1;"><label class="pi-label">Téléphone / WhatsApp</label><input class="pi-input" id="pi-tel" placeholder="+243 XXX XXX XXX"></div>
+            <div style="grid-column:1/-1;"><label class="pi-label">Message (facultatif)</label><textarea class="pi-input" id="pi-msg" rows="3" placeholder="Questions, besoins particuliers..."></textarea></div>
+          </div>
+          <button id="btnPreinsc" onclick="envoyerPreinscription()" style="width:100%;margin-top:1.5rem;padding:1rem;background:linear-gradient(135deg,var(--royal-blue),#2563eb);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;">
+            Envoyer ma demande de pré-inscription →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ FAQ ══ -->
+    <section id="faq" style="padding:5rem 5%;background:white;">
+      <h2 class="section-title">Questions Fréquentes</h2>
+      <p class="section-subtitle">Tout ce que vous devez savoir</p>
+      <div id="faq-container" style="max-width:760px;margin:0 auto;"></div>
+      <div id="faq-loading" style="text-align:center;padding:2rem;color:#64748b;">Chargement...</div>
+      <div id="faq-empty" style="display:none;text-align:center;padding:3rem;color:#94a3b8;"><div style="font-size:3rem;">❓</div><p>La FAQ sera disponible très bientôt.</p></div>
+    </section>
+
     <section id="contact" class="contact-section">
         <h2 class="section-title">Contactez-Nous</h2>
         <p class="section-subtitle">Nous sommes là pour vous répondre</p>
 
         <div class="contact-grid">
-
             <!-- Colonne gauche : infos -->
             <div class="contact-info">
                 <h3><i class="fas fa-info-circle" style="color:var(--gold);margin-right:.5rem;"></i>Informations</h3>
 
                 <div class="contact-item">
                     <span class="contact-item-icon"><i class="fas fa-map-marker-alt"></i></span>
-                    <div>
-                        <strong>Adresse</strong>
-                        <span>Uvira, Sud-Kivu, RDC</span>
-                    </div>
+                    <div><strong>Adresse</strong><span id="contact-adresse">Uvira, Sud-Kivu, RDC</span></div>
                 </div>
-
                 <div class="contact-item">
                     <span class="contact-item-icon"><i class="fas fa-phone-alt"></i></span>
-                    <div>
-                        <strong>Téléphone / WhatsApp</strong>
-                        <span>+243 XXX XXX XXX</span>
-                    </div>
+                    <div><strong>Téléphone / WhatsApp</strong><span id="contact-telephone">+243 XXX XXX XXX</span></div>
                 </div>
-
                 <div class="contact-item">
                     <span class="contact-item-icon"><i class="fas fa-envelope"></i></span>
-                    <div>
-                        <strong>Email</strong>
-                        <span>contact@kingsschool.cd</span>
-                    </div>
+                    <div><strong>Email</strong><span id="contact-email">contact@kingsschool.cd</span></div>
                 </div>
-
                 <div class="contact-item">
                     <span class="contact-item-icon"><i class="fas fa-clock"></i></span>
-                    <div>
-                        <strong>Heures d'ouverture</strong>
-                        <span>Lundi – Vendredi : 7h30 – 16h00</span>
-                    </div>
+                    <div><strong>Heures d'ouverture</strong><span id="contact-horaires">Lundi – Vendredi : 7h30 – 16h00</span></div>
                 </div>
 
-                <!-- Réseaux sociaux — vraies couleurs des apps -->
                 <div class="social-links-row">
-                    <a href="https://www.facebook.com/kingschoolinternational" target="_blank" class="social-btn-round" title="Facebook" style="background:#1877f2;">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="https://www.instagram.com/metanoia_ministries/" target="_blank" class="social-btn-round" title="Instagram" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="https://wa.me/243XXXXXXXXX" target="_blank" class="social-btn-round" title="WhatsApp" style="background:#25d366;">
-                        <i class="fab fa-whatsapp"></i>
-                    </a>
-                    <a href="https://youtube.com" target="_blank" class="social-btn-round" title="YouTube" style="background:#ff0000;">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                    <a href="mailto:contact@kingsschool.cd" class="social-btn-round" title="Email" style="background:linear-gradient(135deg,var(--royal-blue),#2563eb);">
-                        <i class="fas fa-envelope"></i>
-                    </a>
+                    <a id="contact-facebook" href="https://www.facebook.com/kingschoolinternational" target="_blank" class="social-btn-round" title="Facebook" style="background:#1877f2;"><i class="fab fa-facebook-f"></i></a>
+                    <a id="contact-instagram" href="https://www.instagram.com/metanoia_ministries/" target="_blank" class="social-btn-round" title="Instagram" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);"><i class="fab fa-instagram"></i></a>
+                    <a id="contact-whatsapp" href="https://wa.me/243XXXXXXXXX" target="_blank" class="social-btn-round" title="WhatsApp" style="background:#25d366;"><i class="fab fa-whatsapp"></i></a>
+                    <a id="contact-youtube" href="https://youtube.com" target="_blank" class="social-btn-round" title="YouTube" style="background:#ff0000;"><i class="fab fa-youtube"></i></a>
+                    <a href="mailto:contact@kingsschool.cd" class="social-btn-round" title="Email" style="background:linear-gradient(135deg,var(--royal-blue),#2563eb);"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
 
             <!-- Colonne droite : formulaire -->
             <div class="contact-form-box">
                 <h3>✉️ Envoyez un Message</h3>
-
                 <div class="form-feedback" id="contactFeedback"></div>
-
                 <input type="text"  id="cName"    placeholder="Votre nom complet">
                 <input type="email" id="cEmail"   placeholder="Votre adresse email">
-                <input type="text"  id="cSubject" placeholder="Sujet">
+                <input type="tel"   id="cTel" placeholder="Votre numéro de téléphone / WhatsApp">
                 <textarea id="cMessage" rows="5"  placeholder="Votre message..."></textarea>
-
-                <button class="btn-submit-contact" id="btnContact" onclick="sendContactForm()">
-                    Envoyer le message
-                </button>
+                <button class="btn-submit-contact" id="btnContact" onclick="sendContactForm()">Envoyer le message</button>
             </div>
-
         </div>
     </section>
 
+    <!-- ══ MODAL CONNEXION REQUISE ══ -->
+    <div id="modal-connexion" style="position:fixed;inset:0;z-index:9999;background:rgba(15,30,80,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center;display:none;">
+      <div style="background:white;border-radius:20px;padding:2.5rem 2rem;max-width:380px;width:90%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.25);position:relative;animation:modalPop .25s ease;">
+        <button onclick="fermerModalConnexion()" style="position:absolute;top:.8rem;right:.9rem;background:none;border:none;font-size:1.3rem;color:#94a3b8;cursor:pointer;line-height:1;">✕</button>
+        <div style="font-size:3rem;margin-bottom:1rem;">🔐</div>
+        <h3 style="font-size:1.3rem;font-weight:800;color:#1e3a8a;margin-bottom:.6rem;" id="modal-cnx-titre">Connexion requise</h3>
+        <p style="font-size:.9rem;color:#64748b;line-height:1.6;margin-bottom:1.8rem;" id="modal-cnx-texte">Créez un compte ou connectez-vous pour accéder à cette section réservée aux membres.</p>
+        <a href="portail.html" style="display:block;padding:.85rem 1.5rem;background:linear-gradient(135deg,#1e3a8a,#2563eb);color:white;text-decoration:none;border-radius:12px;font-weight:700;font-size:1rem;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(30,58,138,.4)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+          👤 Se connecter / S'inscrire
+        </a>
+        <p style="font-size:.78rem;color:#94a3b8;margin-top:1rem;">C'est gratuit et rapide ✨</p>
+      </div>
+    </div>
+    <style>
+      @keyframes modalPop { from { transform:scale(.9);opacity:0; } to { transform:scale(1);opacity:1; } }
+    </style>
+
+    <!-- ══ TOAST BIENVENUE (visiteurs non connectés) ══ -->
+    <div id="toast-bienvenue" style="
+      position:fixed; bottom:1.5rem; right:1.5rem; z-index:8000;
+      background:white; border-radius:16px;
+      box-shadow:0 8px 32px rgba(30,58,138,.18), 0 2px 8px rgba(0,0,0,.08);
+      padding:1.2rem 1.4rem; max-width:300px; width:calc(100vw - 3rem);
+      border-left:4px solid #d4af37;
+      transition:transform .4s cubic-bezier(.34,1.56,.64,1), opacity .3s ease;
+      display:none;
+    ">
+      <button onclick="fermerToastBienvenue()" style="
+        position:absolute; top:.6rem; right:.7rem;
+        background:none; border:none; font-size:1rem; color:#94a3b8;
+        cursor:pointer; line-height:1; padding:0;
+      ">✕</button>
+      <div style="display:flex; align-items:center; gap:.75rem; margin-bottom:.7rem;">
+        <span style="font-size:1.6rem;">👑</span>
+        <div>
+          <div style="font-size:.8rem; font-weight:800; color:#1e3a8a; text-transform:uppercase; letter-spacing:.05em;">King's School</div>
+          <div style="font-size:.7rem; color:#94a3b8;">Portail membres</div>
+        </div>
+      </div>
+      <p style="font-size:.83rem; color:#374151; line-height:1.55; margin-bottom:1rem;">
+        Rejoignez la communauté pour lire nos actualités et nous contacter directement.
+      </p>
+      <a href="portail.html" style="
+        display:block; text-align:center; padding:.6rem 1rem;
+        background:linear-gradient(135deg,#1e3a8a,#2563eb);
+        color:white; text-decoration:none; border-radius:10px;
+        font-size:.82rem; font-weight:700;
+        transition:transform .15s, box-shadow .15s;
+      " onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 18px rgba(30,58,138,.35)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        Se connecter / S'inscrire gratuitement →
+      </a>
+    </div>
+    <script>
+      (function() {
+        if (localStorage.getItem('ksi_user')) return;
+        var toast = document.getElementById('toast-bienvenue');
+        toast.style.transform = 'translateY(120%)';
+        toast.style.opacity = '0';
+        toast.style.display = 'block';
+        setTimeout(function() {
+          toast.style.transform = 'translateY(0)';
+          toast.style.opacity = '1';
+        }, 1800);
+      })();
+      function fermerToastBienvenue() {
+        var toast = document.getElementById('toast-bienvenue');
+        toast.style.transform = 'translateY(120%)';
+        toast.style.opacity = '0';
+        setTimeout(function() { toast.style.display = 'none'; }, 420);
+      }
+    </script>
+
     <!-- Footer -->
-   
+
     <!-- Protection : vérifie que l'utilisateur est connecté -->
     <script src="garde.js"></script>
 
@@ -1321,111 +1457,222 @@
         typeWriter();
 
         // ════════════════════════════════════════════════
-        //  GALLERY SLIDER
+        //  PHASE 0 — Positionnement header + hero (sans espace blanc)
         // ════════════════════════════════════════════════
-        const galleryData = [
-            { key: 'classroom',    title: 'Salles de classe modernes',      short: 'Environnement optimal pour apprendre.',         desc: 'Nos salles de classe sont équipées pour offrir un environnement d\'apprentissage optimal avec des équipements modernes, un éclairage adapté et un espace confortable pour chaque élève.' },
-            { key: 'activities',   title: 'Activités scolaires',             short: 'Travaux de groupe, débats, ateliers pratiques.', desc: 'Les élèves participent à diverses activités éducatives incluant des travaux de groupe, des présentations, des débats et des ateliers pratiques qui développent leurs compétences académiques et sociales.' },
-            { key: 'trips',        title: 'Sorties éducatives',              short: 'Apprendre hors des murs de l\'école.',          desc: 'Nous organisons régulièrement des sorties pédagogiques pour permettre aux élèves d\'apprendre en dehors de la salle de classe et de découvrir leur environnement, leur culture et leur communauté.' },
-            { key: 'events',       title: 'Événements spéciaux',             short: 'Souvenirs inoubliables, esprit d\'équipe.',      desc: 'Tout au long de l\'année, King\'s School International organise des événements culturels, sportifs et académiques qui créent des souvenirs inoubliables et renforcent l\'esprit d\'équipe.' },
-            { key: 'humanitarian', title: 'Visite humanitaire Kanvivira',    short: 'Compassion, partage et service communautaire.', desc: 'Un moment fort en émotions : nos élèves ont visité le camp des réfugiés burundais à Kanvivira. Cette expérience leur a appris la compassion, le partage et l\'importance du service communautaire. Ils ont apporté de l\'aide et du réconfort aux familles réfugiées.' },
-            { key: 'ceremonies',   title: 'Cérémonies & Graduations',        short: 'Célébrer les réussites de nos élèves.',         desc: 'Nous célébrons les réussites de nos élèves lors de cérémonies officielles de remise de diplômes et d\'événements spéciaux qui marquent leur parcours académique et personnel.' }
-        ];
+        function ajusterLayout() {
+          const banniere = document.getElementById('banniere-inscription');
+          const header   = document.querySelector('header');
+          const hero     = document.querySelector('.hero');
+          const mobileNav = document.querySelector('.mobile-nav');
 
-        let currentSlide = 0, progressVal = 0;
-        let sliderTmr = null, progTmr = null;
-        const DURATION = 4500;
+          const banH    = (banniere && banniere.style.display !== 'none') ? banniere.offsetHeight : 0;
+          const headerH = header ? header.offsetHeight : 90;
 
-        function updateSlider(idx) {
-            currentSlide = (idx + galleryData.length) % galleryData.length;
-            const d = galleryData[currentSlide];
-            const img = document.getElementById('mainImg');
-            img.style.opacity = '0';
-            setTimeout(() => {
-                img.src = 'images/' + d.key + '.jpg';
-                img.alt = d.title;
-                document.getElementById('mainTitle').textContent = d.title;
-                document.getElementById('mainDesc').textContent  = d.short;
-                img.style.opacity = '1';
-            }, 220);
-            document.querySelectorAll('.gallery-thumb').forEach((t, i) => {
-                t.classList.toggle('active', i === currentSlide);
-            });
-            resetProgress();
+          // Header se place juste sous la bannière
+          if (header) header.style.top = banH + 'px';
+
+          // Mobile nav se place juste sous le header
+          if (mobileNav) mobileNav.style.top = (banH + headerH) + 'px';
+
+          // Hero démarre juste sous le header (la bannière occupe déjà sa place dans le flux normal)
+          if (hero) hero.style.marginTop = headerH + 'px';
         }
 
-        function sliderGo(dir)    { updateSlider(currentSlide + dir); }
-        function sliderGoTo(idx)  { updateSlider(idx); }
+        // Appel immédiat + après chargement complet
+        ajusterLayout();
+        window.addEventListener('load', ajusterLayout);
 
-        function resetProgress() {
-            clearInterval(progTmr);
-            clearTimeout(sliderTmr);
-            progressVal = 0;
-            document.getElementById('progressBar').style.width = '0%';
-            const step = 100 / (DURATION / 80);
-            progTmr = setInterval(() => {
-                progressVal = Math.min(progressVal + step, 100);
-                document.getElementById('progressBar').style.width = progressVal + '%';
-            }, 80);
-            sliderTmr = setTimeout(() => updateSlider(currentSlide + 1), DURATION);
+        // Fermeture de la bannière
+        document.getElementById('banniere-close').addEventListener('click', function() {
+          ajusterLayout();
+        });
+
+        // ════════════════════════════════════════════════
+        //  KSI FULLSCREEN PHOTO SLIDER — 100% dynamique
+        // ════════════════════════════════════════════════
+        let ksiData = [];
+        let ksiCur  = 0;
+        let ksiTmr  = null;
+        let ksiProg = null;
+        let ksiProgVal = 0;
+        let ksiPaused = false;
+        const KSI_DURATION = 5500;
+        const KSI_CATS = {general:'Général','vie-scolaire':'Vie scolaire',evenements:'Événements',infrastructure:'Infrastructure',humanitaire:'Humanitaire',sport:'Sport',ceremonie:'Cérémonie'};
+
+        function ksiBuildSlides(photos) {
+          // Filtrer les photos dont l'image est vide ou invalide
+          const valides = photos.filter(p => p.image && p.image.trim() !== '');
+          if (!valides.length) return;
+
+          const container = document.getElementById('ksi-slides-container');
+          const thumbs    = document.getElementById('ksi-thumbs');
+          const dots      = document.getElementById('ksi-dots');
+          document.getElementById('ksi-total').textContent = valides.length;
+          document.getElementById('ksi-cur').textContent  = '1';
+          container.innerHTML = '';
+          thumbs.innerHTML    = '';
+          dots.innerHTML      = '';
+          ksiCur = 0;
+
+          valides.forEach((p, i) => {
+            // Construire le titre avec un mot en doré si possible
+            const mots = (p.titre || '').split(' ');
+            let titreHtml = p.titre || '';
+            if (mots.length >= 2) {
+              const dernierMot = mots.pop();
+              titreHtml = mots.join(' ') + ' <span>' + dernierMot + '</span>';
+            }
+
+            const catLabel = KSI_CATS[p.categorie] || p.categorie || '';
+
+            const slide = document.createElement('div');
+            slide.className = 'ksi-slide' + (i === 0 ? ' active' : '');
+
+            // bgDiv — on utilise appendChild pour tout, pas de innerHTML +=
+            // qui détruirait les éléments déjà ajoutés et leurs styles JS
+            const bgDiv = document.createElement('div');
+            bgDiv.className = 'ksi-slide-bg';
+            bgDiv.style.cssText = "background-image:url('" + p.image + "');background-size:cover;background-position:center;";
+
+            const overlay = document.createElement('div');
+            overlay.className = 'ksi-slide-overlay';
+
+            const content = document.createElement('div');
+            content.className = 'ksi-slide-content';
+            content.innerHTML = (catLabel ? '<div class="ksi-slide-badge">📍 ' + catLabel + '</div>' : '')
+              + '<h2 class="ksi-slide-title">' + titreHtml + '</h2>'
+              + '<p class="ksi-slide-desc">' + (p.description || '') + '</p>';
+
+            slide.appendChild(bgDiv);
+            slide.appendChild(overlay);
+            slide.appendChild(content);
+            slide.style.cursor = 'pointer';
+            slide.addEventListener('click', () => ksiGoTo(ksiCur, true));
+            container.appendChild(slide);
+
+            // Thumbnail
+            const thumb = document.createElement('div');
+            thumb.className = 'ksi-thumb' + (i === 0 ? ' active' : '');
+            const tImg = document.createElement('img');
+            tImg.alt = p.titre || '';
+            tImg.onerror = () => { tImg.style.display='none'; thumb.style.background='linear-gradient(135deg,#1e3a8a,#2563eb)'; };
+            tImg.src = p.image;
+            thumb.appendChild(tImg);
+            thumb.addEventListener('click', () => ksiGoTo(i, true));
+            thumbs.appendChild(thumb);
+
+            // Dot
+            const dot = document.createElement('button');
+            dot.className = 'ksi-dot' + (i === 0 ? ' active' : '');
+            dot.setAttribute('aria-label', 'Slide ' + (i+1));
+            dot.addEventListener('click', () => ksiGoTo(i, true));
+            dots.appendChild(dot);
+          });
+
+          ksiStartAuto();
         }
 
-        resetProgress();
+        function ksiGoTo(idx, fromClick) {
+          const slides = document.querySelectorAll('.ksi-slide');
+          const thumbs = document.querySelectorAll('.ksi-thumb');
+          const dots   = document.querySelectorAll('.ksi-dot');
+          if (!slides.length) return;
+          const newIdx = ((idx % slides.length) + slides.length) % slides.length;
 
-        // Pause au survol
-        document.getElementById('galleryMain').addEventListener('mouseenter', () => {
-            clearInterval(progTmr); clearTimeout(sliderTmr);
-        });
-        document.getElementById('galleryMain').addEventListener('mouseleave', () => {
-            resetProgress();
-        });
+          // Changer de slide
+          slides[ksiCur].classList.remove('active');
+          thumbs[ksiCur] && thumbs[ksiCur].classList.remove('active');
+          dots[ksiCur]   && dots[ksiCur].classList.remove('active');
+          ksiCur = newIdx;
+          slides[ksiCur].classList.add('active');
+          thumbs[ksiCur] && thumbs[ksiCur].classList.add('active');
+          dots[ksiCur]   && dots[ksiCur].classList.add('active');
+          document.getElementById('ksi-cur').textContent = ksiCur + 1;
+
+          if (fromClick) {
+            if (!ksiPaused) {
+              // Clic → pause
+              ksiPaused = true;
+              clearInterval(ksiProg);
+              clearTimeout(ksiTmr);
+            } else {
+              // Déjà en pause + clic sur une autre image → reprendre
+              ksiPaused = false;
+              ksiStartAuto();
+            }
+          } else {
+            if (!ksiPaused) ksiStartAuto();
+          }
+        }
+
+        function ksiGo(dir) { ksiGoTo(ksiCur + dir, false); }
+
+        function ksiStartAuto() {
+          clearInterval(ksiProg);
+          clearTimeout(ksiTmr);
+          ksiProgVal = 0;
+          document.getElementById('ksi-bar').style.width = '0%';
+          const step = 100 / (KSI_DURATION / 80);
+          ksiProg = setInterval(() => {
+            ksiProgVal = Math.min(ksiProgVal + step, 100);
+            document.getElementById('ksi-bar').style.width = ksiProgVal + '%';
+          }, 80);
+          ksiTmr = setTimeout(() => { if (!ksiPaused) ksiGo(1); }, KSI_DURATION);
+        }
 
         // Swipe mobile
-        let tx = 0;
-        document.getElementById('galleryMain').addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
-        document.getElementById('galleryMain').addEventListener('touchend',   e => {
-            const diff = tx - e.changedTouches[0].clientX;
-            if (Math.abs(diff) > 40) sliderGo(diff > 0 ? 1 : -1);
+        let _tx = 0;
+        const _slider = document.getElementById('ksi-slider');
+        _slider.addEventListener('touchstart', e => { _tx = e.touches[0].clientX; }, {passive:true});
+        _slider.addEventListener('touchend',   e => {
+          const diff = _tx - e.changedTouches[0].clientX;
+          if (Math.abs(diff) > 40) ksiGo(diff > 0 ? 1 : -1);
         });
+        // Survol : le slider continue sans interruption
 
-        // Ouvrir modal au clic sur la grande image
-        function openModalCurrent() {
-            const d = galleryData[currentSlide];
-            const modal   = document.getElementById('galleryModal');
-            const content = document.getElementById('modalContent');
-            content.innerHTML = `
-                <h3>${d.title}</h3>
-                <img src="images/${d.key}.jpg" alt="${d.title}" style="max-width:100%;max-height:65vh;border-radius:10px;margin:1rem 0;display:block;">
-                <p>${d.desc}</p>
-            `;
-            modal.classList.add('active');
+        // Chargement dynamique depuis l'API
+        async function chargerGalerie() {
+          try {
+            const res   = await fetch('http://localhost:3000/api/galerie');
+            const items = await res.json();
+            // Filtrer les entrées avec image valide
+            const valides = Array.isArray(items) ? items.filter(p => p.image && p.image.trim()) : [];
+            if (valides.length) {
+              ksiData = valides;
+              ksiBuildSlides(valides);
+              return;
+            }
+          } catch(e) { /* fallback ci-dessous */ }
+          // Fallback statique si serveur absent ou galerie vide
+          const fallback = [
+            {image:'images/classroom.jpg',    titre:'Salles de Classe Modernes',  description:'Des espaces conçus pour l excellence académique.', categorie:'infrastructure'},
+            {image:'images/activities.jpg',   titre:'Activités Scolaires',         description:'Des activités variées pour développer tous les talents.', categorie:'vie-scolaire'},
+            {image:'images/humanitarian.jpg', titre:'Engagement Humanitaire',      description:'Nos élèves apprennent à servir leur communauté.', categorie:'humanitaire'},
+            {image:'images/ceremonies.jpg',   titre:'Cérémonies et Célébrations',  description:'Nous célébrons les réussites de chaque élève.', categorie:'ceremonie'},
+          ];
+          ksiData = fallback;
+          ksiBuildSlides(fallback);
         }
-
-        function closeModal() {
-            document.getElementById('galleryModal').classList.remove('active');
-            resetProgress();
-        }
-
-        window.addEventListener('click', e => {
-            const modal = document.getElementById('galleryModal');
-            if (e.target === modal) closeModal();
-        });
 
         // ════════════════════════════════════════════════
         //  FORMULAIRE DE CONTACT
         // ════════════════════════════════════════════════
         async function sendContactForm() {
+            if (!localStorage.getItem('ksi_user')) {
+              afficherModalConnexion('Connectez-vous pour nous écrire', 'Vous devez être connecté pour envoyer un message. C\'est gratuit et ne prend que quelques secondes.');
+              return;
+            }
             const feedback = document.getElementById('contactFeedback');
             const btn      = document.getElementById('btnContact');
             const name     = document.getElementById('cName').value.trim();
             const email    = document.getElementById('cEmail').value.trim();
-            const subject  = document.getElementById('cSubject').value.trim();
+            const telephone = document.getElementById('cTel').value.trim();
             const message  = document.getElementById('cMessage').value.trim();
 
             feedback.className = 'form-feedback';
             feedback.textContent = '';
 
-            if (!name || !email || !subject || !message) {
+            if (!name || !email || !message) {
                 feedback.className = 'form-feedback error';
                 feedback.textContent = '⚠️ Veuillez remplir tous les champs.';
                 return;
@@ -1443,7 +1690,7 @@
                 const res  = await fetch('http://localhost:3000/api/contact', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, subject, message })
+                    body: JSON.stringify({ name, email, telephone, message })
                 });
                 const data = await res.json();
 
@@ -1452,7 +1699,7 @@
                     feedback.textContent = '✅ Message envoyé ! Nous vous répondrons très bientôt.';
                     document.getElementById('cName').value    = '';
                     document.getElementById('cEmail').value   = '';
-                    document.getElementById('cSubject').value = '';
+                    document.getElementById('cTel').value = '';
                     document.getElementById('cMessage').value = '';
                 } else {
                     feedback.className = 'form-feedback error';
@@ -1486,6 +1733,22 @@
         });
 
         window.addEventListener('scroll', () => {
+            // ── Header : se cache derrière la bannière quand on scroll ──
+            const banniere = document.getElementById('banniere-inscription');
+            const header   = document.querySelector('header');
+            if (header) {
+                const banniereVisible = banniere && banniere.style.display !== 'none';
+                if (banniereVisible) {
+                    const banH = banniere.offsetHeight;
+                    // La bannière sort du viewport progressivement
+                    const offset = Math.max(0, banH - window.pageYOffset);
+                    header.style.top = offset + 'px';
+                } else {
+                    header.style.top = '0';
+                }
+            }
+
+            // ── Lien actif selon la section visible ──
             let current = '';
             document.querySelectorAll('section[id]').forEach(section => {
                 if (window.pageYOffset >= section.offsetTop - 150) {
@@ -1497,6 +1760,466 @@
                 if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
             });
         });
+        // ════════════════════════════════════════════════
+        //  CHARGEMENT DONNÉES DEPUIS L'API
+        // ════════════════════════════════════════════════
+
+        // ══ ACTUALITÉS — système complet ══
+        let allActus = [];
+        let actusFiltrees = [];
+        let actusPageCourante = 1;
+        const ACTUS_PAR_PAGE = 6;
+        const ACTUS_APERCU = 3; // sur la page principale
+
+        function creerCardActu(a, onclick_fn) {
+          const date = new Date(a.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+          const card = document.createElement('div');
+          card.className = 'actu-card';
+          card.onclick = onclick_fn;
+          card.innerHTML = `
+            ${a.image
+              ? `<img src="${a.image}" alt="" onerror="this.style.display='none';this.nextElementSibling&&(this.nextElementSibling.style.display='flex')">`
+              : ''}
+            <div class="actu-card-img-ph" style="${a.image ? 'display:none' : ''}">📰</div>
+            <div class="actu-card-body">
+              <span class="actu-card-cat">Actualité</span>
+              <h3>${a.titre}</h3>
+              <div class="actu-card-meta">
+                <span>📅 ${date}</span>
+                <span>✍️ ${a.auteur}</span>
+              </div>
+              <p>${a.contenu.slice(0,150)}${a.contenu.length>150?'…':''}</p>
+              <span class="actu-card-link">Lire la suite →</span>
+            </div>
+          `;
+          return card;
+        }
+
+        async function chargerActualites() {
+          try {
+            const res = await fetch('http://localhost:3000/api/actualites?limit=100');
+            const data = await res.json();
+            document.getElementById('actus-loading').style.display = 'none';
+            allActus = data.actualites || [];
+            if (!allActus.length) {
+              document.getElementById('actus-empty').style.display = 'block';
+              return;
+            }
+            // Afficher seulement 3 aperçus sur la page principale
+            const container = document.getElementById('actus-container');
+            allActus.slice(0, ACTUS_APERCU).forEach(a => {
+              container.appendChild(creerCardActu(a, () => ouvrirArticle(a)));
+            });
+            // Montrer le bouton "Voir plus" seulement s'il y a plus de 3 actus
+            if (allActus.length > ACTUS_APERCU) {
+              document.getElementById('btn-voir-plus-actus').style.display = 'inline-block';
+            }
+          } catch(e) {
+            document.getElementById('actus-loading').style.display = 'none';
+            document.getElementById('actus-empty').style.display = 'block';
+          }
+        }
+
+        // ── Ouvrir la page complète des actualités ──
+        function ouvrirPageActualites() {
+          if (!localStorage.getItem('ksi_user')) {
+            afficherModalConnexion('Actualités réservées aux membres', 'Connectez-vous pour parcourir toutes nos actualités et rester informé de la vie scolaire.');
+            return;
+          }
+          const overlay = document.getElementById('page-actualites-overlay');
+          overlay.style.display = 'block';
+          document.body.style.overflow = 'hidden';
+          actusFiltrees = [...allActus];
+          actusPageCourante = 1;
+          afficherPageActus();
+        }
+
+        function fermerPageActualites() {
+          document.getElementById('page-actualites-overlay').style.display = 'none';
+          document.body.style.overflow = '';
+        }
+
+        function filtrerActus(type, btn) {
+          document.querySelectorAll('.filtre-actus').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          if (type === 'recent') {
+            const cutoff = new Date(); cutoff.setMonth(cutoff.getMonth() - 1);
+            actusFiltrees = allActus.filter(a => new Date(a.created_at) >= cutoff);
+          } else {
+            actusFiltrees = [...allActus];
+          }
+          actusPageCourante = 1;
+          afficherPageActus();
+        }
+
+        function afficherPageActus() {
+          const grid = document.getElementById('actus-page-grid');
+          const loading = document.getElementById('actus-page-loading');
+          const empty = document.getElementById('actus-page-empty');
+          const pag = document.getElementById('actus-page-pagination');
+          loading.style.display = 'none';
+          grid.innerHTML = '';
+          pag.innerHTML = '';
+
+          if (!actusFiltrees.length) { empty.style.display = 'block'; return; }
+          empty.style.display = 'none';
+
+          const debut = (actusPageCourante - 1) * ACTUS_PAR_PAGE;
+          const page = actusFiltrees.slice(debut, debut + ACTUS_PAR_PAGE);
+          page.forEach(a => grid.appendChild(creerCardActu(a, () => ouvrirArticle(a))));
+
+          // Pagination
+          const totalPages = Math.ceil(actusFiltrees.length / ACTUS_PAR_PAGE);
+          if (totalPages > 1) {
+            pag.style.display = 'flex';
+            for (let i = 1; i <= totalPages; i++) {
+              const btn = document.createElement('button');
+              btn.textContent = i;
+              btn.style.cssText = `padding:.5rem 1rem;border-radius:8px;border:1.5px solid ${i===actusPageCourante?'var(--royal-blue)':'#e2e8f0'};background:${i===actusPageCourante?'var(--royal-blue)':'white'};color:${i===actusPageCourante?'white':'#374151'};font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;`;
+              btn.onclick = () => {
+                actusPageCourante = i;
+                afficherPageActus();
+                document.getElementById('page-actualites-overlay').scrollTo({top:0,behavior:'smooth'});
+              };
+              pag.appendChild(btn);
+            }
+          }
+        }
+
+        // ── Ouvrir un article ──
+        function ouvrirArticle(a) {
+          if (!localStorage.getItem('ksi_user')) {
+            afficherModalConnexion('Connectez-vous pour lire cet article', 'La lecture des actualités complètes est réservée aux membres. Rejoignez-nous, c\'est gratuit !');
+            return;
+          }
+          const overlay = document.getElementById('page-article-overlay');
+          const date = new Date(a.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+          document.getElementById('article-titre').textContent = a.titre;
+          document.getElementById('article-header-titre').textContent = a.titre;
+          document.getElementById('article-meta').innerHTML = `
+            <div class="article-meta-item">📅 <strong>${date}</strong></div>
+            <div class="article-meta-item">✍️ ${a.auteur}</div>
+          `;
+          document.getElementById('article-contenu').textContent = a.contenu;
+          const imgZone = document.getElementById('article-img-zone');
+          imgZone.innerHTML = a.image
+            ? `<img src="${a.image}" class="article-hero-img" alt="${a.titre}" onerror="this.outerHTML='<div class=\'article-hero-ph\'>📰</div>'">`
+            : '<div class="article-hero-ph">📰</div>';
+          overlay.style.display = 'block';
+          overlay.scrollTo({top: 0, behavior: 'instant'});
+          document.body.style.overflow = 'hidden';
+        }
+
+        function fermerArticle() {
+          document.getElementById('page-article-overlay').style.display = 'none';
+          // Si l'overlay liste est encore ouvert, on garde le scroll bloqué sur lui.
+          // Sinon on restitue le scroll normal du site.
+          if (document.getElementById('page-actualites-overlay').style.display === 'block') {
+            document.body.style.overflow = 'hidden';
+          } else {
+            document.body.style.overflow = '';
+          }
+        }
+
+        // ════════════════════════════════════════════════
+        //  MODAL CONNEXION REQUISE
+        // ════════════════════════════════════════════════
+        function afficherModalConnexion(titre, texte) {
+          if (titre) document.getElementById('modal-cnx-titre').textContent = titre;
+          if (texte) document.getElementById('modal-cnx-texte').textContent = texte;
+          const m = document.getElementById('modal-connexion');
+          m.style.display = 'flex';
+          // Fermer en cliquant sur le fond
+          m.onclick = function(e) { if (e.target === m) fermerModalConnexion(); };
+        }
+        function fermerModalConnexion() {
+          document.getElementById('modal-connexion').style.display = 'none';
+        }
+        // Fermer modal avec Echap
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape') {
+            fermerModalConnexion();
+            if (document.getElementById('page-article-overlay').style.display === 'block') {
+              fermerArticle();
+            } else if (document.getElementById('page-actualites-overlay').style.display === 'block') {
+              fermerPageActualites();
+            }
+          }
+        });
+
+        // ── Actualités ──
+        async function chargerActualites_OLD() {} // placeholder
+
+        // ── Équipe ──
+        async function chargerEquipe() {
+          try {
+            const res = await fetch('http://localhost:3000/api/equipe');
+            const data = await res.json();
+            document.getElementById('equipe-loading').style.display = 'none';
+            if (!data.length) { document.getElementById('equipe-empty').style.display = 'block'; return; }
+            const container = document.getElementById('equipe-container');
+            data.forEach(m => {
+              const card = document.createElement('div');
+              card.className = 'equipe-card';
+              card.innerHTML = `
+                ${m.photo ? `<img src="${m.photo}" alt="${m.nom}" onerror="this.parentNode.insertBefore(Object.assign(document.createElement('div'),{className:'equipe-card-ph',innerHTML:'👤'}),this);this.remove();">` : `<div class="equipe-card-ph">👤</div>`}
+                <div class="equipe-card-body">
+                  <h3>${m.nom}</h3>
+                  <div class="poste">${m.poste}</div>
+                  ${m.bio ? `<p>${m.bio.slice(0,100)}${m.bio.length>100?'…':''}</p>` : ''}
+                </div>
+              `;
+              container.appendChild(card);
+            });
+          } catch(e) {
+            document.getElementById('equipe-loading').style.display = 'none';
+            document.getElementById('equipe-empty').style.display = 'block';
+          }
+        }
+
+        // ── Témoignages ──
+        async function chargerTemoignages() {
+          try {
+            const res = await fetch('http://localhost:3000/api/temoignages');
+            const data = await res.json();
+            document.getElementById('temo-loading').style.display = 'none';
+            if (!data.length) { document.getElementById('temo-empty').style.display = 'block'; return; }
+            const container = document.getElementById('temo-container');
+            data.forEach(t => {
+              const stars = '⭐'.repeat(Math.min(5,t.note||5));
+              const card = document.createElement('div');
+              card.className = 'temo-card';
+              card.innerHTML = `
+                <div class="temo-stars">${stars}</div>
+                <div class="temo-text">"${t.texte}"</div>
+                <div class="temo-author">
+                  ${t.photo ? `<img src="${t.photo}" alt="${t.nom}">` : `<div class="temo-author-ph">👤</div>`}
+                  <div class="temo-author-info">
+                    <strong>${t.nom}</strong>
+                    <span>${t.role}</span>
+                  </div>
+                </div>
+              `;
+              container.appendChild(card);
+            });
+          } catch(e) {
+            document.getElementById('temo-loading').style.display = 'none';
+            document.getElementById('temo-empty').style.display = 'block';
+          }
+        }
+
+        // ── FAQ ──
+        async function chargerFaq() {
+          try {
+            const res = await fetch('http://localhost:3000/api/faq');
+            const data = await res.json();
+            document.getElementById('faq-loading').style.display = 'none';
+            if (!data.length) { document.getElementById('faq-empty').style.display = 'block'; return; }
+            const container = document.getElementById('faq-container');
+            data.forEach(f => {
+              const div = document.createElement('div');
+              div.className = 'faq-item';
+              div.innerHTML = `
+                <div class="faq-question" onclick="toggleFaq(this)">
+                  <span>${f.question}</span>
+                  <span class="faq-arrow">▼</span>
+                </div>
+                <div class="faq-answer">
+                  <div class="faq-cat-badge">${f.categorie}</div>
+                  <p>${f.reponse}</p>
+                </div>
+              `;
+              container.appendChild(div);
+            });
+          } catch(e) {
+            document.getElementById('faq-loading').style.display = 'none';
+            document.getElementById('faq-empty').style.display = 'block';
+          }
+        }
+
+        function toggleFaq(btn) {
+          const item = btn.parentElement;
+          item.classList.toggle('open');
+        }
+
+        // ── Pré-inscription ──
+        async function envoyerPreinscription() {
+          if (!localStorage.getItem('ksi_user')) {
+            afficherModalConnexion('Connectez-vous pour vous préinscrire', 'La pré-inscription est réservée aux membres. Créez un compte gratuitement pour continuer.');
+            return;
+          }
+          const feedback = document.getElementById('preinscFeedback');
+          const btn = document.getElementById('btnPreinsc');
+          const nom_enfant = document.getElementById('pi-enfant').value.trim();
+          const age = document.getElementById('pi-age').value;
+          const classe_visee = document.getElementById('pi-classe').value;
+          const nom_parent = document.getElementById('pi-parent').value.trim();
+          const email_parent = document.getElementById('pi-email').value.trim();
+          const telephone = document.getElementById('pi-tel').value.trim();
+          const message = document.getElementById('pi-msg').value.trim();
+
+          if (!nom_enfant || !classe_visee || !nom_parent || !email_parent) {
+            feedback.style.display = 'block';
+            feedback.style.background = '#fee2e2'; feedback.style.color = '#dc2626';
+            feedback.textContent = '⚠️ Veuillez remplir tous les champs obligatoires (*).';
+            return;
+          }
+
+          btn.disabled = true; btn.textContent = 'Envoi en cours...';
+          try {
+            const res = await fetch('http://localhost:3000/api/preinscription', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ nom_enfant, age, classe_visee, nom_parent, email_parent, telephone, message })
+            });
+            const data = await res.json();
+            feedback.style.display = 'block';
+            if (res.ok) {
+              feedback.style.background = '#dcfce7'; feedback.style.color = '#16a34a';
+              feedback.textContent = '✅ Demande envoyée ! Nous vous contacterons très bientôt.';
+              ['pi-enfant','pi-age','pi-parent','pi-email','pi-tel','pi-msg'].forEach(id => document.getElementById(id).value = '');
+              document.getElementById('pi-classe').value = '';
+            } else {
+              feedback.style.background = '#fee2e2'; feedback.style.color = '#dc2626';
+              feedback.textContent = '❌ ' + (data.message || 'Une erreur est survenue.');
+            }
+          } catch(e) {
+            feedback.style.display = 'block';
+            feedback.style.background = '#fee2e2'; feedback.style.color = '#dc2626';
+            feedback.textContent = '⚠️ Serveur inaccessible. Vérifiez que node server.js est lancé.';
+          }
+          btn.disabled = false; btn.textContent = 'Envoyer ma demande de pré-inscription →';
+        }
+
+        // ── Animation chiffres clés ──
+        function animerChiffres() {
+          const items = [
+            { id:'c-eleves', val: window._chiffre_eleves||450, suffix:'' },
+            { id:'c-reussite', val: window._chiffre_reussite||95, suffix:'%' },
+            { id:'c-profs', val: window._chiffre_profs||30, suffix:'' }
+          ];
+          items.forEach(item => {
+            let current = 0;
+            const step = Math.ceil(item.val / 50);
+            const timer = setInterval(() => {
+              current = Math.min(current + step, item.val);
+              document.getElementById(item.id).textContent = current + item.suffix;
+              if (current >= item.val) clearInterval(timer);
+            }, 30);
+          });
+        }
+
+        // Lancer l'animation quand la section est visible
+        const observerChiffres = new IntersectionObserver(entries => {
+          entries.forEach(entry => { if (entry.isIntersecting) { animerChiffres(); observerChiffres.disconnect(); } });
+        }, { threshold: 0.3 });
+        const secChiffres = document.getElementById('chiffres');
+        if (secChiffres) observerChiffres.observe(secChiffres);
+
+        // ── Contenu dynamique du site ──
+        async function chargerContenuSite() {
+          try {
+            const res = await fetch('http://localhost:3000/api/site-content');
+            const c = await res.json();
+
+            // Hero
+            if (c.hero_titre) document.getElementById('hero-titre').textContent = c.hero_titre;
+            if (c.hero_description) document.getElementById('hero-description').textContent = c.hero_description;
+            if (c.hero_btn1_texte) document.getElementById('hero-btn1').textContent = c.hero_btn1_texte;
+            if (c.hero_btn2_texte) document.getElementById('hero-btn2').textContent = c.hero_btn2_texte;
+            if (c.hero_image) {
+              const hero = document.querySelector('.hero');
+              if (hero) {
+                hero.style.backgroundImage = `linear-gradient(135deg,rgba(15,35,110,0.55),rgba(25,75,200,0.50)), url('${c.hero_image}')`;
+                hero.style.backgroundSize = 'cover';
+                hero.style.backgroundPosition = 'center center';
+                hero.style.backgroundRepeat = 'no-repeat';
+                hero.style.backgroundAttachment = 'scroll';
+              }
+            }
+            if (c.hero_phrases) {
+              const nouvelles = c.hero_phrases.split('|').map(s=>s.trim()).filter(Boolean);
+              if (nouvelles.length) { phrases.length=0; nouvelles.forEach(p=>phrases.push(p)); }
+            }
+
+            // Chiffres
+            if (c.chiffres_titre) document.getElementById('chiffres-titre').textContent = c.chiffres_titre;
+            if (c.chiffres_sous_titre) document.getElementById('chiffres-sous-titre').textContent = c.chiffres_sous_titre;
+            if (c.chiffre_fondation) document.getElementById('c-annee').textContent = c.chiffre_fondation;
+            // Les valeurs animées seront gérées par animerChiffres
+            window._chiffre_eleves = parseInt(c.chiffre_eleves)||450;
+            window._chiffre_reussite = parseInt(c.chiffre_reussite)||95;
+            window._chiffre_profs = parseInt(c.chiffre_profs)||30;
+
+            // À propos
+            if (c.apropos_titre) document.getElementById('apropos-titre').textContent = c.apropos_titre;
+            if (c.apropos_p1) document.getElementById('apropos-p1').textContent = c.apropos_p1;
+            if (c.apropos_p2) document.getElementById('apropos-p2').textContent = c.apropos_p2;
+            if (c.apropos_citation) document.getElementById('apropos-citation').textContent = c.apropos_citation;
+            if (c.apropos_citation_auteur) document.getElementById('apropos-citation-auteur').textContent = '— ' + c.apropos_citation_auteur;
+            if (c.apropos_p3) document.getElementById('apropos-p3').textContent = c.apropos_p3;
+            if (c.apropos_image) {
+              const img = document.getElementById('apropos-image');
+              if (img) img.src = c.apropos_image;
+            }
+
+            // Valeurs
+            if (c.valeurs_titre) document.getElementById('valeurs-titre').textContent = c.valeurs_titre;
+            if (c.valeurs_sous_titre) document.getElementById('valeurs-sous-titre').textContent = c.valeurs_sous_titre;
+            if (c.valeurs_items) {
+              try {
+                const items = JSON.parse(c.valeurs_items);
+                const grid = document.getElementById('valeurs-grid');
+                grid.innerHTML = items.map(v=>`
+                  <div class="value-card">
+                    <div class="value-icon">${v.icon||'⭐'}</div>
+                    <h3>${v.titre||''}</h3>
+                    <p>${v.texte||''}</p>
+                  </div>`).join('');
+              } catch(e){}
+            }
+
+            // Contact
+            if (c.contact_adresse) document.getElementById('contact-adresse').textContent = c.contact_adresse;
+            if (c.contact_telephone) document.getElementById('contact-telephone').textContent = c.contact_telephone;
+            if (c.contact_email) document.getElementById('contact-email').textContent = c.contact_email;
+            if (c.contact_horaires) document.getElementById('contact-horaires').textContent = c.contact_horaires;
+            if (c.contact_facebook) document.getElementById('contact-facebook').href = c.contact_facebook;
+            if (c.contact_instagram) document.getElementById('contact-instagram').href = c.contact_instagram;
+            if (c.contact_whatsapp) document.getElementById('contact-whatsapp').href = c.contact_whatsapp;
+            if (c.contact_youtube) document.getElementById('contact-youtube').href = c.contact_youtube;
+
+          } catch(e) { console.warn('Contenu site: serveur non disponible, données statiques utilisées.'); }
+        }
+
+        // Charger toutes les données au chargement
+        chargerGalerie();
+        chargerContenuSite();
+        chargerActualites();
+        chargerEquipe();
+        chargerTemoignages();
+        chargerFaq();
     </script>
+
+    <!-- ══ PAGE DÉTAIL ARTICLE ══ -->
+    <div id="page-article-overlay">
+      <div class="article-sticky-header">
+        <button class="article-back-btn" onclick="fermerArticle()" title="Retour aux actualités">←</button>
+        <div>
+          <div style="font-size:.72rem;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.1rem;">Actualités</div>
+          <div style="color:white;font-size:1rem;font-weight:700;" id="article-header-titre">Article</div>
+        </div>
+        <span style="margin-left:auto;font-size:1.6rem;">👑</span>
+      </div>
+      <div id="article-img-zone"></div>
+      <div class="article-body">
+        <div class="article-meta" id="article-meta"></div>
+        <h1 id="article-titre"></h1>
+        <div class="article-contenu" id="article-contenu"></div>
+      </div>
+    </div>
+
+    <!-- ══ PHASE 0 : Détecteur de session (sans blocage) ══ -->
+    <script src="garde.js"></script>
 </body>
 </html>

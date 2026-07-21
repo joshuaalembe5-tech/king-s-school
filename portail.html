@@ -266,6 +266,7 @@
       const data=await res.json();
       if(res.ok) {
         localStorage.setItem('ksi_user',JSON.stringify(data.user));
+        localStorage.setItem('ksi_token',data.token);
         setFeedback('loginFeedback','success','✅ Connexion réussie ! Redirection...');
         setTimeout(()=>{window.location.href='index.html';},1000);
       } else {
