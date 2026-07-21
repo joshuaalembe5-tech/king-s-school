@@ -1633,7 +1633,7 @@
         // Chargement dynamique depuis l'API
         async function chargerGalerie() {
           try {
-            const res   = await fetch('http://localhost:3000/api/galerie');
+            const res   = await fetch('https://king-s-school.onrender.com/api/galerie');
             const items = await res.json();
             // Filtrer les entrées avec image valide
             const valides = Array.isArray(items) ? items.filter(p => p.image && p.image.trim()) : [];
@@ -1687,7 +1687,7 @@
             btn.textContent = 'Envoi en cours...';
 
             try {
-                const res  = await fetch('http://localhost:3000/api/contact', {
+                const res  = await fetch('https://king-s-school.onrender.com/api/contact', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, telephone, message })
@@ -1797,7 +1797,7 @@
 
         async function chargerActualites() {
           try {
-            const res = await fetch('http://localhost:3000/api/actualites?limit=100');
+            const res = await fetch('https://king-s-school.onrender.com/api/actualites?limit=100');
             const data = await res.json();
             document.getElementById('actus-loading').style.display = 'none';
             allActus = data.actualites || [];
@@ -1953,7 +1953,7 @@
         // ── Équipe ──
         async function chargerEquipe() {
           try {
-            const res = await fetch('http://localhost:3000/api/equipe');
+            const res = await fetch('https://king-s-school.onrender.com/api/equipe');
             const data = await res.json();
             document.getElementById('equipe-loading').style.display = 'none';
             if (!data.length) { document.getElementById('equipe-empty').style.display = 'block'; return; }
@@ -1980,7 +1980,7 @@
         // ── Témoignages ──
         async function chargerTemoignages() {
           try {
-            const res = await fetch('http://localhost:3000/api/temoignages');
+            const res = await fetch('https://king-s-school.onrender.com/api/temoignages');
             const data = await res.json();
             document.getElementById('temo-loading').style.display = 'none';
             if (!data.length) { document.getElementById('temo-empty').style.display = 'block'; return; }
@@ -2011,7 +2011,7 @@
         // ── FAQ ──
         async function chargerFaq() {
           try {
-            const res = await fetch('http://localhost:3000/api/faq');
+            const res = await fetch('https://king-s-school.onrender.com/api/faq');
             const data = await res.json();
             document.getElementById('faq-loading').style.display = 'none';
             if (!data.length) { document.getElementById('faq-empty').style.display = 'block'; return; }
@@ -2067,7 +2067,7 @@
 
           btn.disabled = true; btn.textContent = 'Envoi en cours...';
           try {
-            const res = await fetch('http://localhost:3000/api/preinscription', {
+            const res = await fetch('https://king-s-school.onrender.com/api/preinscription', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ nom_enfant, age, classe_visee, nom_parent, email_parent, telephone, message })
@@ -2119,7 +2119,7 @@
         // ── Contenu dynamique du site ──
         async function chargerContenuSite() {
           try {
-            const res = await fetch('http://localhost:3000/api/site-content');
+            const res = await fetch('https://king-s-school.onrender.com/api/site-content');
             const c = await res.json();
 
             // Hero
