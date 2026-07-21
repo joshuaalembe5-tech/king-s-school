@@ -692,4 +692,6 @@ app.delete('/api/admin/galerie/:id', verifierRoles('admin','editeur'), async (re
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
-app.listen(PORT);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Serveur lancé sur le port ${PORT}`);
+});
