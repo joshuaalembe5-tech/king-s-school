@@ -1046,7 +1046,7 @@ async function adminLogin() {
   const err=document.getElementById('adminLoginError');
   err.style.display='none';
   try {
-    const res=await fetch('http://localhost:3000/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+    const res=await fetch('https://king-s-school.onrender.com/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
     const data=await res.json();
     if(!res.ok){ err.textContent='❌ '+(data.message||'Accès refusé.'); err.style.display='block'; return; }
     if(!['admin','moderateur','editeur'].includes(data.user.role)){ err.textContent='❌ Ce compte n\'a pas accès au panel.'; err.style.display='block'; return; }
@@ -1145,7 +1145,7 @@ function logout(){
 
 // ══ Notifications SSE ══
 function connecterSSE() {
-  const es=new EventSource('http://localhost:3000/api/admin/notifications/stream',{headers:{Authorization:'Bearer '+adminToken}});
+  const es=new EventSource('https://king-s-school.onrender.com/api/admin/notifications/stream',{headers:{Authorization:'Bearer '+adminToken}});
   es.onmessage=e=>{ const d=JSON.parse(e.data); ajouterNotif(d); };
 }
 
@@ -1173,7 +1173,7 @@ document.addEventListener('click',e=>{ if(!e.target.closest('.notif-bell')&&!e.t
 // ══ Stats + Charts ══
 async function loadStats() {
   try {
-    const res=await apiFetch('http://localhost:3000/api/admin/stats');
+    const res=await apiFetch('https://king-s-school.onrender.com/api/admin/stats');
     const d=await res.json();
     document.getElementById('statTotal').textContent=d.total;
     document.getElementById('statToday').textContent=d.today;
@@ -1348,7 +1348,7 @@ function renderCharts(d) {
 
 async function loadRecentUsers() {
   try {
-    const res=await apiFetch('http://localhost:3000/api/admin/users?page=1&limit=5');
+    const res=await apiFetch('https://king-s-school.onrender.com/api/admin/users?page=1&limit=5');
     const data=await res.json();
     const list=document.getElementById('recentsList');
     if(!list) return;
@@ -1375,7 +1375,7 @@ async function loadUsers(page=1) {
   const search=document.getElementById('usersSearch').value;
   const role=document.getElementById('usersRoleFilter').value;
   try {
-    const res=await apiFetch(`http://localhost:3000/api/admin/users?page=${page}&limit=20&search=${encodeURIComponent(search)}&role=${role}`);
+    const res=await apiFetch(`https://king-s-school.onrender.com/api/admin/users?page=${page}&limit=20&search=${encodeURIComponent(search)}&role=${role}`);
     const data=await res.json();
     usersState={page:data.page,totalPages:data.totalPages,total:data.total};
     document.getElementById('loadingUsers').style.display='none';
@@ -1414,7 +1414,7 @@ async function loadUsers(page=1) {
 
 async function changerRole(id,role) {
   try {
-    const res=await apiFetch(`http://localhost:3000/api/admin/users/${id}/role`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({role})});
+    const res=await apiFetch(`https://king-s-school.onrender.com/api/admin/users/${id}/role`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({role})});
     if(res.ok) showToast('✅ Rôle mis à jour.','success'); else showToast('❌ Erreur.','error');
     loadStats();
   } catch(e){}
@@ -1422,7 +1422,7 @@ async function changerRole(id,role) {
 
 async function supprimerUser(id,nom) {
   if(!confirm(`Supprimer "${nom}" ?`)) return;
-  await apiFetch(`http://localhost:3000/api/admin/users/${id}`,{method:'DELETE'});
+  await apiFetch(`https://king-s-school.onrender.com/api/admin/users/${id}`,{method:'DELETE'});
   showToast('🗑️ Utilisateur supprimé.'); loadUsers(usersState.page); loadStats();
 }
 
@@ -1443,7 +1443,7 @@ async function sauvegarderUser() {
   const password = document.getElementById('editUserPassword').value;
   if(!name || !email) { showToast('⚠️ Nom et email requis.','error'); return; }
   try {
-    const res = await apiFetch(`http://localhost:3000/api/admin/users/${id}`, {
+    const res = await apiFetch(`https://king-s-school.onrender.com/api/admin/users/${id}`, {
       method:'PUT', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({name, email, password})
     });
@@ -1461,7 +1461,7 @@ async function loadMessages(page=1) {
   const search=document.getElementById('msgsSearch').value;
   const lu=document.getElementById('msgsLuFilter').value;
   try {
-    const res=await apiFetch(`http://localhost:3000/api/admin/messages?page=${page}&limit=20&search=${encodeURIComponent(search)}&lu=${lu}`);
+    const res=await apiFetch(`https://king-s-school.onrender.com/api/admin/messages?page=${page}&limit=20&search=${encodeURIComponent(search)}&lu=${lu}`);
     const data=await res.json();
     msgsState={page:data.page,totalPages:data.totalPages,total:data.total};
     document.getElementById('loadingMessages').style.display='none';
@@ -1499,12 +1499,12 @@ async function loadMessages(page=1) {
 }
 
 async function marquerLu(id) {
-  await apiFetch(`http://localhost:3000/api/admin/messages/${id}/lu`,{method:'PUT'});
+  await apiFetch(`https://king-s-school.onrender.com/api/admin/messages/${id}/lu`,{method:'PUT'});
   showToast('✅ Marqué comme lu.','success'); loadMessages(msgsState.page); loadStats();
 }
 async function supprimerMessage(id) {
   if(!confirm('Supprimer ce message ?')) return;
-  await apiFetch(`http://localhost:3000/api/admin/messages/${id}`,{method:'DELETE'});
+  await apiFetch(`https://king-s-school.onrender.com/api/admin/messages/${id}`,{method:'DELETE'});
   showToast('🗑️ Message supprimé.'); loadMessages(msgsState.page); loadStats();
 }
 
@@ -1516,7 +1516,7 @@ async function loadPreinsc(page=1) {
   document.getElementById('preinscPagination').style.display='none';
   const statut=document.getElementById('preinscStatut').value;
   try {
-    const res=await apiFetch(`http://localhost:3000/api/admin/preinscriptions?page=${page}&limit=20&statut=${statut}`);
+    const res=await apiFetch(`https://king-s-school.onrender.com/api/admin/preinscriptions?page=${page}&limit=20&statut=${statut}`);
     const data=await res.json();
     preinscState={page:data.page,totalPages:data.totalPages,total:data.total};
     document.getElementById('loadingPreinsc').style.display='none';
@@ -1559,14 +1559,14 @@ async function loadPreinsc(page=1) {
 
 async function majStatutPreinsc(id,statut) {
   try {
-    const res=await apiFetch(`http://localhost:3000/api/admin/preinscriptions/${id}/statut`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({statut})});
+    const res=await apiFetch(`https://king-s-school.onrender.com/api/admin/preinscriptions/${id}/statut`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({statut})});
     if(res.ok) showToast('✅ Statut mis à jour.','success');
     loadStats();
   } catch(e){}
 }
 async function supprimerPreinsc(id) {
   if(!confirm('Supprimer cette pré-inscription ?')) return;
-  await apiFetch(`http://localhost:3000/api/admin/preinscriptions/${id}`,{method:'DELETE'});
+  await apiFetch(`https://king-s-school.onrender.com/api/admin/preinscriptions/${id}`,{method:'DELETE'});
   showToast('🗑️ Supprimée.'); loadPreinsc(preinscState.page);
 }
 
@@ -1636,7 +1636,7 @@ async function sauvegarderPreinsc() {
   };
   if(!body.nom_enfant||!body.nom_parent||!body.email_parent) { showToast('⚠️ Champs requis manquants.','error'); return; }
   try {
-    const res = await apiFetch(`http://localhost:3000/api/admin/preinscriptions/${id}`, {
+    const res = await apiFetch(`https://king-s-school.onrender.com/api/admin/preinscriptions/${id}`, {
       method:'PUT', headers:{'Content-Type':'application/json'},
       body: JSON.stringify(body)
     });
@@ -1652,7 +1652,7 @@ async function loadActualites(page=1) {
   document.getElementById('emptyActus').style.display='none';
   document.getElementById('actusPagination').style.display='none';
   try {
-    const res=await apiFetch(`http://localhost:3000/api/admin/actualites?page=${page}&limit=9`);
+    const res=await apiFetch(`https://king-s-school.onrender.com/api/admin/actualites?page=${page}&limit=9`);
     const data=await res.json();
     actusState={page:data.page,totalPages:data.totalPages,total:data.total};
     document.getElementById('loadingActus').style.display='none';
@@ -1694,7 +1694,7 @@ async function saveActualite() {
   const image=document.getElementById('actuImage').value.trim();
   const contenu=document.getElementById('actuContenu').value.trim();
   if(!titre||!contenu){ showToast('⚠️ Titre et contenu requis.','error'); return; }
-  const url=id?`http://localhost:3000/api/admin/actualites/${id}`:'http://localhost:3000/api/admin/actualites';
+  const url=id?`https://king-s-school.onrender.com/api/admin/actualites/${id}`:'https://king-s-school.onrender.com/api/admin/actualites';
   try {
     const res=await apiFetch(url,{method:id?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titre,image,contenu})});
     if(res.ok){ showToast(id?'✅ Mise à jour.':'✅ Publiée.','success'); closeModal('actuModal'); loadActualites(actusState.page); loadStats(); }
@@ -1704,7 +1704,7 @@ async function saveActualite() {
 
 async function deleteActualite(id) {
   if(!confirm('Supprimer cette actualité ?')) return;
-  await apiFetch(`http://localhost:3000/api/admin/actualites/${id}`,{method:'DELETE'});
+  await apiFetch(`https://king-s-school.onrender.com/api/admin/actualites/${id}`,{method:'DELETE'});
   showToast('🗑️ Supprimée.'); loadActualites(actusState.page); loadStats();
 }
 
@@ -1714,7 +1714,7 @@ async function loadEquipe() {
   document.getElementById('equipeGrid').innerHTML='';
   document.getElementById('emptyEquipe').style.display='none';
   try {
-    const res=await apiFetch('http://localhost:3000/api/admin/equipe');
+    const res=await apiFetch('https://king-s-school.onrender.com/api/admin/equipe');
     const data=await res.json();
     document.getElementById('loadingEquipe').style.display='none';
     if(!data.length){ document.getElementById('emptyEquipe').style.display='block'; return; }
@@ -1753,7 +1753,7 @@ async function saveMembre() {
   const id=document.getElementById('equipeId').value;
   const body={nom:document.getElementById('equipeNom').value.trim(),poste:document.getElementById('equipePoste').value.trim(),photo:document.getElementById('equipePhoto').value.trim(),bio:document.getElementById('equipeBio').value.trim(),ordre:document.getElementById('equipeOrdre').value};
   if(!body.nom||!body.poste){ showToast('⚠️ Nom et poste requis.','error'); return; }
-  const url=id?`http://localhost:3000/api/admin/equipe/${id}`:'http://localhost:3000/api/admin/equipe';
+  const url=id?`https://king-s-school.onrender.com/api/admin/equipe/${id}`:'https://king-s-school.onrender.com/api/admin/equipe';
   try {
     const res=await apiFetch(url,{method:id?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     if(res.ok){ showToast('✅ Enregistré.','success'); closeModal('equipeModal'); loadEquipe(); }
@@ -1763,7 +1763,7 @@ async function saveMembre() {
 
 async function deleteMembre(id) {
   if(!confirm('Supprimer ce membre ?')) return;
-  await apiFetch(`http://localhost:3000/api/admin/equipe/${id}`,{method:'DELETE'});
+  await apiFetch(`https://king-s-school.onrender.com/api/admin/equipe/${id}`,{method:'DELETE'});
   showToast('🗑️ Supprimé.'); loadEquipe();
 }
 
@@ -1775,7 +1775,7 @@ async function loadTemoignages() {
   document.getElementById('temoGrid').innerHTML='';
   document.getElementById('emptyTemo').style.display='none';
   try {
-    const res=await apiFetch('http://localhost:3000/api/admin/temoignages');
+    const res=await apiFetch('https://king-s-school.onrender.com/api/admin/temoignages');
     const data=await res.json();
     document.getElementById('loadingTemo').style.display='none';
     if(!data.length){ document.getElementById('emptyTemo').style.display='block'; return; }
@@ -1821,7 +1821,7 @@ async function saveTemoignage() {
   const id=document.getElementById('temoId').value;
   const body={nom:document.getElementById('temoNom').value.trim(),role:document.getElementById('temoRole').value.trim(),texte:document.getElementById('temoTexte').value.trim(),photo:document.getElementById('temoPhoto').value.trim(),note:document.getElementById('temoNote').value};
   if(!body.nom||!body.texte){ showToast('⚠️ Nom et texte requis.','error'); return; }
-  const url=id?`http://localhost:3000/api/admin/temoignages/${id}`:'http://localhost:3000/api/admin/temoignages';
+  const url=id?`https://king-s-school.onrender.com/api/admin/temoignages/${id}`:'https://king-s-school.onrender.com/api/admin/temoignages';
   try {
     const res=await apiFetch(url,{method:id?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     if(res.ok){ showToast('✅ Enregistré.','success'); closeModal('temoModal'); loadTemoignages(); }
@@ -1831,7 +1831,7 @@ async function saveTemoignage() {
 
 async function deleteTemo(id) {
   if(!confirm('Supprimer ce témoignage ?')) return;
-  await apiFetch(`http://localhost:3000/api/admin/temoignages/${id}`,{method:'DELETE'});
+  await apiFetch(`https://king-s-school.onrender.com/api/admin/temoignages/${id}`,{method:'DELETE'});
   showToast('🗑️ Supprimé.'); loadTemoignages();
 }
 
@@ -1841,7 +1841,7 @@ async function loadFaq() {
   document.getElementById('faqList').innerHTML='';
   document.getElementById('emptyFaq').style.display='none';
   try {
-    const res=await apiFetch('http://localhost:3000/api/admin/faq');
+    const res=await apiFetch('https://king-s-school.onrender.com/api/admin/faq');
     const data=await res.json();
     document.getElementById('loadingFaq').style.display='none';
     if(!data.length){ document.getElementById('emptyFaq').style.display='block'; return; }
@@ -1878,7 +1878,7 @@ async function saveFaq() {
   const id=document.getElementById('faqId').value;
   const body={question:document.getElementById('faqQuestion').value.trim(),reponse:document.getElementById('faqReponse').value.trim(),categorie:document.getElementById('faqCategorie').value,ordre:document.getElementById('faqOrdre').value};
   if(!body.question||!body.reponse){ showToast('⚠️ Question et réponse requises.','error'); return; }
-  const url=id?`http://localhost:3000/api/admin/faq/${id}`:'http://localhost:3000/api/admin/faq';
+  const url=id?`https://king-s-school.onrender.com/api/admin/faq/${id}`:'https://king-s-school.onrender.com/api/admin/faq';
   try {
     const res=await apiFetch(url,{method:id?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     if(res.ok){ showToast('✅ Enregistré.','success'); closeModal('faqModal'); loadFaq(); }
@@ -1888,7 +1888,7 @@ async function saveFaq() {
 
 async function deleteFaq(id) {
   if(!confirm('Supprimer cette FAQ ?')) return;
-  await apiFetch(`http://localhost:3000/api/admin/faq/${id}`,{method:'DELETE'});
+  await apiFetch(`https://king-s-school.onrender.com/api/admin/faq/${id}`,{method:'DELETE'});
   showToast('🗑️ Supprimée.'); loadFaq();
 }
 
@@ -1901,7 +1901,7 @@ async function loadActivity(page=1) {
   document.getElementById('emptyActivity').style.display='none';
   document.getElementById('activityPagination').style.display='none';
   try {
-    const res=await apiFetch(`http://localhost:3000/api/admin/activity?page=${page}&limit=20`);
+    const res=await apiFetch(`https://king-s-school.onrender.com/api/admin/activity?page=${page}&limit=20`);
     const data=await res.json();
     activityState={page:data.page,totalPages:data.totalPages,total:data.total};
     document.getElementById('loadingActivity').style.display='none';
@@ -1927,7 +1927,7 @@ async function loadActivity(page=1) {
 async function exportData(type,format) {
   showToast('⏳ Génération du fichier...');
   try {
-    const res=await apiFetch(`http://localhost:3000/api/admin/export/${type}/${format}`);
+    const res=await apiFetch(`https://king-s-school.onrender.com/api/admin/export/${type}/${format}`);
     if(!res.ok){ showToast('❌ Échec de l\'export.','error'); return; }
     const blob=await res.blob();
     const url=window.URL.createObjectURL(blob);
@@ -1963,7 +1963,7 @@ async function loadContenu() {
   document.getElementById('contenu-loading').style.display = 'block';
   document.getElementById('contenu-editor').style.display = 'none';
   try {
-    const res = await apiFetch('http://localhost:3000/api/admin/site-content');
+    const res = await apiFetch('https://king-s-school.onrender.com/api/admin/site-content');
     const rows = await res.json();
     siteContentData = {};
     rows.forEach(r => { siteContentData[r.cle] = r; });
@@ -2011,7 +2011,7 @@ function renderContenuSection(section) {
       const prevId  = 'prev_' + inputId;
       const fileId  = 'file_' + inputId;
       const hasSrc  = f.valeur ? 'block' : 'none';
-      const imgSrc  = f.valeur ? (f.valeur.startsWith('/') ? 'http://localhost:3000' + f.valeur : f.valeur) : '';
+      const imgSrc  = f.valeur ? (f.valeur.startsWith('/') ? 'https://king-s-school.onrender.com' + f.valeur : f.valeur) : '';
       const lblTxt  = f.valeur ? '✅ Image actuelle — cliquer pour changer' : '📁 Cliquer ou glisser une photo ici';
       html += `<div class="mfield">
         <label style="display:flex;justify-content:space-between;align-items:center;">${esc(f.libelle)}<span style="font-size:.68rem;color:var(--muted);font-family:monospace;">${esc(f.cle)}</span></label>
@@ -2112,7 +2112,7 @@ async function saveJsonField(cle) {
   const arr = getJsonState(cle);
   const valeur = JSON.stringify(arr);
   try {
-    const res = await apiFetch(`http://localhost:3000/api/admin/site-content/${cle}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({valeur})});
+    const res = await apiFetch(`https://king-s-school.onrender.com/api/admin/site-content/${cle}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({valeur})});
     if (res.ok) { siteContentData[cle].valeur = valeur; showToast('✅ Sauvegardé !','success'); }
     else { const d=await res.json(); showToast('❌ '+d.message,'error'); }
   } catch(e) { showToast('❌ Erreur réseau.','error'); }
@@ -2123,7 +2123,7 @@ async function saveContenuField(cle, inputId, type) {
   if (type === 'textarea') valeur = document.getElementById(inputId).value;
   else valeur = document.getElementById(inputId).value;
   try {
-    const res = await apiFetch(`http://localhost:3000/api/admin/site-content/${cle}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({valeur})});
+    const res = await apiFetch(`https://king-s-school.onrender.com/api/admin/site-content/${cle}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({valeur})});
     if (res.ok) {
       siteContentData[cle].valeur = valeur;
       showToast('✅ Enregistré !','success');
@@ -2149,7 +2149,7 @@ async function loadGalerie() {
   document.getElementById('gal-grid').style.display='none';
   document.getElementById('gal-empty').style.display='none';
   try {
-    const res=await apiFetch('http://localhost:3000/api/admin/galerie');
+    const res=await apiFetch('https://king-s-school.onrender.com/api/admin/galerie');
     galerieData=await res.json();
     renderGalerieGrid(galerieData);
   } catch(e){ document.getElementById('gal-loading').textContent='⚠️ Erreur de chargement.'; }
@@ -2204,7 +2204,7 @@ function openGalModal(id) {
   const prev=document.getElementById('galPreview');
   const lbl=document.getElementById('gal-edit-drop-label');
   if(p.image){
-    const src=p.image.startsWith('/')?'http://localhost:3000'+p.image:p.image;
+    const src=p.image.startsWith('/')?'https://king-s-school.onrender.com'+p.image:p.image;
     prev.src=src; prev.style.display='block';
     if(lbl) lbl.textContent='✅ Photo actuelle — cliquer pour changer';
   } else {
@@ -2219,7 +2219,7 @@ async function savePhotoGalerie() {
   const body={image:document.getElementById('galImage').value.trim(),titre:document.getElementById('galTitre').value.trim(),description:document.getElementById('galDesc').value.trim(),categorie:document.getElementById('galCategorie').value,ordre:p?p.ordre:0};
   if(!body.image){showToast('⚠️ Veuillez choisir une photo depuis votre ordinateur.','error');return;}
   try {
-    const res=await apiFetch(`http://localhost:3000/api/admin/galerie/${id}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const res=await apiFetch(`https://king-s-school.onrender.com/api/admin/galerie/${id}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     if(res.ok){showToast('✅ Slide mis à jour.','success');closeModal('galModal');await loadGalerie();}
     else{const d=await res.json();showToast('❌ '+d.message,'error');}
   } catch(e){showToast('❌ Erreur réseau.','error');}
@@ -2233,7 +2233,7 @@ async function ajouterPhotoGalerie() {
   const fb=document.getElementById('gal-add-feedback');
   if(!image){fb.textContent='⚠️ Veuillez d\'abord choisir une photo depuis votre ordinateur.';fb.style.cssText='display:block;color:var(--red);';return;}
   try {
-    const res=await apiFetch('http://localhost:3000/api/admin/galerie',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image,titre,description:desc,categorie:cat})});
+    const res=await apiFetch('https://king-s-school.onrender.com/api/admin/galerie',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image,titre,description:desc,categorie:cat})});
     if(res.ok){
       fb.textContent='✅ Photo ajoutée au slider !';fb.style.cssText='display:block;color:var(--green);';
       // Reset champs texte
@@ -2255,7 +2255,7 @@ async function ajouterPhotoGalerie() {
 async function supprimerPhotoGalerie(id) {
   if(!confirm('Supprimer définitivement ce slide ?')) return;
   try {
-    const res=await apiFetch(`http://localhost:3000/api/admin/galerie/${id}`,{method:'DELETE'});
+    const res=await apiFetch(`https://king-s-school.onrender.com/api/admin/galerie/${id}`,{method:'DELETE'});
     if(res.ok){showToast('🗑️ Photo supprimée.','success');await loadGalerie();}
     else{const d=await res.json();showToast('❌ '+d.message,'error');}
   } catch(e){showToast('❌ Erreur réseau.','error');}
@@ -2306,7 +2306,7 @@ async function loadActualites(page=1) {
   if(grid) grid.innerHTML='';
   if(emptyEl) emptyEl.style.display='none';
   try {
-    const res=await apiFetch(`http://localhost:3000/api/admin/actualites?page=${page}&limit=9`);
+    const res=await apiFetch(`https://king-s-school.onrender.com/api/admin/actualites?page=${page}&limit=9`);
     const data=await res.json();
     actusState={page:data.page,totalPages:data.totalPages,total:data.total};
     if(loadingEl) loadingEl.style.display='none';
@@ -2325,7 +2325,7 @@ async function loadActualites(page=1) {
 async function uploadImage(file) {
   const formData = new FormData();
   formData.append('image', file);
-  const res = await fetch('http://localhost:3000/api/admin/upload', {
+  const res = await fetch('https://king-s-school.onrender.com/api/admin/upload', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + adminToken },
     body: formData
@@ -2342,7 +2342,7 @@ async function uploadImage(file) {
 function setDropZoneSuccess(zoneId, labelId, previewId, url) {
   const prev = document.getElementById(previewId);
   const label = document.getElementById(labelId);
-  if (prev) { prev.src = 'http://localhost:3000' + url; prev.style.display = 'block'; }
+  if (prev) { prev.src = 'https://king-s-school.onrender.com' + url; prev.style.display = 'block'; }
   if (label) label.textContent = '✅ Photo chargée — cliquer pour changer';
 }
 
@@ -2369,7 +2369,7 @@ async function handleContenuFile(input, cle, inputId) {
   try {
     const url = await uploadImage(input.files[0]);
     document.getElementById(inputId).value = url;
-    if (prev) { prev.src = 'http://localhost:3000' + url; prev.style.display = 'block'; }
+    if (prev) { prev.src = 'https://king-s-school.onrender.com' + url; prev.style.display = 'block'; }
     if (lbl)  lbl.textContent = '✅ Photo chargée — cliquer pour changer';
     // Sauvegarder automatiquement dans la base
     await saveContenuField(cle, inputId, 'text');
@@ -2515,7 +2515,7 @@ openActuById = function(id) {
   if (a && a.image) {
     const prev = document.getElementById('actuPreview');
     const lbl  = document.getElementById('actu-drop-label');
-    if (prev) { prev.src = a.image.startsWith('/') ? 'http://localhost:3000'+a.image : a.image; prev.style.display='block'; }
+    if (prev) { prev.src = a.image.startsWith('/') ? 'https://king-s-school.onrender.com'+a.image : a.image; prev.style.display='block'; }
     if (lbl)  lbl.textContent = '✅ Photo actuelle — cliquer pour changer';
   }
 };
