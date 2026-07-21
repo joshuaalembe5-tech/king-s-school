@@ -259,7 +259,7 @@
     const btn=document.getElementById('btnLogin');
     setLoading(btn,true,'Se connecter');
     try {
-      const res=await fetch('http://localhost:3000/api/login',{
+      const res=await fetch('https://king-s-school.onrender.com/api/login',{
         method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({email,password})
       });
@@ -293,7 +293,7 @@
     const btn=document.getElementById('btnRegister');
     setLoading(btn,true,'Créer mon compte');
     try {
-      const res=await fetch('http://localhost:3000/api/register',{
+      const res=await fetch('https://king-s-school.onrender.com/api/register',{
         method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({name,email,password})
       });
