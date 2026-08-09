@@ -1002,12 +1002,13 @@
         .chiffre-number { font-size:3rem; font-weight:900; color:var(--gold); line-height:1; margin-bottom:.4rem; }
 
         /* ══ Actualités cards ══ */
-        .actu-card { background:white; border-radius:14px; box-shadow:0 4px 16px rgba(0,0,0,.07); overflow:hidden; display:flex; flex-direction:column; transition:transform .2s,box-shadow .2s; }
-        .actu-card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,.13); }
-        .actu-card img { width:100%; height:190px; object-fit:cover; }
-        .actu-card-img-ph { width:100%; height:190px; background:linear-gradient(135deg,#e2e8f0,#cbd5e1); display:flex; align-items:center; justify-content:center; font-size:3rem; }
-        .actu-card-body { padding:1.3rem; flex:1; display:flex; flex-direction:column; }
-        .actu-card-body h3 { font-size:1.05rem; font-weight:700; color:var(--royal-blue); margin-bottom:.5rem; line-height:1.35; }
+        /* Cartes actus — page principale */
+        .actu-card { background:white; border-radius:18px; box-shadow:0 2px 12px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; transition:transform .25s,box-shadow .25s; cursor:pointer; }
+        .actu-card:hover { transform:translateY(-6px); box-shadow:0 18px 48px rgba(30,58,138,.13); }
+        .actu-card img { width:100%; height:200px; object-fit:cover; }
+        .actu-card-img-ph { width:100%; height:200px; background:linear-gradient(135deg,#e2e8f0,#cbd5e1); display:flex; align-items:center; justify-content:center; font-size:3rem; }
+        .actu-card-body { padding:1.4rem; flex:1; display:flex; flex-direction:column; }
+        .actu-card-body h3 { font-size:1.05rem; font-weight:700; color:#1e3a8a; margin-bottom:.5rem; line-height:1.35; }
         .actu-card-meta { font-size:.75rem; color:#94a3b8; margin-bottom:.7rem; }
         .actu-card-body p { font-size:.87rem; color:#555; flex:1; line-height:1.6; }
 
@@ -1046,44 +1047,342 @@
         .faq-item.open .faq-answer { display:block; }
         .faq-cat-badge { display:inline-block; padding:.2rem .6rem; border-radius:20px; font-size:.68rem; font-weight:700; background:#eff6ff; color:var(--royal-blue); margin-bottom:.7rem; }
 
-        /* ══ Page Actualités Overlay ══ */
-        .filtre-actus.active { background: var(--royal-blue) !important; color: white !important; border-color: var(--royal-blue) !important; }
-        .filtre-actus:hover:not(.active) { background: #f1f5f9 !important; border-color: #cbd5e1 !important; }
+        /* ══════════════════════════════════════════════
+           OVERLAY ACTUALITÉS — Design Premium
+        ══════════════════════════════════════════════ */
 
-        /* ══ Cards actualités — style école française ══ */
-        .actu-card {
-            background: white;
-            border-radius: 14px;
-            box-shadow: 0 4px 16px rgba(0,0,0,.07);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform .25s, box-shadow .25s;
-            cursor: pointer;
+        /* Hero */
+        .actu-overlay-hero {
+          background: linear-gradient(135deg,#0d1f5c 0%,#1e3a8a 50%,#1d4ed8 100%);
+          padding: 3.5rem 5% 5.5rem;
+          text-align: center;
+          position: relative;
+          overflow: hidden;
         }
-        .actu-card:hover { transform: translateY(-5px); box-shadow: 0 14px 36px rgba(0,0,0,.13); }
-        .actu-card img { width: 100%; height: 200px; object-fit: cover; display: block; }
-        .actu-card-img-ph { width: 100%; height: 200px; background: linear-gradient(135deg, var(--royal-blue), #2563eb); display: flex; align-items: center; justify-content: center; font-size: 3.5rem; }
-        .actu-card-body { padding: 1.4rem; flex: 1; display: flex; flex-direction: column; }
-        .actu-card-cat { display: inline-block; padding: .2rem .65rem; border-radius: 20px; font-size: .68rem; font-weight: 700; background: var(--royal-blue); color: white; margin-bottom: .6rem; text-transform: uppercase; letter-spacing: .05em; }
-        .actu-card-body h3 { font-size: 1.05rem; font-weight: 700; color: var(--royal-blue); margin-bottom: .5rem; line-height: 1.35; }
-        .actu-card-meta { font-size: .75rem; color: #94a3b8; margin-bottom: .7rem; display: flex; gap: .8rem; flex-wrap: wrap; }
-        .actu-card-body p { font-size: .87rem; color: #555; flex: 1; line-height: 1.65; margin-bottom: .9rem; }
-        .actu-card-link { display: inline-flex; align-items: center; gap: .4rem; font-size: .82rem; font-weight: 700; color: var(--royal-blue); transition: gap .2s; }
-        .actu-card:hover .actu-card-link { gap: .7rem; }
+        .actu-overlay-hero::before {
+          content:''; position:absolute; inset:0; pointer-events:none;
+          background: radial-gradient(ellipse at 15% 40%, rgba(212,175,55,.15) 0%, transparent 55%),
+                      radial-gradient(ellipse at 85% 60%, rgba(96,165,250,.18) 0%, transparent 55%);
+        }
+        .actu-overlay-hero::after {
+          content:''; position:absolute; bottom:-1px; left:0; right:0;
+          height:56px; background:#f0f4f8;
+          clip-path: ellipse(60% 100% at 50% 100%);
+        }
+        .actu-hero-eyebrow {
+          display:inline-flex; align-items:center; gap:.5rem;
+          background:rgba(212,175,55,.16); border:1px solid rgba(212,175,55,.32);
+          color:#fde68a; font-size:.7rem; font-weight:700;
+          text-transform:uppercase; letter-spacing:.12em;
+          padding:.32rem .9rem; border-radius:20px; margin-bottom:1rem;
+        }
+        .actu-hero-title {
+          font-size:clamp(1.9rem,4.5vw,3rem); font-weight:900;
+          color:white; line-height:1.12; margin-bottom:.7rem; position:relative;
+        }
+        .actu-hero-title em { color:#d4af37; font-style:normal; }
+        .actu-hero-sub {
+          font-size:.97rem; color:rgba(255,255,255,.68); max-width:440px;
+          margin:0 auto 1.8rem; line-height:1.75; position:relative;
+        }
+        .actu-hero-stats {
+          display:flex; justify-content:center; gap:1.2rem; flex-wrap:wrap;
+          position:relative;
+        }
+        .actu-hero-stat {
+          display:flex; align-items:center; gap:.5rem;
+          background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15);
+          color:white; font-size:.82rem; font-weight:600;
+          padding:.4rem 1rem; border-radius:20px;
+        }
 
-        /* ══ Page detail article ══ */
-        #page-article-overlay { display: none; position: fixed; inset: 0; background: #f8fafc; z-index: 2100; overflow-y: auto; }
-        .article-hero-img { width: 100%; height: 360px; object-fit: cover; display: block; }
-        .article-hero-ph { width: 100%; height: 360px; background: linear-gradient(135deg, var(--royal-blue), #2563eb); display: flex; align-items: center; justify-content: center; font-size: 5rem; }
-        .article-body { max-width: 800px; margin: 0 auto; padding: 2.5rem 5%; }
-        .article-body h1 { font-size: 2rem; font-weight: 800; color: var(--royal-blue); line-height: 1.25; margin-bottom: 1rem; }
-        .article-meta { display: flex; gap: 1.2rem; flex-wrap: wrap; font-size: .82rem; color: #64748b; margin-bottom: 1.8rem; padding-bottom: 1.5rem; border-bottom: 2px solid #e2e8f0; }
-        .article-meta-item { display: flex; align-items: center; gap: .35rem; }
-        .article-contenu { font-size: 1rem; color: #374151; line-height: 1.85; white-space: pre-wrap; }
-        .article-back-btn { background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3); color: white; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; flex-shrink: 0; }
-        .article-back-btn:hover { background: rgba(255,255,255,.25); }
-        .article-sticky-header { background: linear-gradient(135deg, var(--royal-blue) 0%, #2563eb 100%); padding: 1.2rem 5%; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,.2); }
+        /* Barre filtres sticky */
+        .actu-filters-bar {
+          background:white;
+          padding:1rem 5%;
+          border-bottom:1px solid #e8edf5;
+          display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+          box-shadow:0 2px 10px rgba(0,0,0,.05);
+          position:sticky; top:64px; z-index:10;
+        }
+        .actu-filters-label {
+          font-size:.7rem; font-weight:800; color:#94a3b8;
+          text-transform:uppercase; letter-spacing:.1em; margin-right:.2rem;
+          flex-shrink:0;
+        }
+        .actu-filter-btn {
+          padding:.38rem 1rem; border-radius:22px;
+          border:1.5px solid #e2e8f0; background:white;
+          color:#475569; font-size:.78rem; font-weight:600;
+          cursor:pointer; font-family:inherit;
+          transition:all .2s; display:flex; align-items:center; gap:.35rem;
+        }
+        .actu-filter-btn:hover { border-color:#1e3a8a; color:#1e3a8a; background:#eff6ff; }
+        .actu-filter-btn.active {
+          background:#1e3a8a; color:white;
+          border-color:#1e3a8a; box-shadow:0 3px 10px rgba(30,58,138,.28);
+        }
+        .filtre-actus.active { background:var(--royal-blue) !important; color:white !important; border-color:var(--royal-blue) !important; }
+        .filtre-actus:hover:not(.active) { background:#f1f5f9 !important; }
+
+        /* Grille */
+        .actu-overlay-grid {
+          display:grid;
+          grid-template-columns:repeat(auto-fill, minmax(330px,1fr));
+          gap:1.8rem;
+        }
+
+        /* Carte actu overlay — Premium redesign */
+        .actu-card {
+          background:white; border-radius:20px;
+          box-shadow:0 2px 16px rgba(0,0,0,.07);
+          overflow:hidden; display:flex; flex-direction:column;
+          transition:transform .28s cubic-bezier(.22,.68,0,1.2), box-shadow .28s;
+          cursor:pointer; position:relative;
+        }
+        .actu-card:hover { transform:translateY(-8px) scale(1.01); box-shadow:0 20px 52px rgba(30,58,138,.15); }
+        .actu-card-img-wrap { position:relative; overflow:hidden; height:210px; }
+        .actu-card-img-wrap img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s; }
+        .actu-card:hover .actu-card-img-wrap img { transform:scale(1.05); }
+        .actu-card-img-ph { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:4rem;
+          background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 60%,#3b82f6 100%); }
+        .actu-card-img-overlay {
+          position:absolute; inset:0;
+          background:linear-gradient(to top, rgba(15,30,90,.6) 0%, transparent 55%);
+        }
+        .actu-card-cat {
+          position:absolute; top:1rem; left:1rem;
+          padding:.28rem .75rem; border-radius:14px;
+          font-size:.65rem; font-weight:800;
+          background:rgba(212,175,55,.92); color:#1a1a1a;
+          text-transform:uppercase; letter-spacing:.07em;
+          backdrop-filter:blur(4px);
+        }
+        .actu-card-date-overlay {
+          position:absolute; bottom:.9rem; left:1rem;
+          font-size:.72rem; color:rgba(255,255,255,.88); font-weight:600;
+          display:flex; align-items:center; gap:.35rem;
+        }
+        .actu-card-body { padding:1.3rem 1.4rem 1.5rem; flex:1; display:flex; flex-direction:column; }
+        .actu-card-body h3 {
+          font-size:1.05rem; font-weight:800; color:#0f172a;
+          margin-bottom:.55rem; line-height:1.38;
+          display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+        }
+        .actu-card-body p { font-size:.85rem; color:#64748b; flex:1; line-height:1.68; margin-bottom:.95rem;
+          display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+        .actu-card-footer { display:flex; align-items:center; justify-content:space-between; }
+        .actu-card-author { font-size:.75rem; color:#94a3b8; display:flex; align-items:center; gap:.4rem; }
+        .actu-card-author-dot { width:22px; height:22px; border-radius:50%; background:linear-gradient(135deg,#1e3a8a,#3b82f6);
+          display:flex; align-items:center; justify-content:center; font-size:.7rem; color:white; font-weight:700; flex-shrink:0; }
+        .actu-card-link {
+          display:inline-flex; align-items:center; gap:.4rem;
+          font-size:.78rem; font-weight:700; color:#1e3a8a;
+          background:#eff6ff; padding:.32rem .8rem; border-radius:20px;
+          transition:all .2s;
+        }
+        .actu-card:hover .actu-card-link { background:#1e3a8a; color:white; gap:.6rem; }
+
+        /* ══ Pagination premium ══ */
+        .actu-pagination {
+          display:flex; justify-content:center; align-items:center;
+          gap:.5rem; margin-top:3rem; flex-wrap:wrap;
+        }
+        .actu-pag-btn {
+          width:38px; height:38px; border-radius:10px;
+          border:1.5px solid #e2e8f0; background:white;
+          color:#374151; font-size:.88rem; font-weight:700;
+          cursor:pointer; font-family:inherit; transition:all .2s;
+          display:flex; align-items:center; justify-content:center;
+        }
+        .actu-pag-btn:hover { border-color:#1e3a8a; color:#1e3a8a; }
+        .actu-pag-btn.active { background:#1e3a8a; color:white; border-color:#1e3a8a; box-shadow:0 4px 12px rgba(30,58,138,.28); }
+
+        /* ══════════════════════════════════════════════
+           PAGE DETAIL ARTICLE — Design Magazine Premium
+        ══════════════════════════════════════════════ */
+        #page-article-overlay {
+          display:none; position:fixed; inset:0;
+          background:#fff; z-index:2100; overflow-y:auto;
+          font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+          scroll-behavior:smooth;
+        }
+
+        /* ── Progress bar de lecture ── */
+        .article-reading-bar {
+          position:fixed; top:0; left:0; height:3px; width:0%;
+          background:linear-gradient(90deg,#d4af37,#f59e0b);
+          z-index:2200; transition:width .1s linear;
+          border-radius:0 2px 2px 0;
+        }
+
+        /* ── Barre de navigation sticky ── */
+        .article-sticky-header {
+          background:rgba(255,255,255,.92);
+          backdrop-filter:blur(16px);
+          -webkit-backdrop-filter:blur(16px);
+          padding:.75rem 5%;
+          display:flex; align-items:center; gap:1rem;
+          position:sticky; top:0; z-index:100;
+          box-shadow:0 1px 0 rgba(0,0,0,.08), 0 4px 24px rgba(0,0,0,.06);
+          border-bottom:1px solid rgba(0,0,0,.06);
+        }
+        .article-back-btn {
+          width:38px; height:38px; border-radius:50%; flex-shrink:0;
+          background:#f1f5f9; border:1.5px solid #e2e8f0;
+          color:#374151; cursor:pointer;
+          display:flex; align-items:center; justify-content:center;
+          transition:all .2s;
+        }
+        .article-back-btn:hover { background:#1e3a8a; border-color:#1e3a8a; color:white; transform:scale(1.08); }
+        .article-nav-category {
+          font-size:.64rem; color:#d4af37; text-transform:uppercase;
+          letter-spacing:.12em; font-weight:800; margin-bottom:.08rem;
+        }
+        .article-nav-title {
+          color:#0f172a; font-size:.88rem; font-weight:700;
+          white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+          max-width:40vw;
+        }
+        .article-nav-share {
+          margin-left:auto; display:flex; gap:.5rem; flex-shrink:0;
+        }
+        .article-share-btn {
+          width:34px; height:34px; border-radius:50%;
+          background:#f8fafc; border:1.5px solid #e2e8f0;
+          color:#64748b; cursor:pointer; font-size:.85rem;
+          display:flex; align-items:center; justify-content:center;
+          transition:all .2s;
+        }
+        .article-share-btn:hover { background:#1e3a8a; border-color:#1e3a8a; color:white; }
+
+        /* ── Hero image ── */
+        .article-hero-wrap {
+          position:relative; overflow:hidden;
+          max-height:520px; background:#0d1f5c;
+        }
+        .article-hero-img {
+          width:100%; height:480px; object-fit:cover; display:block;
+          transition:transform 8s ease;
+        }
+        #page-article-overlay:hover .article-hero-img { transform:scale(1.03); }
+        .article-hero-ph {
+          width:100%; height:380px;
+          background:linear-gradient(135deg,#0d1f5c 0%,#1e3a8a 50%,#2563eb 100%);
+          display:flex; flex-direction:column; align-items:center;
+          justify-content:center; gap:1rem;
+        }
+        .article-hero-ph-icon { font-size:5rem; filter:drop-shadow(0 4px 16px rgba(0,0,0,.4)); }
+        .article-hero-ph-label {
+          font-size:.75rem; color:rgba(255,255,255,.5);
+          text-transform:uppercase; letter-spacing:.12em; font-weight:600;
+        }
+        .article-hero-gradient {
+          position:absolute; inset:0;
+          background:linear-gradient(
+            to top,
+            rgba(5,15,50,.88) 0%,
+            rgba(5,15,50,.4) 35%,
+            rgba(5,15,50,.1) 60%,
+            transparent 80%
+          );
+        }
+        .article-hero-cat {
+          position:absolute; top:1.8rem; left:5%;
+          background:#d4af37; color:#1a1a1a;
+          padding:.32rem 1rem; border-radius:20px;
+          font-size:.68rem; font-weight:800;
+          text-transform:uppercase; letter-spacing:.08em;
+          box-shadow:0 4px 12px rgba(0,0,0,.3);
+        }
+        .article-hero-bottom {
+          position:absolute; bottom:0; left:0; right:0;
+          padding:2rem 5% 2.5rem;
+        }
+        .article-hero-title-overlay {
+          font-size:clamp(1.6rem,4vw,2.6rem); font-weight:900;
+          color:white; line-height:1.18; letter-spacing:-.02em;
+          text-shadow:0 2px 20px rgba(0,0,0,.5);
+          margin-bottom:.9rem; max-width:780px;
+        }
+        .article-hero-meta-row {
+          display:flex; gap:.8rem; flex-wrap:wrap; align-items:center;
+        }
+        .article-hero-meta-pill {
+          display:flex; align-items:center; gap:.4rem;
+          background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.2);
+          backdrop-filter:blur(8px);
+          color:white; font-size:.78rem; font-weight:600;
+          padding:.32rem .85rem; border-radius:20px;
+        }
+
+        /* ── Corps de l'article ── */
+        .article-body {
+          max-width:720px; margin:0 auto;
+          padding:3rem 5% 5rem;
+        }
+
+        /* Ligne décorative d'intro */
+        .article-intro-bar {
+          display:flex; align-items:center; gap:1rem;
+          margin-bottom:2.5rem;
+        }
+        .article-intro-line {
+          flex:1; height:2px; border-radius:1px;
+          background:linear-gradient(90deg,#d4af37 0%,rgba(212,175,55,0) 100%);
+        }
+        .article-intro-badge {
+          font-size:.68rem; color:#64748b; font-weight:700;
+          text-transform:uppercase; letter-spacing:.1em;
+          white-space:nowrap;
+        }
+
+        /* Typographie du contenu */
+        .article-contenu {
+          font-size:1.06rem; color:#1e293b;
+          line-height:2; white-space:pre-wrap;
+          letter-spacing:.008em;
+        }
+        .article-contenu-first-letter::first-letter {
+          float:left; font-size:4.2rem; line-height:.78;
+          font-weight:900; color:#1e3a8a; margin:.05em .15em 0 0;
+          font-family:Georgia,serif;
+        }
+
+        /* Barre de séparation bas */
+        .article-footer-bar {
+          max-width:720px; margin:0 auto; padding:0 5% 2rem;
+          border-top:2px solid #f1f5f9;
+        }
+        .article-footer-label {
+          font-size:.72rem; color:#94a3b8; text-transform:uppercase;
+          letter-spacing:.1em; font-weight:700; margin:2rem 0 1.2rem;
+        }
+
+        /* Articles suggérés */
+        .article-suggestions {
+          display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+          gap:1.2rem;
+        }
+        .article-sugg-card {
+          background:#f8fafc; border-radius:14px; overflow:hidden;
+          cursor:pointer; transition:all .22s; border:1.5px solid #f1f5f9;
+          display:flex; flex-direction:column;
+        }
+        .article-sugg-card:hover { background:white; border-color:#dbeafe; box-shadow:0 8px 28px rgba(30,58,138,.1); transform:translateY(-3px); }
+        .article-sugg-img { width:100%; height:110px; object-fit:cover; display:block; }
+        .article-sugg-ph { width:100%; height:110px; background:linear-gradient(135deg,#1e3a8a,#3b82f6); display:flex; align-items:center; justify-content:center; font-size:2.5rem; }
+        .article-sugg-body { padding:.9rem 1rem 1rem; flex:1; }
+        .article-sugg-body h4 { font-size:.85rem; font-weight:700; color:#0f172a; line-height:1.4; margin-bottom:.35rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+        .article-sugg-date { font-size:.72rem; color:#94a3b8; font-weight:500; }
+
+        /* Responsive */
+        @media(max-width:600px) {
+          .article-hero-img { height:280px; }
+          .article-hero-title-overlay { font-size:1.4rem; }
+          .article-body { padding:2rem 4% 4rem; }
+          .article-suggestions { grid-template-columns:1fr; }
+        }
     </style>
 </head>
 <body>
@@ -1107,10 +1406,11 @@
             </div>
             <ul class="nav-links">
                 <li><a href="#accueil">Accueil</a></li>
-                <li><a href="#apropos">À propos</a></li>
-                <li><a href="#actualites">Actualités</a></li>
+                <li><a href="#" onclick="navVersAPropos();return false;">À propos</a></li>
+                <li><a href="#" onclick="navVersActualites();return false;">Actualités</a></li>
                 <li><a href="#equipe">Équipe</a></li>
-                <li><a href="#galerie">Galerie</a></li>
+                <li><a href="#temoignages">Témoignages</a></li>
+                <li><a href="#galerie" onclick="ouvrirGalerieOverlay();return false;">Galerie</a></li>
                 <li><a href="#preinscription">Pré-inscription</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li><a href="portail.html" id="nav-auth-btn" class="btn-nav-auth">Connexion</a></li>
@@ -1120,8 +1420,8 @@
         <div class="mobile-nav">
             <ul>
                 <li><a href="#accueil">Accueil</a></li>
-                <li><a href="#apropos">À propos</a></li>
-                <li><a href="#galerie">Galerie</a></li>
+                <li><a href="#" onclick="navVersAPropos();return false;">À propos</a></li>
+                <li><a href="#galerie" onclick="ouvrirGalerieOverlay();return false;">Galerie</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li><a href="portail.html" style="color:var(--royal-blue);font-weight:700;">🔑 Connexion / Compte</a></li>
             </ul>
@@ -1172,8 +1472,646 @@
                     <img id="apropos-image" src="images/jo20.jpg" alt="À propos de King's School">
                 </div>
             </div>
+            <!-- Bouton Voir plus À Propos -->
+            <div style="text-align:center;margin-top:2.5rem;">
+              <button onclick="navVersAPropos()" style="display:inline-flex;align-items:center;gap:.6rem;background:linear-gradient(135deg,var(--royal-blue),#2563eb);color:white;border:none;padding:.9rem 2.4rem;border-radius:30px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .25s;box-shadow:0 4px 16px rgba(30,58,138,.3);font-family:inherit;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(30,58,138,.42)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(30,58,138,.3)'">
+                En savoir plus sur King's School
+                <span style="font-size:1.1rem;transition:transform .2s;">→</span>
+              </button>
+            </div>
         </div>
     </section>
+
+    <!-- ══ PAGE À PROPOS (overlay) ══ -->
+    <div id="page-apropos-overlay" style="display:none;position:fixed;inset:0;background:#f0f4f8;z-index:2000;overflow-y:auto;">
+
+      <!-- Navbar intégrée overlay À propos -->
+      <div class="overlay-nav">
+        <div class="overlay-nav-inner">
+          <div class="overlay-nav-logo">
+            <button class="overlay-back-btn" onclick="fermerPageAPropos()" title="Retour">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            </button>
+            <img src="images/logo1.png" alt="King's School" class="overlay-nav-logo-img" onerror="this.style.display='none'">
+            <div class="overlay-nav-logo-text">
+              <span>King's School International</span>
+              <small>Metanoia Ministries</small>
+            </div>
+          </div>
+          <ul class="overlay-nav-links">
+            <li><a href="#" onclick="fermerPageAPropos();document.getElementById('accueil').scrollIntoView({behavior:'smooth'});return false;">Accueil</a></li>
+            <li><a href="#" class="overlay-nav-active" onclick="return false;">À propos</a></li>
+            <li><a href="#" onclick="fermerPageAPropos();setTimeout(ouvrirPageActualites,200);return false;">Actualités</a></li>
+            <li><a href="#" onclick="fermerPageAPropos();document.getElementById('equipe').scrollIntoView({behavior:'smooth'});return false;">Équipe</a></li>
+            <li><a href="#" onclick="fermerPageAPropos();document.getElementById('temoignages').scrollIntoView({behavior:'smooth'});return false;">Témoignages</a></li>
+            <li><a href="#" onclick="fermerPageAPropos();setTimeout(ouvrirGalerieOverlay,200);return false;">Galerie</a></li>
+            <li><a href="#" onclick="fermerPageAPropos();document.getElementById('preinscription').scrollIntoView({behavior:'smooth'});return false;">Pré-inscription</a></li>
+            <li><a href="#" onclick="fermerPageAPropos();document.getElementById('contact').scrollIntoView({behavior:'smooth'});return false;">Contact</a></li>
+            <li><a href="portail.html" class="overlay-nav-auth-btn" id="overlay-ap-auth">Connexion</a></li>
+          </ul>
+          <!-- Dropdown profil (identique page principale) -->
+          <div id="overlay-ap-profil-wrap" style="display:none;position:relative;margin-left:.5rem;">
+            <button id="overlay-ap-profil-btn" onclick="toggleOverlayProfilDropdown('overlay-ap-dropdown')" style="display:flex;align-items:center;gap:.5rem;background:none;border:none;cursor:pointer;padding:.3rem .5rem;border-radius:10px;transition:background .2s;" onmouseover="this.style.background='rgba(0,0,0,.06)'" onmouseout="this.style.background='none'">
+              <div id="overlay-ap-avatar" style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#1e3a8a,#2563eb);color:white;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0;"></div>
+              <span id="overlay-ap-nom" style="font-size:.85rem;font-weight:600;color:#1e3a8a;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="overlay-ap-dropdown" class="overlay-profil-dropdown">
+              <div class="opd-user-header">
+                <div id="overlay-ap-dd-avatar" class="opd-avatar"></div>
+                <div><div id="overlay-ap-dd-nom" class="opd-nom"></div><div id="overlay-ap-dd-email" class="opd-email"></div></div>
+              </div>
+              <div class="opd-notif-section">
+                <div class="opd-notif-label">NOTIFICATIONS <a href="#" class="opd-voir-tout" onclick="event.preventDefault();if(window.ksiOuvrirToutesNotifs)window.ksiOuvrirToutesNotifs();">Tout voir</a></div>
+                <div id="overlay-ap-dd-notifs" class="opd-notif-list"><div class="opd-notif-empty">Aucune notification</div></div>
+              </div>
+              <div class="opd-actions">
+                <a href="portail.html" class="opd-action"><span>🔄</span> Changer de compte</a>
+                <a href="#" onclick="ksiDeconnexionOverlay();return false;" class="opd-action opd-deconnexion"><span>🚪</span> Déconnexion</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero cinématique avec image de fond -->
+      <div class="ap-hero">
+        <div class="ap-hero-bg" id="ap-hero-bg"></div>
+        <div class="ap-hero-overlay"></div>
+        <div class="ap-hero-content">
+          <div class="ap-hero-badge">✦ Notre École</div>
+          <h1 class="ap-hero-title">King's School <span>International</span></h1>
+          <p class="ap-hero-sub">Former des Leaders, Transformer des Nations</p>
+          <div class="ap-stats-bar">
+            <div class="ap-stat">
+              <div class="ap-stat-num" id="ap-stat-eleves">450+</div>
+              <div class="ap-stat-label">Élèves</div>
+            </div>
+            <div class="ap-stat-divider"></div>
+            <div class="ap-stat">
+              <div class="ap-stat-num" id="ap-stat-profs">30+</div>
+              <div class="ap-stat-label">Enseignants</div>
+            </div>
+            <div class="ap-stat-divider"></div>
+            <div class="ap-stat">
+              <div class="ap-stat-num" id="ap-stat-reussite">95%</div>
+              <div class="ap-stat-label">Réussite</div>
+            </div>
+            <div class="ap-stat-divider"></div>
+            <div class="ap-stat">
+              <div class="ap-stat-num" id="ap-stat-annees">10+</div>
+              <div class="ap-stat-label">Années</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Corps principal -->
+      <div class="ap-body">
+
+        <!-- Mission & Vision côte à côte -->
+        <div class="ap-mv-grid">
+          <div class="ap-mv-card ap-mv-mission">
+            <div class="ap-mv-icon">🎯</div>
+            <div class="ap-mv-label">Notre Mission</div>
+            <div id="ap-mission" class="ap-mv-text"></div>
+          </div>
+          <div class="ap-mv-card ap-mv-vision">
+            <div class="ap-mv-icon">🌍</div>
+            <div class="ap-mv-label">Notre Vision</div>
+            <div id="ap-vision" class="ap-mv-text"></div>
+          </div>
+        </div>
+
+        <!-- Histoire avec vraie photo -->
+        <div class="ap-section">
+          <div class="ap-eyebrow">Notre Parcours</div>
+          <h2 class="ap-section-title">Notre Histoire</h2>
+          <div class="ap-histoire-grid">
+            <div id="ap-histoire" class="ap-histoire-text"></div>
+            <div class="ap-histoire-img-wrap">
+              <div id="ap-histoire-img" class="ap-histoire-img-box">🏫</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Valeurs en cartes pleines avec icône grande -->
+        <div class="ap-section ap-section-white">
+          <div class="ap-eyebrow">Ce qui nous guide</div>
+          <h2 class="ap-section-title">Nos Valeurs</h2>
+          <div id="ap-valeurs" class="ap-valeurs-grid"></div>
+        </div>
+
+        <!-- Galerie photos masonry -->
+        <div id="ap-galerie-section" class="ap-section">
+          <div class="ap-eyebrow">Nos Espaces</div>
+          <h2 class="ap-section-title">Galerie Photos</h2>
+          <div id="ap-galerie" class="ap-galerie-masonry"></div>
+          <!-- Lightbox -->
+          <div id="ap-lightbox" class="ap-lightbox" onclick="if(event.target===this)fermerLightbox()">
+            <button class="ap-lb-close" onclick="fermerLightbox()">✕</button>
+            <button class="ap-lb-nav ap-lb-prev" onclick="event.stopPropagation();navLightbox(-1)">‹</button>
+            <div class="ap-lb-inner">
+              <img id="ap-lb-img" src="" alt="">
+              <div class="ap-lb-footer">
+                <span id="ap-lb-caption" class="ap-lb-caption"></span>
+                <span id="ap-lb-counter" class="ap-lb-counter"></span>
+              </div>
+            </div>
+            <button class="ap-lb-nav ap-lb-next" onclick="event.stopPropagation();navLightbox(1)">›</button>
+          </div>
+        </div>
+
+        <!-- Vidéos — iframes intégrées -->
+        <div id="ap-videos-section" class="ap-section ap-section-white">
+          <div class="ap-eyebrow">Nous voir en action</div>
+          <h2 id="ap-video-titre" class="ap-section-title">Découvrez notre école en vidéo</h2>
+          <div id="ap-videos" class="ap-videos-grid"></div>
+          <div id="ap-videos-empty" class="ap-empty-state" style="display:none;">
+            <div class="ap-empty-icon">🎬</div>
+            <p>Les vidéos seront ajoutées très bientôt par l'administrateur.</p>
+          </div>
+        </div>
+
+        <!-- Réseaux sociaux -->
+        <div id="ap-socials-section" class="ap-section ap-section-center">
+          <div class="ap-eyebrow" style="justify-content:center;">Restez connectés</div>
+          <h2 class="ap-section-title">Suivez-nous</h2>
+          <p class="ap-section-sub">Rejoignez notre communauté et restez informé de toutes nos actualités.</p>
+          <div id="ap-socials" class="ap-socials-row"></div>
+        </div>
+
+        <!-- CTA final -->
+        <div class="ap-cta-block">
+          <div class="ap-cta-deco"></div>
+          <h2 id="ap-cta-titre" class="ap-cta-titre">Rejoignez la famille King's School</h2>
+          <p id="ap-cta-texte" class="ap-cta-texte"></p>
+          <div class="ap-cta-btns">
+            <a href="portail.html" class="ap-cta-btn-gold">👤 Créer un compte</a>
+            <button onclick="fermerPageAPropos();document.getElementById('preinscription').scrollIntoView({behavior:'smooth'})" class="ap-cta-btn-ghost">📝 Pré-inscription</button>
+          </div>
+        </div>
+
+      </div><!-- /ap-body -->
+    </div><!-- /page-apropos-overlay -->
+
+    <style>
+      /* ══════════════════════════════════════════
+         OVERLAY À PROPOS — styles complets
+      ══════════════════════════════════════════ */
+      #page-apropos-overlay { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
+
+      /* ── Navbar commune aux overlays ── */
+      .overlay-nav {
+        position:sticky; top:0; z-index:500;
+        background:white;
+        border-bottom:2px solid #e2e8f0;
+        box-shadow:0 2px 12px rgba(0,0,0,.07);
+        font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+      }
+      .overlay-nav-inner {
+        display:flex; align-items:center; justify-content:space-between;
+        padding:.55rem 5%; max-width:1400px; margin:0 auto; gap:1rem;
+      }
+      .overlay-nav-logo {
+        display:flex; align-items:center; gap:.7rem; flex-shrink:0;
+      }
+      .overlay-back-btn {
+        width:34px; height:34px; border-radius:50%;
+        background:#f1f5f9; border:1.5px solid #e2e8f0;
+        color:#374151; cursor:pointer;
+        display:flex; align-items:center; justify-content:center;
+        flex-shrink:0; transition:all .2s;
+      }
+      .overlay-back-btn:hover { background:#e2e8f0; color:#1e3a8a; }
+      .overlay-nav-logo-img { height:44px; width:auto; }
+      .overlay-nav-logo-text { display:flex; flex-direction:column; gap:.05rem; }
+      .overlay-nav-logo-text span { font-size:.82rem; font-weight:700; color:#1e3a8a; }
+      .overlay-nav-logo-text small { font-size:.65rem; color:#d4af37; font-weight:500; }
+      .overlay-nav-links {
+        display:flex; list-style:none; gap:1.5rem;
+        align-items:center; flex-wrap:wrap;
+      }
+      .overlay-nav-links a {
+        text-decoration:none; color:#374151; font-size:.85rem; font-weight:500;
+        transition:color .2s; position:relative;
+      }
+      .overlay-nav-links a:hover { color:#1e3a8a; }
+      .overlay-nav-links a::after {
+        content:''; position:absolute; bottom:-4px; left:0;
+        width:0; height:2px; background:#d4af37; transition:width .25s;
+      }
+      .overlay-nav-links a:hover::after { width:100%; }
+      .overlay-nav-active { color:#1e3a8a !important; font-weight:700 !important; }
+      .overlay-nav-active::after { width:100% !important; }
+      .overlay-nav-auth-btn {
+        background:#d4af37; color:white !important;
+        padding:.38rem 1rem; border-radius:20px;
+        font-size:.82rem !important; font-weight:600 !important;
+        transition:background .2s, transform .2s !important;
+        white-space:nowrap;
+      }
+      .overlay-nav-auth-btn:hover { background:#b9982d !important; transform:translateY(-1px); }
+      .overlay-nav-auth-btn::after { display:none !important; }
+      /* ── Dropdown profil dans les overlays ── */
+      .overlay-profil-dropdown {
+        display:none; position:fixed; top:70px; right:1.2rem;
+        width:300px; background:white; border-radius:16px;
+        box-shadow:0 12px 48px rgba(0,0,0,.18); z-index:9999;
+        border:1px solid #e2e8f0; overflow:hidden;
+      }
+      .overlay-profil-dropdown.open { display:block; }
+      .opd-user-header {
+        display:flex; align-items:center; gap:.9rem;
+        padding:1.1rem 1.2rem; border-bottom:1px solid #f1f5f9;
+      }
+      .opd-avatar {
+        width:40px; height:40px; border-radius:50%;
+        background:linear-gradient(135deg,#1e3a8a,#2563eb);
+        color:white; display:flex; align-items:center; justify-content:center;
+        font-size:.9rem; font-weight:700; flex-shrink:0;
+      }
+      .opd-nom { font-size:.88rem; font-weight:700; color:#1e3a8a; }
+      .opd-email { font-size:.74rem; color:#94a3b8; margin-top:.1rem; }
+      .opd-notif-section { padding:.9rem 1.2rem; border-bottom:1px solid #f1f5f9; }
+      .opd-notif-label {
+        font-size:.68rem; font-weight:700; color:#94a3b8;
+        letter-spacing:.06em; display:flex; justify-content:space-between;
+        align-items:center; margin-bottom:.6rem;
+      }
+      .opd-voir-tout { font-size:.72rem; color:#2563eb; font-weight:600; text-decoration:none; }
+      .opd-voir-tout:hover { text-decoration:underline; }
+      .opd-notif-list { display:flex; flex-direction:column; gap:.4rem; max-height:160px; overflow-y:auto; }
+      .opd-notif-empty { font-size:.8rem; color:#94a3b8; text-align:center; padding:.6rem 0; }
+      .opd-notif-row {
+        padding:.55rem .7rem; border-radius:8px; background:#f8fafc;
+        font-size:.78rem; color:#334155; cursor:pointer;
+      }
+      .opd-notif-row.unread { background:#eff6ff; }
+      .opd-notif-row-title { font-weight:600; color:#1e3a8a; margin-bottom:.1rem; }
+      .opd-notif-row-body { color:#64748b; font-size:.74rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .opd-notif-row-time { font-size:.68rem; color:#94a3b8; margin-top:.15rem; }
+      .opd-actions { padding:.6rem .8rem; display:flex; flex-direction:column; gap:.2rem; }
+      .opd-action {
+        display:flex; align-items:center; gap:.7rem;
+        padding:.6rem .8rem; border-radius:9px;
+        font-size:.82rem; color:#334155; text-decoration:none;
+        transition:background .15s; font-weight:500;
+      }
+      .opd-action:hover { background:#f1f5f9; }
+      .opd-deconnexion { color:#ef4444 !important; }
+      .opd-deconnexion:hover { background:#fef2f2 !important; }
+      @media(max-width:860px) {
+        .overlay-nav-links { display:none; }
+        .overlay-nav-inner { justify-content:flex-start; }
+        .actu-overlay-grid { grid-template-columns:1fr; }
+      }
+      @keyframes spin { to { transform:rotate(360deg); } }
+
+      /* Header */
+      .ap-header {
+        background:linear-gradient(135deg,var(--royal-blue) 0%,#2563eb 100%);
+        padding:1.2rem 5%;display:flex;align-items:center;gap:1rem;
+        position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.25);
+      }
+      .ap-back-btn {
+        background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);
+        color:white;width:38px;height:38px;border-radius:50%;cursor:pointer;
+        display:flex;align-items:center;justify-content:center;flex-shrink:0;
+        transition:background .2s;
+      }
+      .ap-back-btn:hover { background:rgba(255,255,255,.28); }
+      .ap-header-info { display:flex;flex-direction:column;gap:.1rem; }
+      .ap-header-eyebrow { font-size:.68rem;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.1em; }
+      .ap-header-title { color:white;font-size:1.25rem;font-weight:800;margin:0; }
+      .ap-header-crown { margin-left:auto;font-size:1.6rem; }
+
+      /* Hero */
+      .ap-hero {
+        position:relative;min-height:520px;display:flex;align-items:flex-end;
+        overflow:hidden;
+      }
+      .ap-hero-bg {
+        position:absolute;inset:0;
+        background:linear-gradient(135deg,var(--royal-blue) 0%,#1e40af 60%,#2563eb 100%);
+        background-size:cover;background-position:center;
+        animation:apHeroKenBurns 18s ease-in-out infinite alternate;
+        transition:background-image .6s;
+      }
+      @keyframes apHeroKenBurns {
+        from { transform:scale(1);    background-position:center 40%; }
+        to   { transform:scale(1.06); background-position:center 60%; }
+      }
+      .ap-hero-overlay {
+        position:absolute;inset:0;
+        background:linear-gradient(to bottom,
+          rgba(10,20,70,.35) 0%,
+          rgba(10,20,70,.55) 60%,
+          rgba(10,20,70,.82) 100%);
+      }
+      .ap-hero-content {
+        position:relative;z-index:2;width:100%;padding:3rem 5% 3.5rem;text-align:center;
+      }
+      .ap-hero-badge {
+        display:inline-flex;align-items:center;gap:.5rem;
+        background:rgba(212,175,55,.18);border:1px solid rgba(212,175,55,.4);
+        border-radius:30px;padding:.35rem 1.1rem;color:var(--gold);
+        font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+        margin-bottom:1.4rem;
+      }
+      .ap-hero-title {
+        font-size:clamp(2rem,5vw,3.4rem);font-weight:900;color:white;
+        line-height:1.1;letter-spacing:-.02em;margin:0 0 .9rem;
+      }
+      .ap-hero-title span { color:var(--gold); }
+      .ap-hero-sub {
+        font-size:1.05rem;color:rgba(255,255,255,.78);
+        max-width:520px;margin:0 auto 2.8rem;
+      }
+      /* Stats bar */
+      .ap-stats-bar {
+        display:inline-flex;align-items:center;gap:0;
+        background:rgba(255,255,255,.1);backdrop-filter:blur(12px);
+        border:1px solid rgba(255,255,255,.18);border-radius:16px;
+        padding:.6rem 1.2rem;flex-wrap:wrap;justify-content:center;gap:.2rem;
+      }
+      .ap-stat { text-align:center;padding:.5rem 1.4rem; }
+      .ap-stat-num { font-size:1.9rem;font-weight:900;color:var(--gold);line-height:1; }
+      .ap-stat-label { font-size:.65rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem; }
+      .ap-stat-divider { width:1px;height:36px;background:rgba(255,255,255,.2);flex-shrink:0; }
+
+      /* Corps */
+      .ap-body { max-width:1140px;margin:0 auto;padding:2.5rem 5% 4rem; }
+
+      /* Mission & Vision */
+      .ap-mv-grid {
+        display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-bottom:3rem;
+      }
+      .ap-mv-card {
+        border-radius:20px;padding:2.2rem;position:relative;overflow:hidden;
+      }
+      .ap-mv-mission {
+        background:linear-gradient(140deg,var(--royal-blue) 0%,#1e40af 100%);
+        color:white;
+      }
+      .ap-mv-vision {
+        background:var(--light-gold);border:2px solid rgba(212,175,55,.3);
+      }
+      .ap-mv-icon { font-size:2.2rem;margin-bottom:1rem; }
+      .ap-mv-label {
+        font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+        margin-bottom:.7rem;
+      }
+      .ap-mv-mission .ap-mv-label { color:var(--gold); }
+      .ap-mv-vision .ap-mv-label  { color:var(--royal-blue); }
+      .ap-mv-text { font-size:.94rem;line-height:1.85; }
+      .ap-mv-mission .ap-mv-text { color:rgba(255,255,255,.87); }
+      .ap-mv-vision  .ap-mv-text  { color:#374151; }
+      /* Décoration cercle */
+      .ap-mv-card::after {
+        content:'';position:absolute;bottom:-20px;right:-20px;
+        width:90px;height:90px;border-radius:50%;
+        background:rgba(255,255,255,.06);
+      }
+      .ap-mv-vision::after { background:rgba(30,58,138,.06); }
+
+      /* Sections génériques */
+      .ap-section { margin-bottom:3rem; }
+      .ap-section-white {
+        background:white;border-radius:20px;padding:2.5rem;
+        box-shadow:0 4px 24px rgba(0,0,0,.06);
+      }
+      .ap-section-center { text-align:center; }
+      .ap-eyebrow {
+        display:inline-flex;align-items:center;gap:.5rem;
+        color:#2563eb;font-size:.72rem;font-weight:700;
+        letter-spacing:.12em;text-transform:uppercase;margin-bottom:.7rem;
+      }
+      .ap-eyebrow::before {
+        content:'';display:inline-block;width:22px;height:2px;
+        background:var(--gold);border-radius:2px;flex-shrink:0;
+      }
+      .ap-section-title {
+        font-size:1.75rem;font-weight:800;color:var(--royal-blue);
+        margin:0 0 1.6rem;
+      }
+      .ap-section-sub { color:#64748b;margin-bottom:1.8rem;font-size:.95rem; }
+
+      /* Histoire */
+      .ap-histoire-grid {
+        display:grid;grid-template-columns:1fr 1fr;gap:2.8rem;align-items:center;
+      }
+      .ap-histoire-text { font-size:.97rem;line-height:1.95;color:#374151; }
+      .ap-histoire-text p { margin-bottom:1rem; }
+      .ap-histoire-img-wrap { border-radius:20px;overflow:hidden; }
+      .ap-histoire-img-box {
+        aspect-ratio:4/3;background:linear-gradient(135deg,#dbeafe,var(--light-gold));
+        display:flex;align-items:center;justify-content:center;font-size:5rem;
+        box-shadow:0 16px 48px rgba(30,58,138,.14);border-radius:20px;overflow:hidden;
+      }
+      .ap-histoire-img-box img { width:100%;height:100%;object-fit:cover; }
+
+      /* Valeurs — cartes pleines */
+      .ap-valeurs-grid {
+        display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1rem;
+      }
+      .ap-valeur-card {
+        background:#f8fafc;border:1.5px solid #e8edf3;border-radius:16px;
+        padding:1.4rem 1rem;text-align:center;transition:all .22s;cursor:default;
+      }
+      .ap-valeur-card:hover {
+        border-color:var(--gold);background:white;
+        box-shadow:0 8px 28px rgba(212,175,55,.18);transform:translateY(-3px);
+      }
+      .ap-valeur-icon { font-size:2rem;margin-bottom:.7rem; }
+      .ap-valeur-titre { font-size:.83rem;font-weight:700;color:#1e293b;line-height:1.3; }
+
+      /* Galerie masonry */
+      .ap-galerie-masonry {
+        columns:3;column-gap:1rem;
+      }
+      .ap-gal-item {
+        break-inside:avoid;margin-bottom:1rem;border-radius:14px;overflow:hidden;
+        position:relative;cursor:zoom-in;background:#e2e8f0;
+        box-shadow:0 2px 10px rgba(0,0,0,.1);
+        transition:transform .28s, box-shadow .28s;
+      }
+      .ap-gal-item:hover {
+        transform:translateY(-3px);
+        box-shadow:0 12px 36px rgba(0,0,0,.22);
+      }
+      .ap-gal-item img {
+        width:100%;display:block;transition:transform .38s;
+      }
+      .ap-gal-item:hover img { transform:scale(1.07); }
+      .ap-gal-overlay {
+        position:absolute;inset:0;
+        background:linear-gradient(to top, rgba(10,20,70,.65) 0%, rgba(10,20,70,0) 55%);
+        opacity:0;transition:opacity .28s;
+        display:flex;align-items:flex-end;justify-content:space-between;padding:.8rem;
+      }
+      .ap-gal-item:hover .ap-gal-overlay { opacity:1; }
+      .ap-gal-zoom {
+        position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.65);
+        width:46px;height:46px;border-radius:50%;
+        background:rgba(255,255,255,.92);
+        display:flex;align-items:center;justify-content:center;
+        font-size:1.3rem;opacity:0;transition:all .25s;
+        box-shadow:0 4px 16px rgba(0,0,0,.3);
+      }
+      .ap-gal-item:hover .ap-gal-zoom { opacity:1;transform:translate(-50%,-50%) scale(1); }
+      .ap-gal-titre-label {
+        color:rgba(255,255,255,.9);font-size:.75rem;font-weight:600;
+        max-width:calc(100% - 56px);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+        text-shadow:0 1px 4px rgba(0,0,0,.5);
+      }
+
+      /* Lightbox */
+      .ap-lightbox {
+        display:none;position:fixed;inset:0;background:rgba(3,6,22,.94);
+        z-index:9999;align-items:center;justify-content:center;
+        cursor:default;backdrop-filter:blur(4px);
+      }
+      .ap-lightbox.open { display:flex; }
+      .ap-lb-inner {
+        display:flex;flex-direction:column;align-items:center;
+        max-width:92vw;max-height:94vh;
+      }
+      .ap-lightbox img {
+        max-width:88vw;max-height:80vh;border-radius:10px;
+        box-shadow:0 32px 100px rgba(0,0,0,.8);object-fit:contain;
+        cursor:default;transition:opacity .2s ease;
+        display:block;
+      }
+      .ap-lb-footer {
+        display:flex;align-items:center;justify-content:space-between;
+        width:100%;margin-top:.9rem;padding:0 .4rem;
+      }
+      .ap-lb-caption {
+        color:rgba(255,255,255,.75);font-size:.85rem;font-weight:500;
+        flex:1;text-align:left;
+      }
+      .ap-lb-counter {
+        color:rgba(255,255,255,.45);font-size:.78rem;font-weight:600;
+        letter-spacing:.06em;margin-left:1rem;flex-shrink:0;
+      }
+      .ap-lb-close {
+        position:fixed;top:1.2rem;right:1.4rem;
+        background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);
+        color:white;width:40px;height:40px;border-radius:50%;
+        font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+        transition:background .2s,transform .18s;z-index:10;
+      }
+      .ap-lb-close:hover { background:rgba(255,255,255,.25);transform:rotate(90deg); }
+      .ap-lb-nav {
+        position:fixed;top:50%;transform:translateY(-50%);
+        background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);
+        color:white;width:52px;height:52px;border-radius:50%;
+        font-size:1.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+        transition:background .2s,transform .18s;z-index:10;line-height:1;
+      }
+      .ap-lb-nav:hover { background:rgba(255,255,255,.25);transform:translateY(-50%) scale(1.08); }
+      .ap-lb-prev { left:1.2rem; }
+      .ap-lb-next { right:1.2rem; }
+
+      /* Vidéos — iframes */
+      .ap-videos-grid {
+        display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.4rem;
+      }
+      .ap-video-embed {
+        border-radius:16px;overflow:hidden;
+        box-shadow:0 4px 20px rgba(0,0,0,.1);background:#000;
+      }
+      .ap-video-embed iframe {
+        width:100%;aspect-ratio:16/9;display:block;border:none;
+      }
+      .ap-video-meta { padding:.9rem 1rem; background:white; }
+      .ap-video-meta h4 { font-size:.9rem;font-weight:700;color:var(--royal-blue);margin:0 0 .2rem; }
+      .ap-video-meta p  { font-size:.78rem;color:#64748b;margin:0; }
+      /* Vignette cliquable (non-YouTube) */
+      .ap-video-card {
+        border-radius:16px;overflow:hidden;border:1.5px solid #e2e8f0;
+        background:white;text-decoration:none;display:block;transition:all .25s;
+      }
+      .ap-video-card:hover { box-shadow:0 12px 36px rgba(30,58,138,.12);transform:translateY(-4px); }
+      .ap-video-thumb {
+        aspect-ratio:16/9;background:linear-gradient(135deg,var(--royal-blue),#2563eb);
+        display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
+      }
+      .ap-video-thumb img { width:100%;height:100%;object-fit:cover; }
+      .ap-play-btn {
+        position:absolute;width:52px;height:52px;background:rgba(255,255,255,.92);
+        border-radius:50%;display:flex;align-items:center;justify-content:center;
+        box-shadow:0 4px 16px rgba(0,0,0,.3);transition:transform .2s;
+      }
+      .ap-video-card:hover .ap-play-btn { transform:scale(1.12); }
+      .ap-video-info { padding:1.1rem; }
+      .ap-video-info h4 { font-size:.92rem;font-weight:700;color:var(--royal-blue);margin:0 0 .25rem; }
+      .ap-video-info p  { font-size:.8rem;color:#64748b;margin:0; }
+      .ap-platform-badge {
+        position:absolute;top:.6rem;right:.6rem;
+        background:rgba(0,0,0,.62);color:white;
+        font-size:.64rem;font-weight:700;padding:.18rem .5rem;border-radius:5px;
+      }
+
+      .ap-empty-state {
+        text-align:center;padding:2.5rem;border:2px dashed #e2e8f0;border-radius:14px;color:#94a3b8;
+      }
+      .ap-empty-icon { font-size:2.8rem;margin-bottom:.5rem; }
+
+      /* Réseaux sociaux */
+      .ap-socials-row { display:flex;flex-wrap:wrap;gap:.9rem;justify-content:center; }
+      .ap-social-btn {
+        display:inline-flex;align-items:center;gap:.7rem;
+        text-decoration:none;background:white;border:1.5px solid #e2e8f0;
+        border-radius:12px;padding:.85rem 1.4rem;
+        font-size:.88rem;font-weight:600;color:#374151;transition:all .22s;
+      }
+      .ap-social-btn:hover { transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.1); }
+
+      /* CTA */
+      .ap-cta-block {
+        background:linear-gradient(135deg,var(--royal-blue) 0%,#1e40af 50%,#2563eb 100%);
+        border-radius:24px;padding:4rem 3rem;text-align:center;position:relative;overflow:hidden;
+      }
+      .ap-cta-deco {
+        position:absolute;top:-60px;right:-60px;width:220px;height:220px;
+        border-radius:50%;background:rgba(212,175,55,.1);pointer-events:none;
+      }
+      .ap-cta-titre { font-size:2rem;font-weight:900;color:white;margin:0 0 .9rem;line-height:1.2;position:relative; }
+      .ap-cta-texte { color:rgba(255,255,255,.78);font-size:1rem;max-width:500px;margin:0 auto 2.2rem;line-height:1.75;position:relative; }
+      .ap-cta-btns { display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative; }
+      .ap-cta-btn-gold {
+        display:inline-flex;align-items:center;gap:.6rem;
+        background:var(--gold);color:var(--royal-blue);text-decoration:none;
+        padding:.9rem 2.2rem;border-radius:30px;font-size:.95rem;font-weight:800;
+        transition:all .25s;
+      }
+      .ap-cta-btn-gold:hover { background:var(--light-gold);transform:translateY(-2px); }
+      .ap-cta-btn-ghost {
+        display:inline-flex;align-items:center;gap:.6rem;
+        background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.38);color:white;
+        padding:.9rem 2.2rem;border-radius:30px;font-size:.95rem;font-weight:700;
+        cursor:pointer;font-family:inherit;transition:all .25s;
+      }
+      .ap-cta-btn-ghost:hover { background:rgba(255,255,255,.24); }
+
+      /* Responsive */
+      @media(max-width:820px) {
+        .ap-mv-grid { grid-template-columns:1fr; }
+        .ap-histoire-grid { grid-template-columns:1fr; }
+        .ap-histoire-img-wrap { order:-1; }
+        .ap-galerie-masonry { columns:2; }
+        .ap-valeurs-grid { grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); }
+      }
+      @media(max-width:520px) {
+        .ap-galerie-masonry { columns:1; }
+        .ap-stats-bar { gap:0; }
+        .ap-stat { padding:.4rem .8rem; }
+        .ap-cta-block { padding:2.5rem 1.5rem; }
+        .ap-cta-titre { font-size:1.5rem; }
+      }
+    </style>
 
     <!-- Values Section -->
 
@@ -1203,31 +2141,95 @@
     </section>
 
     <!-- ══ PAGE ACTUALITÉS (overlay) ══ -->
-    <div id="page-actualites-overlay" style="display:none;position:fixed;inset:0;background:#f8fafc;z-index:2000;overflow-y:auto;">
-      <!-- Header de la page actualités -->
-      <div style="background:linear-gradient(135deg,var(--royal-blue) 0%,#2563eb 100%);padding:2rem 5%;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2);">
-        <button onclick="fermerPageActualites()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;" onmouseover="this.style.background='rgba(255,255,255,.25)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">←</button>
-        <div>
-          <div style="font-size:.75rem;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem;">King's School International</div>
-          <h2 style="color:white;font-size:1.4rem;font-weight:800;margin:0;">Toutes nos actualités</h2>
+    <div id="page-actualites-overlay" style="display:none;position:fixed;inset:0;background:#f0f4f8;z-index:2000;overflow-y:auto;">
+      <!-- Navbar intégrée overlay Actualités -->
+      <div class="overlay-nav">
+        <div class="overlay-nav-inner">
+          <div class="overlay-nav-logo">
+            <button class="overlay-back-btn" onclick="fermerPageActualites()" title="Retour">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            </button>
+            <img src="images/logo1.png" alt="King's School" class="overlay-nav-logo-img" onerror="this.style.display='none'">
+            <div class="overlay-nav-logo-text">
+              <span>King's School International</span>
+              <small>Metanoia Ministries</small>
+            </div>
+          </div>
+          <ul class="overlay-nav-links">
+            <li><a href="#" onclick="fermerPageActualites();document.getElementById('accueil').scrollIntoView({behavior:'smooth'});return false;">Accueil</a></li>
+            <li><a href="#" onclick="fermerPageActualites();setTimeout(ouvrirPageAPropos,200);return false;">À propos</a></li>
+            <li><a href="#" class="overlay-nav-active" onclick="return false;">Actualités</a></li>
+            <li><a href="#" onclick="fermerPageActualites();document.getElementById('equipe').scrollIntoView({behavior:'smooth'});return false;">Équipe</a></li>
+            <li><a href="#" onclick="fermerPageActualites();document.getElementById('temoignages').scrollIntoView({behavior:'smooth'});return false;">Témoignages</a></li>
+            <li><a href="#" onclick="fermerPageActualites();setTimeout(ouvrirGalerieOverlay,200);return false;">Galerie</a></li>
+            <li><a href="#" onclick="fermerPageActualites();document.getElementById('preinscription').scrollIntoView({behavior:'smooth'});return false;">Pré-inscription</a></li>
+            <li><a href="#" onclick="fermerPageActualites();document.getElementById('contact').scrollIntoView({behavior:'smooth'});return false;">Contact</a></li>
+            <li><a href="portail.html" class="overlay-nav-auth-btn" id="overlay-act-auth">Connexion</a></li>
+          </ul>
+          <!-- Dropdown profil Actualités -->
+          <div id="overlay-act-profil-wrap" style="display:none;position:relative;margin-left:.5rem;">
+            <button id="overlay-act-profil-btn" onclick="toggleOverlayProfilDropdown('overlay-act-dropdown')" style="display:flex;align-items:center;gap:.5rem;background:none;border:none;cursor:pointer;padding:.3rem .5rem;border-radius:10px;transition:background .2s;" onmouseover="this.style.background='rgba(0,0,0,.06)'" onmouseout="this.style.background='none'">
+              <div id="overlay-act-avatar" style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#1e3a8a,#2563eb);color:white;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0;"></div>
+              <span id="overlay-act-nom" style="font-size:.85rem;font-weight:600;color:#1e3a8a;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="overlay-act-dropdown" class="overlay-profil-dropdown">
+              <div class="opd-user-header">
+                <div id="overlay-act-dd-avatar" class="opd-avatar"></div>
+                <div><div id="overlay-act-dd-nom" class="opd-nom"></div><div id="overlay-act-dd-email" class="opd-email"></div></div>
+              </div>
+              <div class="opd-notif-section">
+                <div class="opd-notif-label">NOTIFICATIONS <a href="#" class="opd-voir-tout" onclick="event.preventDefault();if(window.ksiOuvrirToutesNotifs)window.ksiOuvrirToutesNotifs();">Tout voir</a></div>
+                <div id="overlay-act-dd-notifs" class="opd-notif-list"><div class="opd-notif-empty">Aucune notification</div></div>
+              </div>
+              <div class="opd-actions">
+                <a href="portail.html" class="opd-action"><span>🔄</span> Changer de compte</a>
+                <a href="#" onclick="ksiDeconnexionOverlay();return false;" class="opd-action opd-deconnexion"><span>🚪</span> Déconnexion</a>
+              </div>
+            </div>
+          </div>
         </div>
-        <div style="margin-left:auto;"><span style="font-size:1.6rem;">👑</span></div>
+      </div>
+      <!-- Hero section -->
+      <div class="actu-overlay-hero">
+        <div class="actu-hero-eyebrow">
+          <span>👑</span> King's School International
+        </div>
+        <h2 class="actu-hero-title">Nos <em>Actualités</em></h2>
+        <p class="actu-hero-sub">Restez informé de la vie scolaire, des événements et des annonces importantes de notre communauté.</p>
+        <div class="actu-hero-stats">
+          <div class="actu-hero-stat"><span>📰</span> <span id="actu-hero-count">— articles</span></div>
+          <div class="actu-hero-stat"><span>🔄</span> Mis à jour régulièrement</div>
+        </div>
       </div>
 
-      <!-- Filtres catégories -->
-      <div style="background:white;padding:1.2rem 5%;border-bottom:1px solid #e2e8f0;display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;">
-        <span style="font-size:.8rem;font-weight:700;color:#64748b;margin-right:.4rem;">Filtrer :</span>
-        <button class="filtre-actus active" onclick="filtrerActus('tous',this)" style="padding:.45rem 1.1rem;border-radius:20px;border:none;background:var(--royal-blue);color:white;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;">Tout</button>
-        <button class="filtre-actus" onclick="filtrerActus('recent',this)" style="padding:.45rem 1.1rem;border-radius:20px;border:1.5px solid #e2e8f0;background:white;color:#374151;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;">Récents</button>
+      <!-- Barre de filtres sticky -->
+      <div class="actu-filters-bar">
+        <span class="actu-filters-label">Filtrer :</span>
+        <button class="actu-filter-btn active filtre-actus" onclick="filtrerActus('tous',this)">
+          📋 Tout afficher
+        </button>
+        <button class="actu-filter-btn filtre-actus" onclick="filtrerActus('recent',this)">
+          🕐 Ce mois-ci
+        </button>
+        <button class="actu-filter-btn filtre-actus" onclick="filtrerActus('ancien',this)">
+          📅 Archives
+        </button>
       </div>
 
       <!-- Grille des actualités -->
-      <div style="max-width:1200px;margin:0 auto;padding:2.5rem 5%;">
-        <div id="actus-page-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:2rem;"></div>
-        <div id="actus-page-loading" style="text-align:center;padding:4rem;color:#64748b;">Chargement...</div>
-        <div id="actus-page-empty" style="display:none;text-align:center;padding:4rem;color:#94a3b8;"><div style="font-size:4rem;">📰</div><p style="font-size:1.1rem;">Aucune actualité pour le moment.</p></div>
-        <!-- Pagination -->
-        <div id="actus-page-pagination" style="display:none;text-align:center;margin-top:2.5rem;display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;"></div>
+      <div style="max-width:1240px;margin:0 auto;padding:3rem 5% 4rem;">
+        <div id="actus-page-grid" class="actu-overlay-grid"></div>
+        <div id="actus-page-loading" style="text-align:center;padding:5rem 1rem;color:#64748b;">
+          <div style="font-size:2.5rem;margin-bottom:1rem;animation:spin 1.2s linear infinite;display:inline-block;">⏳</div>
+          <p style="font-size:.95rem;">Chargement des actualités…</p>
+        </div>
+        <div id="actus-page-empty" style="display:none;text-align:center;padding:5rem 1rem;">
+          <div style="font-size:4rem;margin-bottom:1rem;opacity:.4;">📰</div>
+          <p style="font-size:1.1rem;color:#64748b;font-weight:600;">Aucune actualité pour le moment.</p>
+          <p style="font-size:.88rem;color:#94a3b8;margin-top:.4rem;">Revenez bientôt pour découvrir nos nouvelles.</p>
+        </div>
+        <div id="actus-page-pagination" class="actu-pagination" style="display:none;"></div>
       </div>
     </div>
 
@@ -1319,12 +2321,9 @@
                     <div><strong>Heures d'ouverture</strong><span id="contact-horaires">Lundi – Vendredi : 7h30 – 16h00</span></div>
                 </div>
 
-                <div class="social-links-row">
-                    <a id="contact-facebook" href="https://www.facebook.com/kingschoolinternational" target="_blank" class="social-btn-round" title="Facebook" style="background:#1877f2;"><i class="fab fa-facebook-f"></i></a>
-                    <a id="contact-instagram" href="https://www.instagram.com/metanoia_ministries/" target="_blank" class="social-btn-round" title="Instagram" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);"><i class="fab fa-instagram"></i></a>
-                    <a id="contact-whatsapp" href="https://wa.me/243XXXXXXXXX" target="_blank" class="social-btn-round" title="WhatsApp" style="background:#25d366;"><i class="fab fa-whatsapp"></i></a>
-                    <a id="contact-youtube" href="https://youtube.com" target="_blank" class="social-btn-round" title="YouTube" style="background:#ff0000;"><i class="fab fa-youtube"></i></a>
-                    <a href="mailto:contact@kingsschool.cd" class="social-btn-round" title="Email" style="background:linear-gradient(135deg,var(--royal-blue),#2563eb);"><i class="fas fa-envelope"></i></a>
+                <!-- Réseaux sociaux générés dynamiquement depuis l'admin -->
+                <div class="social-links-row" id="contact-socials-row">
+                    <!-- chargé par chargerContenuSite() -->
                 </div>
             </div>
 
@@ -1419,6 +2418,10 @@
     <script src="garde.js"></script>
 
     <script>
+        // ══ Détection automatique URL serveur ══
+        const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+          ? 'http://localhost:3000' : 'https://king-s-school.onrender.com';
+
         // ════════════════════════════════════════════════
         //  TYPEWRITER — tagline du hero
         // ════════════════════════════════════════════════
@@ -1500,7 +2503,6 @@
         const KSI_CATS = {general:'Général','vie-scolaire':'Vie scolaire',evenements:'Événements',infrastructure:'Infrastructure',humanitaire:'Humanitaire',sport:'Sport',ceremonie:'Cérémonie'};
 
         function ksiBuildSlides(photos) {
-          // Filtrer les photos dont l'image est vide ou invalide
           const valides = photos.filter(p => p.image && p.image.trim() !== '');
           if (!valides.length) return;
 
@@ -1515,7 +2517,9 @@
           ksiCur = 0;
 
           valides.forEach((p, i) => {
-            // Construire le titre avec un mot en doré si possible
+            // Préfixer API si l'image est relative (/uploads/...)
+            const imgUrl = p.image.startsWith('/') ? API + p.image : p.image;
+
             const mots = (p.titre || '').split(' ');
             let titreHtml = p.titre || '';
             if (mots.length >= 2) {
@@ -1528,11 +2532,9 @@
             const slide = document.createElement('div');
             slide.className = 'ksi-slide' + (i === 0 ? ' active' : '');
 
-            // bgDiv — on utilise appendChild pour tout, pas de innerHTML +=
-            // qui détruirait les éléments déjà ajoutés et leurs styles JS
             const bgDiv = document.createElement('div');
             bgDiv.className = 'ksi-slide-bg';
-            bgDiv.style.cssText = "background-image:url('" + p.image + "');background-size:cover;background-position:center;";
+            bgDiv.style.cssText = "background-image:url('" + imgUrl + "');background-size:cover;background-position:center;";
 
             const overlay = document.createElement('div');
             overlay.className = 'ksi-slide-overlay';
@@ -1547,7 +2549,7 @@
             slide.appendChild(overlay);
             slide.appendChild(content);
             slide.style.cursor = 'pointer';
-            slide.addEventListener('click', () => ksiGoTo(ksiCur, true));
+            slide.addEventListener('click', () => ouvrirGalerieOverlay(i));
             container.appendChild(slide);
 
             // Thumbnail
@@ -1556,7 +2558,7 @@
             const tImg = document.createElement('img');
             tImg.alt = p.titre || '';
             tImg.onerror = () => { tImg.style.display='none'; thumb.style.background='linear-gradient(135deg,#1e3a8a,#2563eb)'; };
-            tImg.src = p.image;
+            tImg.src = imgUrl;
             thumb.appendChild(tImg);
             thumb.addEventListener('click', () => ksiGoTo(i, true));
             thumbs.appendChild(thumb);
@@ -1633,7 +2635,7 @@
         // Chargement dynamique depuis l'API
         async function chargerGalerie() {
           try {
-            const res   = await fetch('https://king-s-school.onrender.com/api/galerie');
+            const res   = await fetch(API+'/api/galerie');
             const items = await res.json();
             // Filtrer les entrées avec image valide
             const valides = Array.isArray(items) ? items.filter(p => p.image && p.image.trim()) : [];
@@ -1687,7 +2689,7 @@
             btn.textContent = 'Envoi en cours...';
 
             try {
-                const res  = await fetch('https://king-s-school.onrender.com/api/contact', {
+                const res  = await fetch(API+'/api/contact', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, telephone, message })
@@ -1772,24 +2774,31 @@
         const ACTUS_APERCU = 3; // sur la page principale
 
         function creerCardActu(a, onclick_fn) {
-          const date = new Date(a.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+          const date = new Date(a.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'});
+          const initiale = (a.auteur||'?').trim()[0].toUpperCase();
           const card = document.createElement('div');
           card.className = 'actu-card';
           card.onclick = onclick_fn;
           card.innerHTML = `
-            ${a.image
-              ? `<img src="${a.image}" alt="" onerror="this.style.display='none';this.nextElementSibling&&(this.nextElementSibling.style.display='flex')">`
-              : ''}
-            <div class="actu-card-img-ph" style="${a.image ? 'display:none' : ''}">📰</div>
-            <div class="actu-card-body">
+            <div class="actu-card-img-wrap">
+              ${a.image
+                ? `<img src="${a.image}" alt="${a.titre}" onerror="this.parentNode.querySelector('.actu-card-img-ph').style.display='flex';this.remove()">`
+                : ''}
+              <div class="actu-card-img-ph" style="${a.image ? 'display:none' : ''}">📰</div>
+              <div class="actu-card-img-overlay"></div>
               <span class="actu-card-cat">Actualité</span>
+              <div class="actu-card-date-overlay">📅 ${date}</div>
+            </div>
+            <div class="actu-card-body">
               <h3>${a.titre}</h3>
-              <div class="actu-card-meta">
-                <span>📅 ${date}</span>
-                <span>✍️ ${a.auteur}</span>
+              <p>${a.contenu.slice(0,160)}${a.contenu.length>160?'…':''}</p>
+              <div class="actu-card-footer">
+                <div class="actu-card-author">
+                  <div class="actu-card-author-dot">${initiale}</div>
+                  <span>${a.auteur}</span>
+                </div>
+                <span class="actu-card-link">Lire <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
               </div>
-              <p>${a.contenu.slice(0,150)}${a.contenu.length>150?'…':''}</p>
-              <span class="actu-card-link">Lire la suite →</span>
             </div>
           `;
           return card;
@@ -1797,7 +2806,7 @@
 
         async function chargerActualites() {
           try {
-            const res = await fetch('https://king-s-school.onrender.com/api/actualites?limit=100');
+            const res = await fetch(API+'/api/actualites?limit=100');
             const data = await res.json();
             document.getElementById('actus-loading').style.display = 'none';
             allActus = data.actualites || [];
@@ -1832,6 +2841,7 @@
           actusFiltrees = [...allActus];
           actusPageCourante = 1;
           afficherPageActus();
+          updateOverlayAuthBtns();
         }
 
         function fermerPageActualites() {
@@ -1845,6 +2855,9 @@
           if (type === 'recent') {
             const cutoff = new Date(); cutoff.setMonth(cutoff.getMonth() - 1);
             actusFiltrees = allActus.filter(a => new Date(a.created_at) >= cutoff);
+          } else if (type === 'ancien') {
+            const cutoff = new Date(); cutoff.setMonth(cutoff.getMonth() - 1);
+            actusFiltrees = allActus.filter(a => new Date(a.created_at) < cutoff);
           } else {
             actusFiltrees = [...allActus];
           }
@@ -1869,52 +2882,131 @@
           page.forEach(a => grid.appendChild(creerCardActu(a, () => ouvrirArticle(a))));
 
           // Pagination
+          const heroCount = document.getElementById('actu-hero-count');
+          if (heroCount) heroCount.textContent = `${actusFiltrees.length} article${actusFiltrees.length>1?'s':''}`;
           const totalPages = Math.ceil(actusFiltrees.length / ACTUS_PAR_PAGE);
           if (totalPages > 1) {
             pag.style.display = 'flex';
+            if (actusPageCourante > 1) {
+              const prev = document.createElement('button');
+              prev.className='actu-pag-btn'; prev.innerHTML='‹';
+              prev.onclick=()=>{actusPageCourante--;afficherPageActus();document.getElementById('page-actualites-overlay').scrollTo({top:0,behavior:'smooth'});};
+              pag.appendChild(prev);
+            }
             for (let i = 1; i <= totalPages; i++) {
               const btn = document.createElement('button');
-              btn.textContent = i;
-              btn.style.cssText = `padding:.5rem 1rem;border-radius:8px;border:1.5px solid ${i===actusPageCourante?'var(--royal-blue)':'#e2e8f0'};background:${i===actusPageCourante?'var(--royal-blue)':'white'};color:${i===actusPageCourante?'white':'#374151'};font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;`;
-              btn.onclick = () => {
-                actusPageCourante = i;
-                afficherPageActus();
-                document.getElementById('page-actualites-overlay').scrollTo({top:0,behavior:'smooth'});
-              };
+              btn.className='actu-pag-btn'+(i===actusPageCourante?' active':'');
+              btn.textContent=i;
+              btn.onclick=()=>{actusPageCourante=i;afficherPageActus();document.getElementById('page-actualites-overlay').scrollTo({top:0,behavior:'smooth'});};
               pag.appendChild(btn);
+            }
+            if (actusPageCourante < totalPages) {
+              const next = document.createElement('button');
+              next.className='actu-pag-btn'; next.innerHTML='›';
+              next.onclick=()=>{actusPageCourante++;afficherPageActus();document.getElementById('page-actualites-overlay').scrollTo({top:0,behavior:'smooth'});};
+              pag.appendChild(next);
             }
           }
         }
 
         // ── Ouvrir un article ──
+        // Suivi de l'origine d'ouverture d'un article
+        let _articleOuvertDepuisSection = false;
+
         function ouvrirArticle(a) {
           if (!localStorage.getItem('ksi_user')) {
             afficherModalConnexion('Connectez-vous pour lire cet article', 'La lecture des actualités complètes est réservée aux membres. Rejoignez-nous, c\'est gratuit !');
             return;
           }
+          // Si l'overlay actualités n'est pas déjà ouvert, l'article vient de la section principale
+          _articleOuvertDepuisSection = (document.getElementById('page-actualites-overlay').style.display !== 'block');
           const overlay = document.getElementById('page-article-overlay');
           const date = new Date(a.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
-          document.getElementById('article-titre').textContent = a.titre;
+
+          // Nav sticky
           document.getElementById('article-header-titre').textContent = a.titre;
-          document.getElementById('article-meta').innerHTML = `
-            <div class="article-meta-item">📅 <strong>${date}</strong></div>
-            <div class="article-meta-item">✍️ ${a.auteur}</div>
-          `;
-          document.getElementById('article-contenu').textContent = a.contenu;
+
+          // Temps de lecture estimé
+          const words = a.contenu.split(/\s+/).length;
+          const mins = Math.max(1, Math.round(words / 200));
+          const readEl = document.getElementById('article-read-time');
+          if (readEl) readEl.textContent = `${mins} min de lecture · ${date}`;
+
+          // Hero image avec tout le contenu en overlay
           const imgZone = document.getElementById('article-img-zone');
-          imgZone.innerHTML = a.image
-            ? `<img src="${a.image}" class="article-hero-img" alt="${a.titre}" onerror="this.outerHTML='<div class=\'article-hero-ph\'>📰</div>'">`
-            : '<div class="article-hero-ph">📰</div>';
+          const initiale = (a.auteur||'?').trim()[0].toUpperCase();
+          if (a.image) {
+            imgZone.innerHTML = `
+              <img src="${a.image}" class="article-hero-img" alt="${a.titre}"
+                onerror="this.outerHTML='<div class=\\'article-hero-ph\\'><div class=\\'article-hero-ph-icon\\'>📰</div><div class=\\'article-hero-ph-label\\'>King\\'s School International</div></div>'">
+              <div class="article-hero-gradient"></div>
+              <span class="article-hero-cat">Actualité</span>
+              <div class="article-hero-bottom">
+                <h1 class="article-hero-title-overlay">${a.titre}</h1>
+                <div class="article-hero-meta-row">
+                  <div class="article-hero-meta-pill">📅 ${date}</div>
+                  <div class="article-hero-meta-pill">✍️ ${a.auteur}</div>
+                  <div class="article-hero-meta-pill">⏱️ ${mins} min</div>
+                </div>
+              </div>`;
+          } else {
+            imgZone.innerHTML = `
+              <div class="article-hero-ph">
+                <div class="article-hero-ph-icon">📰</div>
+                <div class="article-hero-ph-label">King's School International</div>
+              </div>
+              <div class="article-hero-gradient"></div>
+              <span class="article-hero-cat">Actualité</span>
+              <div class="article-hero-bottom">
+                <h1 class="article-hero-title-overlay">${a.titre}</h1>
+                <div class="article-hero-meta-row">
+                  <div class="article-hero-meta-pill">📅 ${date}</div>
+                  <div class="article-hero-meta-pill">✍️ ${a.auteur}</div>
+                  <div class="article-hero-meta-pill">⏱️ ${mins} min</div>
+                </div>
+              </div>`;
+          }
+
+          // Contenu
+          document.getElementById('article-contenu').textContent = a.contenu;
+
+          // Articles suggérés (3 autres au hasard)
+          const sugEl = document.getElementById('article-suggestions');
+          if (sugEl) {
+            const autres = allActus.filter(x => x.id !== a.id).sort(() => Math.random()-.5).slice(0,3);
+            sugEl.innerHTML = autres.map(s => {
+              const sd = new Date(s.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'});
+              return `<div class="article-sugg-card" onclick="ouvrirArticle(${JSON.stringify(s).replace(/"/g,'&quot;')})">
+                ${s.image ? `<img class="article-sugg-img" src="${s.image}" alt="${s.titre}" onerror="this.outerHTML='<div class=\\'article-sugg-ph\\'>📰</div>'">` : '<div class="article-sugg-ph">📰</div>'}
+                <div class="article-sugg-body">
+                  <h4>${s.titre}</h4>
+                  <div class="article-sugg-date">📅 ${sd}</div>
+                </div>
+              </div>`;
+            }).join('');
+          }
+
           overlay.style.display = 'block';
           overlay.scrollTo({top: 0, behavior: 'instant'});
           document.body.style.overflow = 'hidden';
+
+          // Progress bar de lecture
+          overlay.onscroll = () => {
+            const total = overlay.scrollHeight - overlay.clientHeight;
+            const pct = total > 0 ? (overlay.scrollTop / total * 100) : 0;
+            const bar = document.getElementById('article-reading-bar');
+            if (bar) bar.style.width = pct + '%';
+          };
         }
 
         function fermerArticle() {
           document.getElementById('page-article-overlay').style.display = 'none';
-          // Si l'overlay liste est encore ouvert, on garde le scroll bloqué sur lui.
-          // Sinon on restitue le scroll normal du site.
-          if (document.getElementById('page-actualites-overlay').style.display === 'block') {
+          // Si l'article venait de la section principale (pas de l'overlay liste),
+          // on ouvre l'overlay actualités pour que l'utilisateur y atterrisse.
+          if (_articleOuvertDepuisSection) {
+            _articleOuvertDepuisSection = false;
+            ouvrirPageActualites();
+          } else if (document.getElementById('page-actualites-overlay').style.display === 'block') {
             document.body.style.overflow = 'hidden';
           } else {
             document.body.style.overflow = '';
@@ -1943,6 +3035,8 @@
               fermerArticle();
             } else if (document.getElementById('page-actualites-overlay').style.display === 'block') {
               fermerPageActualites();
+            } else if (document.getElementById('page-apropos-overlay').style.display === 'block') {
+              fermerPageAPropos();
             }
           }
         });
@@ -1953,7 +3047,7 @@
         // ── Équipe ──
         async function chargerEquipe() {
           try {
-            const res = await fetch('https://king-s-school.onrender.com/api/equipe');
+            const res = await fetch(API+'/api/equipe');
             const data = await res.json();
             document.getElementById('equipe-loading').style.display = 'none';
             if (!data.length) { document.getElementById('equipe-empty').style.display = 'block'; return; }
@@ -1980,7 +3074,7 @@
         // ── Témoignages ──
         async function chargerTemoignages() {
           try {
-            const res = await fetch('https://king-s-school.onrender.com/api/temoignages');
+            const res = await fetch(API+'/api/temoignages');
             const data = await res.json();
             document.getElementById('temo-loading').style.display = 'none';
             if (!data.length) { document.getElementById('temo-empty').style.display = 'block'; return; }
@@ -2011,7 +3105,7 @@
         // ── FAQ ──
         async function chargerFaq() {
           try {
-            const res = await fetch('https://king-s-school.onrender.com/api/faq');
+            const res = await fetch(API+'/api/faq');
             const data = await res.json();
             document.getElementById('faq-loading').style.display = 'none';
             if (!data.length) { document.getElementById('faq-empty').style.display = 'block'; return; }
@@ -2043,8 +3137,38 @@
         }
 
         // ── Pré-inscription ──
+        const PI_CHAMPS = ['pi-enfant','pi-age','pi-classe','pi-parent','pi-email','pi-tel','pi-msg'];
+
+        function sauvegarderChampsPi() {
+          const draft = {};
+          PI_CHAMPS.forEach(id => { const el = document.getElementById(id); if (el) draft[id] = el.value; });
+          localStorage.setItem('ksi_pi_draft', JSON.stringify(draft));
+        }
+
+        function restaurerChampsPi() {
+          const raw = localStorage.getItem('ksi_pi_draft');
+          if (!raw) return;
+          try {
+            const draft = JSON.parse(raw);
+            PI_CHAMPS.forEach(id => {
+              const el = document.getElementById(id);
+              if (el && draft[id] !== undefined && draft[id] !== '') el.value = draft[id];
+            });
+          } catch(e) {}
+        }
+
+        // Sauvegarde automatique à chaque frappe
+        PI_CHAMPS.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.addEventListener('input', sauvegarderChampsPi);
+        });
+
+        // Restaurer au chargement
+        restaurerChampsPi();
+
         async function envoyerPreinscription() {
           if (!localStorage.getItem('ksi_user')) {
+            sauvegarderChampsPi();
             afficherModalConnexion('Connectez-vous pour vous préinscrire', 'La pré-inscription est réservée aux membres. Créez un compte gratuitement pour continuer.');
             return;
           }
@@ -2067,7 +3191,7 @@
 
           btn.disabled = true; btn.textContent = 'Envoi en cours...';
           try {
-            const res = await fetch('https://king-s-school.onrender.com/api/preinscription', {
+            const res = await fetch(API+'/api/preinscription', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ nom_enfant, age, classe_visee, nom_parent, email_parent, telephone, message })
@@ -2079,6 +3203,7 @@
               feedback.textContent = '✅ Demande envoyée ! Nous vous contacterons très bientôt.';
               ['pi-enfant','pi-age','pi-parent','pi-email','pi-tel','pi-msg'].forEach(id => document.getElementById(id).value = '');
               document.getElementById('pi-classe').value = '';
+              localStorage.removeItem('ksi_pi_draft');
             } else {
               feedback.style.background = '#fee2e2'; feedback.style.color = '#dc2626';
               feedback.textContent = '❌ ' + (data.message || 'Une erreur est survenue.');
@@ -2118,78 +3243,484 @@
 
         // ── Contenu dynamique du site ──
         async function chargerContenuSite() {
+          let c = null;
           try {
-            const res = await fetch('https://king-s-school.onrender.com/api/site-content');
-            const c = await res.json();
+            const res = await fetch(API+'/api/site-content?t='+Date.now(), {cache:'no-store',headers:{'Cache-Control':'no-cache','Pragma':'no-cache'}});
+            if (!res.ok) throw new Error('HTTP '+res.status);
+            c = await res.json();
+          } catch(e) { console.warn('Contenu site indisponible:', e.message); return; }
 
-            // Hero
+          // Hero
+          try {
             if (c.hero_titre) document.getElementById('hero-titre').textContent = c.hero_titre;
             if (c.hero_description) document.getElementById('hero-description').textContent = c.hero_description;
             if (c.hero_btn1_texte) document.getElementById('hero-btn1').textContent = c.hero_btn1_texte;
             if (c.hero_btn2_texte) document.getElementById('hero-btn2').textContent = c.hero_btn2_texte;
-            if (c.hero_image) {
-              const hero = document.querySelector('.hero');
-              if (hero) {
-                hero.style.backgroundImage = `linear-gradient(135deg,rgba(15,35,110,0.55),rgba(25,75,200,0.50)), url('${c.hero_image}')`;
-                hero.style.backgroundSize = 'cover';
-                hero.style.backgroundPosition = 'center center';
-                hero.style.backgroundRepeat = 'no-repeat';
-                hero.style.backgroundAttachment = 'scroll';
-              }
-            }
-            if (c.hero_phrases) {
-              const nouvelles = c.hero_phrases.split('|').map(s=>s.trim()).filter(Boolean);
-              if (nouvelles.length) { phrases.length=0; nouvelles.forEach(p=>phrases.push(p)); }
-            }
+            if (c.hero_image) { const h=document.querySelector('.hero'); if(h){h.style.backgroundImage=`linear-gradient(135deg,rgba(15,35,110,0.55),rgba(25,75,200,0.50)), url('${c.hero_image}')`;h.style.backgroundSize='cover';h.style.backgroundPosition='center center';h.style.backgroundRepeat='no-repeat';h.style.backgroundAttachment='scroll';} }
+            if (c.hero_phrases) { const n=c.hero_phrases.split('|').map(s=>s.trim()).filter(Boolean); if(n.length){phrases.length=0;n.forEach(p=>phrases.push(p));} }
+          } catch(e) { console.warn('Hero error:',e.message); }
 
-            // Chiffres
+          // Chiffres
+          try {
             if (c.chiffres_titre) document.getElementById('chiffres-titre').textContent = c.chiffres_titre;
             if (c.chiffres_sous_titre) document.getElementById('chiffres-sous-titre').textContent = c.chiffres_sous_titre;
             if (c.chiffre_fondation) document.getElementById('c-annee').textContent = c.chiffre_fondation;
-            // Les valeurs animées seront gérées par animerChiffres
-            window._chiffre_eleves = parseInt(c.chiffre_eleves)||450;
+            window._chiffre_eleves   = parseInt(c.chiffre_eleves)||450;
             window._chiffre_reussite = parseInt(c.chiffre_reussite)||95;
-            window._chiffre_profs = parseInt(c.chiffre_profs)||30;
+            window._chiffre_profs    = parseInt(c.chiffre_profs)||30;
+          } catch(e) { console.warn('Chiffres error:',e.message); }
 
-            // À propos
-            if (c.apropos_titre) document.getElementById('apropos-titre').textContent = c.apropos_titre;
-            if (c.apropos_p1) document.getElementById('apropos-p1').textContent = c.apropos_p1;
-            if (c.apropos_p2) document.getElementById('apropos-p2').textContent = c.apropos_p2;
-            if (c.apropos_citation) document.getElementById('apropos-citation').textContent = c.apropos_citation;
-            if (c.apropos_citation_auteur) document.getElementById('apropos-citation-auteur').textContent = '— ' + c.apropos_citation_auteur;
-            if (c.apropos_p3) document.getElementById('apropos-p3').textContent = c.apropos_p3;
-            if (c.apropos_image) {
-              const img = document.getElementById('apropos-image');
-              if (img) img.src = c.apropos_image;
+          // À propos section principale
+          try {
+            const _t=(id,v)=>{const el=document.getElementById(id);if(el&&v!==undefined&&v!=='')el.textContent=v;};
+            _t('apropos-titre', c.apropos_titre);
+            _t('apropos-p1', c.apropos_p1);
+            _t('apropos-p2', c.apropos_p2);
+            _t('apropos-citation', c.apropos_citation);
+            if (c.apropos_citation_auteur) { const el=document.getElementById('apropos-citation-auteur'); if(el) el.textContent='— '+c.apropos_citation_auteur; }
+            _t('apropos-p3', c.apropos_p3);
+            const img=document.getElementById('apropos-image');
+            if(img&&c.apropos_image) img.src=c.apropos_image.startsWith('/')?API+c.apropos_image:c.apropos_image;
+          } catch(e) { console.warn('Apropos error:',e.message); }
+
+          // Valeurs
+          try {
+            if (c.valeurs_titre) { const el=document.getElementById('valeurs-titre'); if(el) el.textContent=c.valeurs_titre; }
+            if (c.valeurs_sous_titre) { const el=document.getElementById('valeurs-sous-titre'); if(el) el.textContent=c.valeurs_sous_titre; }
+            if (c.valeurs_items) {
+              const items=JSON.parse(c.valeurs_items);
+              const grid=document.getElementById('valeurs-grid');
+              if(grid) grid.innerHTML=items.map(v=>`<div class="value-card"><div class="value-icon">${v.icon||'⭐'}</div><h3>${v.titre||''}</h3><p>${v.texte||''}</p></div>`).join('');
+            }
+          } catch(e) { console.warn('Valeurs error:',e.message); }
+
+          // ── Contact — exécuté dans son propre bloc, toujours indépendant ──
+          try {
+            const setT=(id,v)=>{const el=document.getElementById(id);if(el&&v)el.textContent=v;};
+            setT('contact-adresse',   c.contact_adresse);
+            setT('contact-telephone', c.contact_telephone);
+            setT('contact-email',     c.contact_email);
+            setT('contact-horaires',  c.contact_horaires);
+
+            // ── Réseaux sociaux — générés dynamiquement (identique à l'admin) ──
+            // Définition de tous les réseaux possibles dans l'ordre
+            const SOCIALS_CONTACT = [
+              { key:'contact_facebook',  bg:'#1877f2',  icon:'fab fa-facebook-f',  title:'Facebook' },
+              { key:'contact_instagram', bg:'linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)', icon:'fab fa-instagram', title:'Instagram' },
+              { key:'contact_whatsapp',  bg:'#25d366',  icon:'fab fa-whatsapp',    title:'WhatsApp' },
+              { key:'contact_youtube',   bg:'#ff0000',  icon:'fab fa-youtube',     title:'YouTube' },
+              { key:'contact_tiktok',    bg:'linear-gradient(135deg,#010101,#69c9d0)', icon:'fab fa-tiktok', title:'TikTok' },
+              { key:'contact_twitter',   bg:'#000000',  icon:'fab fa-x-twitter',   title:'X / Twitter' },
+            ];
+            const socialsRow = document.getElementById('contact-socials-row');
+            if (socialsRow) {
+              // Garder uniquement les réseaux dont l'URL est renseignée dans l'admin
+              // Afficher uniquement les réseaux dont l'URL est configurée (sans email/whatsapp redondants)
+              const socialsHtml = SOCIALS_CONTACT
+                .filter(s => c[s.key] && c[s.key].trim() && c[s.key] !== '#')
+                .map(s => `<a href="${c[s.key]}" target="_blank" rel="noopener" class="social-btn-round" title="${s.title}" style="background:${s.bg};"><i class="${s.icon}"></i></a>`)
+                .join('');
+              socialsRow.innerHTML = socialsHtml;
+            }
+          } catch(e) { console.warn('Contact error:',e.message); }
+        }
+
+        // ════════════════════════════════════════════════
+        //  PAGE À PROPOS (overlay)
+        function updateOverlayAuthBtns() {
+          const rawUser = localStorage.getItem('ksi_user');
+          const OVERLAYS = [
+            { auth:'overlay-ap-auth',  wrap:'overlay-ap-profil-wrap',  avatar:'overlay-ap-avatar',  nom:'overlay-ap-nom',  ddAvatar:'overlay-ap-dd-avatar',  ddNom:'overlay-ap-dd-nom',  ddEmail:'overlay-ap-dd-email',  ddNotifs:'overlay-ap-dd-notifs'  },
+            { auth:'overlay-act-auth', wrap:'overlay-act-profil-wrap', avatar:'overlay-act-avatar', nom:'overlay-act-nom', ddAvatar:'overlay-act-dd-avatar', ddNom:'overlay-act-dd-nom', ddEmail:'overlay-act-dd-email', ddNotifs:'overlay-act-dd-notifs' },
+            { auth:'overlay-gal-auth', wrap:'overlay-gal-profil-wrap', avatar:'overlay-gal-avatar', nom:'overlay-gal-nom', ddAvatar:'overlay-gal-dd-avatar', ddNom:'overlay-gal-dd-nom', ddEmail:'overlay-gal-dd-email', ddNotifs:'overlay-gal-dd-notifs' },
+          ];
+          if (rawUser) {
+            let u = {};
+            try { u = JSON.parse(rawUser); } catch(e) {}
+            const initials = (u.name||'?').trim().split(/\s+/).map(n=>n[0]).join('').slice(0,2).toUpperCase();
+            OVERLAYS.forEach(ov => {
+              // Masquer le lien Connexion, afficher le dropdown
+              const authLink = document.getElementById(ov.auth);
+              if (authLink) authLink.style.display = 'none';
+              const wrap = document.getElementById(ov.wrap);
+              if (wrap) wrap.style.display = 'flex';
+              // Initiales dans les avatars
+              const av = document.getElementById(ov.avatar);
+              if (av) av.textContent = initials;
+              const nom = document.getElementById(ov.nom);
+              if (nom) nom.textContent = u.name || 'Profil';
+              const ddAv = document.getElementById(ov.ddAvatar);
+              if (ddAv) ddAv.textContent = initials;
+              const ddNom = document.getElementById(ov.ddNom);
+              if (ddNom) ddNom.textContent = u.name || '';
+              const ddEmail = document.getElementById(ov.ddEmail);
+              if (ddEmail) ddEmail.textContent = u.email || '';
+            });
+            // Charger les notifications dans les dropdowns
+            chargerNotifsOverlay();
+          } else {
+            OVERLAYS.forEach(ov => {
+              const authLink = document.getElementById(ov.auth);
+              if (authLink) { authLink.style.display = ''; authLink.textContent = 'Connexion'; }
+              const wrap = document.getElementById(ov.wrap);
+              if (wrap) wrap.style.display = 'none';
+            });
+          }
+        }
+
+        // ── Dropdown : ouvrir/fermer ──
+        function toggleOverlayProfilDropdown(dropId) {
+          const all = ['overlay-ap-dropdown','overlay-act-dropdown','overlay-gal-dropdown'];
+          all.forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (id === dropId) el.classList.toggle('open');
+            else el.classList.remove('open');
+          });
+        }
+        document.addEventListener('click', e => {
+          const insideDrop = e.target.closest('.overlay-profil-dropdown');
+          const insideBtn  = e.target.closest('[onclick*="toggleOverlayProfilDropdown"]');
+          if (!insideDrop && !insideBtn) {
+            ['overlay-ap-dropdown','overlay-act-dropdown','overlay-gal-dropdown'].forEach(id => {
+              const el = document.getElementById(id);
+              if (el) el.classList.remove('open');
+            });
+          }
+        });
+
+        // ── Déconnexion depuis un overlay ──
+        function ksiDeconnexionOverlay() {
+          localStorage.removeItem('ksi_user');
+          window.location.reload();
+        }
+
+        // ── Charger les notifications dans les dropdowns overlays ──
+        let _overlayNotifs = [];
+        async function chargerNotifsOverlay() {
+          try {
+            const token = localStorage.getItem('ksi_token') || '';
+            const res = await fetch(API + '/api/notifications', {
+              headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (!res.ok) return;
+            const data = await res.json();
+            // L'API retourne un tableau direct
+            _overlayNotifs = Array.isArray(data) ? data : (Array.isArray(data.notifications) ? data.notifications : []);
+          } catch(e) { _overlayNotifs = []; }
+          ['overlay-ap-dd-notifs','overlay-act-dd-notifs','overlay-gal-dd-notifs'].forEach(id => {
+            _remplirDropdownNotifs(id);
+          });
+        }
+
+        function _remplirDropdownNotifs(containerId) {
+          const el = document.getElementById(containerId);
+          if (!el) return;
+          if (!_overlayNotifs.length) {
+            el.innerHTML = '<div class="opd-notif-empty">Aucune notification</div>';
+            return;
+          }
+          el.innerHTML = _overlayNotifs.slice(0, 5).map((n, i) => {
+            const date = n.created_at ? new Date(n.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
+            return `<div class="opd-notif-row${n.lu ? '' : ' unread'}" data-idx="${i}" style="cursor:pointer;">
+              <div class="opd-notif-row-title">${n.titre||''}</div>
+              <div class="opd-notif-row-body">${n.contenu||''}</div>
+              <div class="opd-notif-row-time">${date}</div>
+            </div>`;
+          }).join('');
+          // Clic sur chaque notification → ouvre la modale détail de garde.js
+          el.querySelectorAll('.opd-notif-row').forEach(row => {
+            row.addEventListener('click', () => {
+              const n = _overlayNotifs[parseInt(row.dataset.idx)];
+              if (!n) return;
+              // Fermer le dropdown
+              ['overlay-ap-dropdown','overlay-act-dropdown','overlay-gal-dropdown'].forEach(id => {
+                const d = document.getElementById(id); if (d) d.classList.remove('open');
+              });
+              if (window.ksiOuvrirDetail) window.ksiOuvrirDetail(n);
+            });
+          });
+        }
+
+        // Navigation navbar → overlays (avec vérification connexion)
+        function navVersAPropos() {
+          if (!localStorage.getItem('ksi_user')) {
+            afficherModalConnexion('Connectez-vous pour découvrir notre école', 'La page À propos complète est réservée aux membres. Créez un compte gratuitement pour accéder à notre histoire, nos valeurs et notre galerie photos.');
+            return;
+          }
+          document.getElementById('apropos').scrollIntoView({behavior:'smooth'});
+          setTimeout(ouvrirPageAPropos, 400);
+        }
+
+        function navVersActualites() {
+          if (!localStorage.getItem('ksi_user')) {
+            afficherModalConnexion('Actualités réservées aux membres', 'Connectez-vous pour parcourir toutes nos actualités et rester informé de la vie scolaire.');
+            return;
+          }
+          ouvrirPageActualites();
+        }
+
+        function ouvrirPageAPropos() {
+          const overlay = document.getElementById('page-apropos-overlay');
+          overlay.style.display = 'block';
+          document.body.style.overflow = 'hidden';
+          overlay.scrollTo({top:0,behavior:'instant'});
+          chargerContenuAPropos();
+          updateOverlayAuthBtns();
+        }
+
+        function fermerPageAPropos() {
+          document.getElementById('page-apropos-overlay').style.display = 'none';
+          document.body.style.overflow = '';
+          fermerLightbox();
+        }
+
+        // Fermer avec Escape
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape') {
+            fermerLightbox();
+            if (document.getElementById('page-apropos-overlay').style.display !== 'none') fermerPageAPropos();
+          }
+        });
+
+        let _apCharge = false;
+
+        async function chargerContenuAPropos() {
+          if (_apCharge) return;
+          _apCharge = true;
+          try {
+            const res = await fetch(API+'/api/site-content');
+            const c = await res.json();
+
+            // Stats hero
+            if (c.apropos_stat_eleves)   document.getElementById('ap-stat-eleves').textContent   = c.apropos_stat_eleves;
+            if (c.apropos_stat_profs)    document.getElementById('ap-stat-profs').textContent    = c.apropos_stat_profs;
+            if (c.apropos_stat_reussite) document.getElementById('ap-stat-reussite').textContent = c.apropos_stat_reussite;
+            if (c.apropos_stat_annees)   document.getElementById('ap-stat-annees').textContent   = c.apropos_stat_annees;
+
+            // Image de fond hero + section Histoire (partagée)
+            const bg = document.getElementById('ap-hero-bg');
+            const imgBox = document.getElementById('ap-histoire-img');
+            const rawImgUrl = (c.apropos_image || '').trim();
+            if (rawImgUrl) {
+              const fullImgUrl = rawImgUrl.startsWith('/') ? API + rawImgUrl : rawImgUrl;
+              // Précharger avant d'afficher
+              const preload = new Image();
+              preload.onload = () => {
+                bg.style.backgroundImage = `url('${fullImgUrl}')`;
+                bg.style.backgroundSize = 'cover';
+                bg.style.backgroundPosition = 'center';
+              };
+              preload.src = fullImgUrl;
+              imgBox.innerHTML = `<img src="${fullImgUrl}" alt="King's School" style="width:100%;height:100%;object-fit:cover;">`;
             }
 
-            // Valeurs
-            if (c.valeurs_titre) document.getElementById('valeurs-titre').textContent = c.valeurs_titre;
-            if (c.valeurs_sous_titre) document.getElementById('valeurs-sous-titre').textContent = c.valeurs_sous_titre;
-            if (c.valeurs_items) {
+            // Mission / Vision / Histoire
+            if (c.apropos_mission)  document.getElementById('ap-mission').innerHTML   = c.apropos_mission;
+            if (c.apropos_vision)   document.getElementById('ap-vision').innerHTML    = c.apropos_vision;
+            if (c.apropos_histoire) document.getElementById('ap-histoire').innerHTML  = c.apropos_histoire;
+
+            // Valeurs — cartes pleines avec grande icône
+            if (c.apropos_valeurs) {
               try {
-                const items = JSON.parse(c.valeurs_items);
-                const grid = document.getElementById('valeurs-grid');
-                grid.innerHTML = items.map(v=>`
-                  <div class="value-card">
-                    <div class="value-icon">${v.icon||'⭐'}</div>
-                    <h3>${v.titre||''}</h3>
-                    <p>${v.texte||''}</p>
-                  </div>`).join('');
+                const vals = JSON.parse(c.apropos_valeurs);
+                document.getElementById('ap-valeurs').innerHTML = vals.map(v =>
+                  `<div class="ap-valeur-card">
+                    <div class="ap-valeur-icon">${v.icon||'⭐'}</div>
+                    <div class="ap-valeur-titre">${v.titre||''}</div>
+                  </div>`
+                ).join('');
               } catch(e){}
             }
 
-            // Contact
-            if (c.contact_adresse) document.getElementById('contact-adresse').textContent = c.contact_adresse;
-            if (c.contact_telephone) document.getElementById('contact-telephone').textContent = c.contact_telephone;
-            if (c.contact_email) document.getElementById('contact-email').textContent = c.contact_email;
-            if (c.contact_horaires) document.getElementById('contact-horaires').textContent = c.contact_horaires;
-            if (c.contact_facebook) document.getElementById('contact-facebook').href = c.contact_facebook;
-            if (c.contact_instagram) document.getElementById('contact-instagram').href = c.contact_instagram;
-            if (c.contact_whatsapp) document.getElementById('contact-whatsapp').href = c.contact_whatsapp;
-            if (c.contact_youtube) document.getElementById('contact-youtube').href = c.contact_youtube;
+            // Vidéos — YouTube en iframe, autres en vignette cliquable
+            if (c.apropos_video_titre) document.getElementById('ap-video-titre').textContent = c.apropos_video_titre;
+            if (c.apropos_videos) {
+              try {
+                const vids = JSON.parse(c.apropos_videos);
+                const container = document.getElementById('ap-videos');
+                if (vids.length) {
+                  document.getElementById('ap-videos-empty').style.display = 'none';
+                  container.innerHTML = vids.map(v => {
+                    const ytId = getYtIdAP(v.url);
+                    if (ytId) {
+                      // YouTube → iframe intégrée
+                      return `<div class="ap-video-embed">
+                        <iframe src="https://www.youtube.com/embed/${ytId}" title="${v.titre||'Vidéo'}" allowfullscreen loading="lazy"></iframe>
+                        ${(v.titre||v.description) ? `<div class="ap-video-meta">
+                          ${v.titre ? `<h4>${v.titre}</h4>` : ''}
+                          ${v.description ? `<p>${v.description}</p>` : ''}
+                        </div>` : ''}
+                      </div>`;
+                    } else {
+                      // Autre plateforme → vignette cliquable avec couleur + icône par plateforme
+                      const platform = detectPlatformAP(v.url);
+                      const platformStyle = getPlatformStyleAP(platform);
+                      return `<a href="${v.url}" target="_blank" rel="noopener" class="ap-video-card">
+                        <div class="ap-video-thumb" style="background:${platformStyle.bg};">
+                          <div class="ap-platform-icon" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.5rem;">
+                            <i class="${platformStyle.faIcon}" style="font-size:2.8rem;color:white;opacity:.9;"></i>
+                          </div>
+                          <div class="ap-play-btn" style="background:rgba(255,255,255,.22);backdrop-filter:blur(4px);">
+                            <svg width="22" height="22" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                          </div>
+                          <span class="ap-platform-badge" style="background:${platformStyle.badgeBg};">${platform}</span>
+                        </div>
+                        <div class="ap-video-info">
+                          <h4>${v.titre||'Regarder la vidéo'}</h4>
+                          <p>${v.description||''}</p>
+                        </div>
+                      </a>`;
+                    }
+                  }).join('');
+                } else {
+                  document.getElementById('ap-videos-empty').style.display = 'block';
+                }
+              } catch(e){ document.getElementById('ap-videos-empty').style.display = 'block'; }
+            } else {
+              document.getElementById('ap-videos-empty').style.display = 'block';
+            }
 
-          } catch(e) { console.warn('Contenu site: serveur non disponible, données statiques utilisées.'); }
+            // Galerie masonry avec lightbox
+            let galImages = [];
+            if (c.galerie_items) {
+              try {
+                galImages = JSON.parse(c.galerie_items)
+                  .map(g => ({
+                    url: g.image ? (g.image.startsWith('/') ? API + g.image : g.image) : '',
+                    titre: g.titre || ''
+                  }))
+                  .filter(g => g.url);
+              } catch(e) {}
+            }
+            if (c.apropos_galerie_extra) {
+              try {
+                const extra = JSON.parse(c.apropos_galerie_extra);
+                galImages = [...galImages, ...extra.map(u => ({
+                  url: u.startsWith('/') ? API + u : u,
+                  titre: ''
+                }))];
+              } catch(e) {}
+            }
+            if (galImages.length) {
+              window._apGalImages = galImages;
+              document.getElementById('ap-galerie').innerHTML = galImages.map((g, i) =>
+                `<div class="ap-gal-item" onclick="ouvrirLightbox(${i})" title="${g.titre ? g.titre : 'Voir la photo'}">
+                  <img src="${g.url}" alt="${g.titre || ''}" loading="lazy" onerror="this.parentElement.style.display='none'">
+                  <div class="ap-gal-overlay">
+                    <span class="ap-gal-titre-label">${g.titre || ''}</span>
+                    <div class="ap-gal-zoom">🔍</div>
+                  </div>
+                </div>`
+              ).join('');
+              document.getElementById('ap-galerie-section').style.display = '';
+            } else {
+              document.getElementById('ap-galerie-section').style.display = 'none';
+            }
+
+            // Réseaux sociaux
+            const SOCIALS_AP = [
+              {href:c.contact_facebook,  icon:'<i class="fab fa-facebook-f" style="color:#1877f2;font-size:1.1rem;"></i>', label:'Facebook',  color:'#1877f2'},
+              {href:c.contact_instagram, icon:'<i class="fab fa-instagram" style="font-size:1.1rem;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366);-webkit-background-clip:text;-webkit-text-fill-color:transparent;"></i>', label:'Instagram', color:'#e1306c'},
+              {href:c.contact_youtube,   icon:'<i class="fab fa-youtube" style="color:#ff0000;font-size:1.1rem;"></i>', label:'YouTube',   color:'#ff0000'},
+              {href:c.contact_twitter,   icon:'<i class="fab fa-x-twitter" style="color:#000;font-size:1.1rem;"></i>', label:'X / Twitter',color:'#000000'},
+              {href:c.contact_tiktok,    icon:'<i class="fab fa-tiktok" style="color:#69c9d0;font-size:1.1rem;"></i>', label:'TikTok',    color:'#69c9d0'},
+              {href:c.contact_whatsapp,  icon:'<i class="fab fa-whatsapp" style="color:#25d366;font-size:1.1rem;"></i>', label:'WhatsApp',  color:'#25d366'},
+            ];
+            const socialsEl = document.getElementById('ap-socials');
+            const socialsHtml = SOCIALS_AP
+              .filter(s => s.href && s.href.trim() && s.href !== '#')
+              .map(s =>
+                `<a href="${s.href}" target="_blank" rel="noopener" class="ap-social-btn"
+                   onmouseover="this.style.borderColor='${s.color}';this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,.1)'"
+                   onmouseout="this.style.borderColor='#e2e8f0';this.style.transform='';this.style.boxShadow=''">
+                  ${s.icon} ${s.label}
+                </a>`
+              ).join('');
+            socialsEl.innerHTML = socialsHtml || '<p style="color:#94a3b8;">Réseaux sociaux à venir.</p>';
+
+            // CTA
+            if (c.apropos_cta_titre) document.getElementById('ap-cta-titre').textContent = c.apropos_cta_titre;
+            if (c.apropos_cta_texte) document.getElementById('ap-cta-texte').textContent = c.apropos_cta_texte;
+
+          } catch(e) {
+            console.warn('Contenu À Propos non disponible:', e);
+            _apCharge = false;
+          }
+        }
+
+        // ── Lightbox — exposées sur window pour les onclick inline ──
+        let _lbIdx = 0;
+        window.ouvrirLightbox = function(idx) {
+          const imgs = window._apGalImages || [];
+          if (!imgs.length) return;
+          _lbIdx = idx;
+          const lb = document.getElementById('ap-lightbox');
+          const img = document.getElementById('ap-lb-img');
+          const cap = document.getElementById('ap-lb-caption');
+          const cpt = document.getElementById('ap-lb-counter');
+          img.style.opacity = '0';
+          img.src = imgs[idx].url;
+          img.onload = () => { img.style.opacity = '1'; };
+          if (cap) cap.textContent = imgs[idx].titre || '';
+          if (cpt) cpt.textContent = `${idx + 1} / ${imgs.length}`;
+          lb.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        };
+        window.fermerLightbox = function() {
+          const lb = document.getElementById('ap-lightbox');
+          if (lb) lb.classList.remove('open');
+          document.body.style.overflow = '';
+        };
+        window.navLightbox = function(dir) {
+          const imgs = window._apGalImages || [];
+          if (!imgs.length) return;
+          _lbIdx = (_lbIdx + dir + imgs.length) % imgs.length;
+          const img = document.getElementById('ap-lb-img');
+          const cap = document.getElementById('ap-lb-caption');
+          const cpt = document.getElementById('ap-lb-counter');
+          img.style.opacity = '0';
+          setTimeout(() => {
+            img.src = imgs[_lbIdx].url;
+            img.onload = () => { img.style.opacity = '1'; };
+          }, 100);
+          if (cap) cap.textContent = imgs[_lbIdx].titre || '';
+          if (cpt) cpt.textContent = `${_lbIdx + 1} / ${imgs.length}`;
+        };
+        // Navigation clavier dans la lightbox
+        document.addEventListener('keydown', function(e) {
+          if (!document.getElementById('ap-lightbox').classList.contains('open')) return;
+          if (e.key === 'ArrowRight') window.navLightbox(1);
+          if (e.key === 'ArrowLeft')  window.navLightbox(-1);
+          if (e.key === 'Escape')     window.fermerLightbox();
+        });
+
+        // ── Utilitaires vidéo ──
+        function detectPlatformAP(url) {
+          if (!url) return 'Vidéo';
+          if (url.includes('youtu')) return 'YouTube';
+          if (url.includes('facebook') || url.includes('fb.watch')) return 'Facebook';
+          if (url.includes('instagram')) return 'Instagram';
+          if (url.includes('tiktok')) return 'TikTok';
+          if (url.includes('twitter') || url.includes('x.com')) return 'X';
+          return 'Vidéo';
+        }
+
+        // Retourne couleur de fond + icône Font Awesome selon la plateforme
+        function getPlatformStyleAP(platform) {
+          const map = {
+            'Facebook':  { bg:'linear-gradient(135deg,#1877f2,#0d65d9)', badgeBg:'#1877f2', faIcon:'fab fa-facebook-f' },
+            'Instagram': { bg:'linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)', badgeBg:'#e6683c', faIcon:'fab fa-instagram' },
+            'TikTok':    { bg:'linear-gradient(135deg,#010101,#1a1a2e)', badgeBg:'#010101', faIcon:'fab fa-tiktok' },
+            'X':         { bg:'linear-gradient(135deg,#14171a,#333)', badgeBg:'#14171a', faIcon:'fab fa-x-twitter' },
+            'YouTube':   { bg:'linear-gradient(135deg,#ff0000,#cc0000)', badgeBg:'#ff0000', faIcon:'fab fa-youtube' },
+          };
+          return map[platform] || { bg:'linear-gradient(135deg,#1e3a8a,#2563eb)', badgeBg:'#1e3a8a', faIcon:'fas fa-play-circle' };
+        }
+        function getYtIdAP(url) {
+          if (!url) return null;
+          const m = url.match(/(?:v=|youtu\.be\/|embed\/)([^&?\/\s]{11})/);
+          return m ? m[1] : null;
         }
 
         // Charger toutes les données au chargement
@@ -2203,23 +3734,820 @@
 
     <!-- ══ PAGE DÉTAIL ARTICLE ══ -->
     <div id="page-article-overlay">
+      <!-- Barre de progression de lecture -->
+      <div class="article-reading-bar" id="article-reading-bar"></div>
+
+      <!-- Navigation sticky claire -->
       <div class="article-sticky-header">
-        <button class="article-back-btn" onclick="fermerArticle()" title="Retour aux actualités">←</button>
-        <div>
-          <div style="font-size:.72rem;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.1rem;">Actualités</div>
-          <div style="color:white;font-size:1rem;font-weight:700;" id="article-header-titre">Article</div>
+        <button class="article-back-btn" onclick="fermerArticle()" title="Retour aux actualités">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        </button>
+        <div style="min-width:0;flex:1;">
+          <div class="article-nav-category">📰 Actualités</div>
+          <div class="article-nav-title" id="article-header-titre">Article</div>
         </div>
-        <span style="margin-left:auto;font-size:1.6rem;">👑</span>
+        <div class="article-nav-share">
+          <button class="article-share-btn" title="Copier le lien" onclick="navigator.clipboard&&navigator.clipboard.writeText(window.location.href);this.textContent='✓';setTimeout(()=>this.textContent='🔗',1500)">🔗</button>
+          <button class="article-share-btn" title="Imprimer" onclick="window.print()">🖨️</button>
+        </div>
       </div>
-      <div id="article-img-zone"></div>
+
+      <!-- Hero avec image pleine largeur -->
+      <div class="article-hero-wrap" id="article-img-zone"></div>
+
+      <!-- Corps de l'article -->
       <div class="article-body">
-        <div class="article-meta" id="article-meta"></div>
-        <h1 id="article-titre"></h1>
+        <div class="article-intro-bar">
+          <div class="article-intro-line"></div>
+          <div class="article-intro-badge" id="article-read-time">Lecture</div>
+          <div class="article-intro-line" style="background:linear-gradient(90deg,rgba(212,175,55,0),#d4af37);"></div>
+        </div>
         <div class="article-contenu" id="article-contenu"></div>
+      </div>
+
+      <!-- Articles suggérés -->
+      <div class="article-footer-bar">
+        <div class="article-footer-label">📚 À lire aussi</div>
+        <div class="article-suggestions" id="article-suggestions"></div>
       </div>
     </div>
 
     <!-- ══ PHASE 0 : Détecteur de session (sans blocage) ══ -->
     <script src="garde.js"></script>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         GALERIE OVERLAY — page plein écran connectée à la galerie principale
+         ══════════════════════════════════════════════════════════════ -->
+    <div id="galerie-overlay" aria-modal="true" role="dialog" aria-label="Galerie Photos">
+
+      <!-- ── Navbar identique aux overlays À propos / Actualités ── -->
+      <div class="overlay-nav">
+        <div class="overlay-nav-inner">
+          <div class="overlay-nav-logo">
+            <button class="overlay-back-btn" onclick="fermerGalerieOverlay()" title="Retour">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            </button>
+            <img src="images/logo1.png" alt="King's School" class="overlay-nav-logo-img" onerror="this.style.display='none'">
+            <div class="overlay-nav-logo-text">
+              <span>King's School International</span>
+              <small>Metanoia Ministries</small>
+            </div>
+          </div>
+          <ul class="overlay-nav-links">
+            <li><a href="#" onclick="fermerGalerieOverlay();document.getElementById('accueil').scrollIntoView({behavior:'smooth'});return false;">Accueil</a></li>
+            <li><a href="#" onclick="fermerGalerieOverlay();setTimeout(navVersAPropos,200);return false;">À propos</a></li>
+            <li><a href="#" onclick="fermerGalerieOverlay();setTimeout(navVersActualites,200);return false;">Actualités</a></li>
+            <li><a href="#" onclick="fermerGalerieOverlay();document.getElementById('equipe').scrollIntoView({behavior:'smooth'});return false;">Équipe</a></li>
+            <li><a href="#" onclick="fermerGalerieOverlay();document.getElementById('temoignages').scrollIntoView({behavior:'smooth'});return false;">Témoignages</a></li>
+            <li><a href="#" class="overlay-nav-active" onclick="return false;">Galerie</a></li>
+            <li><a href="#" onclick="fermerGalerieOverlay();document.getElementById('preinscription').scrollIntoView({behavior:'smooth'});return false;">Pré-inscription</a></li>
+            <li><a href="#" onclick="fermerGalerieOverlay();document.getElementById('contact').scrollIntoView({behavior:'smooth'});return false;">Contact</a></li>
+            <li><a href="portail.html" class="overlay-nav-auth-btn" id="overlay-gal-auth">Connexion</a></li>
+          </ul>
+          <!-- Dropdown profil Galerie -->
+          <div id="overlay-gal-profil-wrap" style="display:none;position:relative;margin-left:.5rem;">
+            <button id="overlay-gal-profil-btn" onclick="toggleOverlayProfilDropdown('overlay-gal-dropdown')" style="display:flex;align-items:center;gap:.5rem;background:none;border:none;cursor:pointer;padding:.3rem .5rem;border-radius:10px;transition:background .2s;" onmouseover="this.style.background='rgba(0,0,0,.06)'" onmouseout="this.style.background='none'">
+              <div id="overlay-gal-avatar" style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#1e3a8a,#2563eb);color:white;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0;"></div>
+              <span id="overlay-gal-nom" style="font-size:.85rem;font-weight:600;color:#1e3a8a;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="overlay-gal-dropdown" class="overlay-profil-dropdown">
+              <div class="opd-user-header">
+                <div id="overlay-gal-dd-avatar" class="opd-avatar"></div>
+                <div><div id="overlay-gal-dd-nom" class="opd-nom"></div><div id="overlay-gal-dd-email" class="opd-email"></div></div>
+              </div>
+              <div class="opd-notif-section">
+                <div class="opd-notif-label">NOTIFICATIONS <a href="#" class="opd-voir-tout" onclick="event.preventDefault();if(window.ksiOuvrirToutesNotifs)window.ksiOuvrirToutesNotifs();">Tout voir</a></div>
+                <div id="overlay-gal-dd-notifs" class="opd-notif-list"><div class="opd-notif-empty">Aucune notification</div></div>
+              </div>
+              <div class="opd-actions">
+                <a href="portail.html" class="opd-action"><span>🔄</span> Changer de compte</a>
+                <a href="#" onclick="ksiDeconnexionOverlay();return false;" class="opd-action opd-deconnexion"><span>🚪</span> Déconnexion</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Sous-header : titre + outils ── -->
+      <div class="gal-ov-subheader">
+        <div class="gal-ov-title-wrap">
+          <div class="gal-ov-eyebrow">NOS ESPACES</div>
+          <h2 class="gal-ov-title">Galerie Photos</h2>
+        </div>
+        <div class="gal-ov-controls">
+          <div class="gal-ov-search-wrap">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="gal-ov-search" placeholder="Rechercher…" oninput="filtrerGalerieOverlay()" autocomplete="off">
+          </div>
+          <div class="gal-ov-view-btns">
+            <button class="gal-view-btn active" id="btn-view-4" onclick="changerVueGalerie(4,this)" title="4 colonnes">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><rect x="0" y="0" width="3" height="3"/><rect x="4.5" y="0" width="3" height="3"/><rect x="9" y="0" width="3" height="3"/><rect x="13.5" y="0" width="3" height="3"/><rect x="0" y="4.5" width="3" height="3"/><rect x="4.5" y="4.5" width="3" height="3"/><rect x="9" y="4.5" width="3" height="3"/><rect x="13.5" y="4.5" width="3" height="3"/></svg>
+            </button>
+            <button class="gal-view-btn" id="btn-view-3" onclick="changerVueGalerie(3,this)" title="3 colonnes">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><rect x="0" y="0" width="4" height="4"/><rect x="6" y="0" width="4" height="4"/><rect x="12" y="0" width="4" height="4"/><rect x="0" y="6" width="4" height="4"/><rect x="6" y="6" width="4" height="4"/><rect x="12" y="6" width="4" height="4"/></svg>
+            </button>
+            <button class="gal-view-btn" id="btn-view-2" onclick="changerVueGalerie(2,this)" title="2 colonnes">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><rect x="0" y="0" width="6" height="6"/><rect x="10" y="0" width="6" height="6"/><rect x="0" y="10" width="6" height="6"/><rect x="10" y="10" width="6" height="6"/></svg>
+            </button>
+          </div>
+          <span class="gal-ov-count" id="gal-ov-count">0 photos</span>
+        </div>
+      </div>
+
+      <!-- ── Filtres catégories ── -->
+      <div class="gal-ov-filters" id="gal-ov-filters">
+        <button class="gal-filter-btn active" onclick="filtrerCategorie('',this)">Tout</button>
+        <button class="gal-filter-btn" onclick="filtrerCategorie('general',this)">Général</button>
+        <button class="gal-filter-btn" onclick="filtrerCategorie('vie-scolaire',this)">Vie scolaire</button>
+        <button class="gal-filter-btn" onclick="filtrerCategorie('evenements',this)">Événements</button>
+        <button class="gal-filter-btn" onclick="filtrerCategorie('infrastructure',this)">Infrastructure</button>
+        <button class="gal-filter-btn" onclick="filtrerCategorie('humanitaire',this)">Humanitaire</button>
+        <button class="gal-filter-btn" onclick="filtrerCategorie('sport',this)">Sport</button>
+        <button class="gal-filter-btn" onclick="filtrerCategorie('ceremonie',this)">Cérémonie</button>
+      </div>
+
+      <!-- Grille de photos -->
+      <div class="gal-ov-body">
+        <div class="gal-ov-grid" id="gal-ov-grid"></div>
+        <div class="gal-ov-empty" id="gal-ov-empty" style="display:none;">
+          <div style="font-size:3.5rem;margin-bottom:1rem;">📷</div>
+          <p>Aucune photo trouvée</p>
+          <button onclick="reinitialiserFiltres()" style="margin-top:1rem;padding:.5rem 1.5rem;border:1.5px solid var(--royal-blue);background:none;color:var(--royal-blue);border-radius:20px;cursor:pointer;font-weight:600;">Voir toutes les photos</button>
+        </div>
+        <div class="gal-ov-loading" id="gal-ov-loading">
+          <div class="gal-ov-spinner"></div>
+          <p>Chargement de la galerie…</p>
+        </div>
+      </div>
+
+      <!-- Pied de page overlay -->
+      <div class="gal-ov-footer" id="gal-ov-footer" style="display:none;">
+        <span id="gal-ov-footer-count"></span>
+        <button class="gal-ov-scroll-top" onclick="document.getElementById('galerie-overlay').scrollTo({top:0,behavior:'smooth'})">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          Haut de page
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ LIGHTBOX GALERIE OVERLAY ══ -->
+    <div id="gal-lb" onclick="if(event.target===this)fermerGalLb()">
+      <button class="gal-lb-nav prev" onclick="navGalLb(-1)">&#8249;</button>
+      <div class="gal-lb-inner">
+        <button class="gal-lb-close" onclick="fermerGalLb()">✕</button>
+        <img id="gal-lb-img" src="" alt="" />
+        <div class="gal-lb-info">
+          <div class="gal-lb-caption" id="gal-lb-caption"></div>
+          <div class="gal-lb-meta">
+            <span class="gal-lb-cat" id="gal-lb-cat"></span>
+            <span class="gal-lb-counter" id="gal-lb-counter"></span>
+          </div>
+        </div>
+        <div class="gal-lb-thumbstrip" id="gal-lb-thumbstrip"></div>
+      </div>
+      <button class="gal-lb-nav next" onclick="navGalLb(1)">&#8250;</button>
+    </div>
+
+    <style>
+    /* ══════════════════════════════════════════
+       GALERIE OVERLAY — styles complets
+    ══════════════════════════════════════════ */
+    #galerie-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9500;
+      background: #f0f2f7;
+      overflow-y: auto;
+    }
+    #galerie-overlay.open {
+      display: block;
+    }
+
+    /* Navbar sticky en haut — fonctionne car pas de transform sur le parent */
+    #galerie-overlay .overlay-nav {
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9560;
+    }
+
+    /* Sous-header : dans le flux normal, scrolle avec le contenu */
+    .gal-ov-subheader {
+      position: static;
+      background: #fff;
+      border-bottom: 1.5px solid #e8ecf4;
+      padding: .75rem 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 10px rgba(30,58,138,.05);
+    }
+    .gal-ov-title-wrap { flex:1; min-width:0; }
+    .gal-ov-eyebrow {
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .13em;
+      color: #d4af37;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .gal-ov-eyebrow::before { content:''; display:block; width:28px; height:2px; background:#d4af37; border-radius:2px; }
+    .gal-ov-title { font-size: 1.3rem; font-weight: 800; color: #1e3a8a; margin:0; line-height:1.2; }
+    .gal-ov-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .gal-ov-search-wrap {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      background: #f0f2f7;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 20px;
+      padding: .4rem .9rem;
+      transition: border-color .2s;
+    }
+    .gal-ov-search-wrap:focus-within { border-color: #1e3a8a; }
+    .gal-ov-search-wrap svg { color:#94a3b8; flex-shrink:0; }
+    #gal-ov-search {
+      border: none;
+      background: none;
+      outline: none;
+      font-size: .85rem;
+      width: 160px;
+      color: #1e293b;
+    }
+    .gal-ov-view-btns { display:flex; gap:.3rem; }
+    .gal-view-btn {
+      width:32px; height:32px;
+      border: 1.5px solid #e2e8f0;
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex; align-items:center; justify-content:center;
+      color:#94a3b8;
+      transition: all .18s;
+    }
+    .gal-view-btn.active, .gal-view-btn:hover { background:#1e3a8a; border-color:#1e3a8a; color:#fff; }
+    .gal-ov-count {
+      font-size: .78rem;
+      color: #94a3b8;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Filtres — dans le flux normal, scrollent avec le contenu */
+    .gal-ov-filters {
+      position: static;
+      display: flex;
+      gap: .6rem;
+      padding: .75rem 2.5rem;
+      overflow-x: auto;
+      background: #fff;
+      border-bottom: 1px solid #e8ecf4;
+      scrollbar-width: none;
+    }
+    .gal-ov-filters::-webkit-scrollbar { display:none; }
+    .gal-filter-btn {
+      border: 1.5px solid #e2e8f0;
+      background: #fff;
+      color: #475569;
+      font-size: .78rem;
+      font-weight: 600;
+      padding: .38rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all .18s;
+    }
+    .gal-filter-btn:hover { border-color:#1e3a8a; color:#1e3a8a; }
+    .gal-filter-btn.active { background:#1e3a8a; border-color:#1e3a8a; color:#fff; }
+
+    /* Body — padding normal */
+    .gal-ov-body { padding: 2rem 2.5rem; }
+
+    /* Grille 4 colonnes par défaut */
+    .gal-ov-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .gal-ov-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .gal-ov-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+
+    /* Cartes photo */
+    .gal-ov-item {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      cursor: pointer;
+      background: #dde3ef;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+      transition: transform .22s, box-shadow .22s;
+    }
+    .gal-ov-item:hover { transform: translateY(-4px) scale(1.015); box-shadow: 0 12px 32px rgba(30,58,138,.18); }
+    .gal-ov-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .4s ease;
+    }
+    .gal-ov-item:hover img { transform: scale(1.06); }
+    .gal-ov-item-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(10,20,60,.7) 0%, transparent 55%);
+      opacity: 0;
+      transition: opacity .25s;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: .8rem;
+    }
+    .gal-ov-item:hover .gal-ov-item-overlay { opacity: 1; }
+    .gal-ov-item-titre {
+      color: #fff;
+      font-size: .8rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: .25rem;
+    }
+    .gal-ov-item-cat {
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: #d4af37;
+    }
+    .gal-ov-item-zoom {
+      position: absolute;
+      top: .6rem;
+      right: .6rem;
+      width: 32px; height: 32px;
+      background: rgba(255,255,255,.2);
+      backdrop-filter: blur(6px);
+      border-radius: 50%;
+      display: flex; align-items:center; justify-content:center;
+      color:#fff;
+      font-size: .85rem;
+      opacity: 0;
+      transition: opacity .2s;
+      border: 1px solid rgba(255,255,255,.35);
+    }
+    .gal-ov-item:hover .gal-ov-item-zoom { opacity:1; }
+
+    /* Animation entrée items */
+    .gal-ov-item {
+      animation: galItemIn .35s ease backwards;
+    }
+    @keyframes galItemIn {
+      from { opacity:0; transform:translateY(18px) scale(.97); }
+      to   { opacity:1; transform:translateY(0) scale(1); }
+    }
+
+    /* États vide / loading */
+    .gal-ov-empty {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #94a3b8;
+      font-size: 1rem;
+    }
+    .gal-ov-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem;
+      color: #94a3b8;
+      gap: 1rem;
+    }
+    .gal-ov-spinner {
+      width: 40px; height: 40px;
+      border: 3px solid #e2e8f0;
+      border-top-color: #1e3a8a;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* Footer — dans le flux normal, tout en bas du body */
+    .gal-ov-footer {
+      padding: .8rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: .82rem;
+      color: #64748b;
+      border-top: 1px solid #e8ecf4;
+      background: #f0f2f7;
+      margin-top: 1.5rem;
+    }
+    .gal-ov-scroll-top {
+      display: flex; align-items:center; gap:.4rem;
+      background: none;
+      border: 1.5px solid #e2e8f0;
+      color: #1e3a8a;
+      font-size: .78rem;
+      font-weight: 700;
+      border-radius: 20px;
+      padding: .38rem 1rem;
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .gal-ov-scroll-top:hover { background:#1e3a8a; color:#fff; border-color:#1e3a8a; }
+
+    /* ══ LIGHTBOX galerie overlay ══ */
+    #gal-lb {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(5,10,30,.92);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    #gal-lb.open { display: flex; }
+    .gal-lb-inner {
+      position: relative;
+      max-width: 92vw;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .8rem;
+    }
+    #gal-lb-img {
+      max-width: 88vw;
+      max-height: 74vh;
+      border-radius: 12px;
+      object-fit: contain;
+      box-shadow: 0 24px 80px rgba(0,0,0,.6);
+      transition: opacity .25s;
+    }
+    .gal-lb-close {
+      position: absolute;
+      top: -2.2rem;
+      right: 0;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      color: #fff;
+      font-size: 1rem;
+      width: 32px; height:32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition: background .18s;
+    }
+    .gal-lb-close:hover { background:rgba(255,255,255,.3); }
+    .gal-lb-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 52px; height:52px;
+      background: rgba(255,255,255,.12);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(255,255,255,.22);
+      color: #fff;
+      font-size: 2rem;
+      border-radius: 50%;
+      cursor: pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition: background .18s;
+      line-height: 1;
+    }
+    .gal-lb-nav:hover { background:rgba(255,255,255,.25); }
+    .gal-lb-nav.prev { left: -4.5rem; }
+    .gal-lb-nav.next { right: -4.5rem; }
+    .gal-lb-info { text-align:center; color:#fff; }
+    .gal-lb-caption { font-size:1rem; font-weight:700; margin-bottom:.2rem; }
+    .gal-lb-meta { display:flex; gap:1rem; justify-content:center; align-items:center; }
+    .gal-lb-cat { font-size:.72rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#d4af37; }
+    .gal-lb-counter { font-size:.75rem; color:rgba(255,255,255,.6); }
+    /* Bande de thumbnails dans la lightbox */
+    .gal-lb-thumbstrip {
+      display: flex;
+      gap: 6px;
+      max-width: 88vw;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,.2) transparent;
+    }
+    .gal-lb-thumb {
+      width: 56px; height: 42px;
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      flex-shrink: 0;
+      border: 2px solid transparent;
+      transition: border-color .18s, transform .18s;
+      opacity: .55;
+    }
+    .gal-lb-thumb.active { border-color:#d4af37; opacity:1; transform:scale(1.08); }
+    .gal-lb-thumb img { width:100%; height:100%; object-fit:cover; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .gal-ov-subheader { padding:.7rem 1.2rem; gap:.7rem; }
+      .gal-ov-filters { padding:.6rem 1.2rem; }
+      .gal-ov-body { padding:1.2rem 1rem; }
+      .gal-ov-grid { grid-template-columns: repeat(2,1fr); gap:10px; }
+      .gal-ov-grid.cols-3 { grid-template-columns: repeat(2,1fr); }
+      .gal-ov-grid.cols-4 { grid-template-columns: repeat(2,1fr); }
+      #gal-ov-search { width:100px; }
+      .gal-lb-nav.prev { left:-3rem; }
+      .gal-lb-nav.next { right:-3rem; }
+    }
+    @media (max-width: 560px) {
+      .gal-ov-subheader { padding:.6rem 1rem; }
+      .gal-ov-filters { padding:.55rem 1rem; }
+      .gal-ov-body { padding:1rem; }
+      .gal-ov-grid, .gal-ov-grid.cols-3, .gal-ov-grid.cols-4, .gal-ov-grid.cols-2 {
+        grid-template-columns: repeat(2,1fr); gap:8px;
+      }
+      .gal-ov-title { font-size:1.05rem; }
+      .gal-lb-nav { display:none; }
+    }
+    </style>
+
+    <script>
+    // ══════════════════════════════════════════
+    //  GALERIE OVERLAY — logique complète
+    // ══════════════════════════════════════════
+    let _galOvData     = [];   // toutes les photos (miroir de ksiData)
+    let _galOvFiltered = [];   // après filtres/recherche
+    let _galOvCatActif = '';
+    let _galOvLbIdx    = 0;
+
+    // ── Convertir un tableau brut de photos en format overlay ──
+    function _normaliserPhotos(photos) {
+      const base = window.API || '';
+      return photos
+        .filter(p => p.image && p.image.trim())
+        .map((p, i) => ({
+          url: p.image.startsWith('/') ? base + p.image : p.image,
+          titre: p.titre || '',
+          categorie: p.categorie || 'general',
+          description: p.description || '',
+          _idx: i
+        }));
+    }
+
+    // ── Ouvrir l'overlay (optionnellement centré sur un index) ──
+    window.ouvrirGalerieOverlay = async function(startIdx) {
+      // Vérification connexion
+      if (!localStorage.getItem('ksi_user')) {
+        afficherModalConnexion('Galerie réservée aux membres', 'Connectez-vous pour parcourir notre galerie photos et découvrir la vie à King\'s School.');
+        return;
+      }
+      const ov = document.getElementById('galerie-overlay');
+      const loading = document.getElementById('gal-ov-loading');
+      const empty   = document.getElementById('gal-ov-empty');
+      const grid    = document.getElementById('gal-ov-grid');
+
+      // Mettre à jour boutons auth + notifications
+      updateOverlayAuthBtns();
+      // Ouvrir immédiatement l'overlay avec le spinner
+      ov.classList.add('open');
+      ov.scrollTo(0, 0);
+      document.body.style.overflow = 'hidden';
+      loading.style.display = 'flex';
+      empty.style.display   = 'none';
+      grid.innerHTML        = '';
+      document.getElementById('gal-ov-footer').style.display = 'none';
+      document.getElementById('gal-ov-count').textContent    = '…';
+
+      // Réinitialiser filtres UI
+      _galOvCatActif = '';
+      document.getElementById('gal-ov-search').value = '';
+      document.querySelectorAll('.gal-filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.gal-filter-btn').classList.add('active');
+
+      // Si ksiData déjà chargé, l'utiliser directement
+      if (window.ksiData && window.ksiData.length) {
+        _galOvData = _normaliserPhotos(window.ksiData);
+      } else {
+        // Sinon charger depuis l'API (même endpoint que le slider)
+        const base = window.API || (
+          window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:3000' : 'https://king-s-school.onrender.com'
+        );
+        try {
+          const res   = await fetch(base + '/api/galerie');
+          const items = await res.json();
+          const valides = Array.isArray(items) ? items.filter(p => p.image && p.image.trim()) : [];
+          if (valides.length) {
+            // Mettre à jour ksiData aussi pour cohérence
+            window.ksiData = valides;
+            _galOvData = _normaliserPhotos(valides);
+          } else {
+            _galOvData = [];
+          }
+        } catch(e) {
+          // Fallback : utiliser les images statiques si disponibles
+          const fallback = [
+            {image:'images/classroom.jpg',    titre:'Salles de Classe Modernes',  description:'Des espaces conçus pour l excellence académique.', categorie:'infrastructure'},
+            {image:'images/activities.jpg',   titre:'Activités Scolaires',         description:'Des activités variées pour développer tous les talents.', categorie:'vie-scolaire'},
+            {image:'images/humanitarian.jpg', titre:'Engagement Humanitaire',      description:'Nos élèves apprennent à servir leur communauté.', categorie:'humanitaire'},
+            {image:'images/ceremonies.jpg',   titre:'Cérémonies et Célébrations',  description:'Nous célébrons les réussites de chaque élève.', categorie:'ceremonie'},
+          ];
+          _galOvData = _normaliserPhotos(fallback);
+        }
+      }
+
+      _galOvFiltered = [..._galOvData];
+      rendreGrille();
+
+      // Si on vient d'un clic sur une slide, ouvrir directement la lightbox
+      if (typeof startIdx === 'number' && _galOvData.length) {
+        // Trouver l'index correspondant dans _galOvFiltered (qui = _galOvData ici)
+        const idx = Math.min(startIdx, _galOvFiltered.length - 1);
+        setTimeout(() => ouvrirGalLb(idx), 80);
+      }
+    };
+
+    // ── Fermer l'overlay ──
+    window.fermerGalerieOverlay = function() {
+      document.getElementById('galerie-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    // ── Construire la grille ──
+    function rendreGrille() {
+      const grid    = document.getElementById('gal-ov-grid');
+      const empty   = document.getElementById('gal-ov-empty');
+      const loading = document.getElementById('gal-ov-loading');
+      const footer  = document.getElementById('gal-ov-footer');
+      const countEl = document.getElementById('gal-ov-count');
+      const footerCount = document.getElementById('gal-ov-footer-count');
+
+      loading.style.display = 'none';
+
+      if (!_galOvFiltered.length) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        footer.style.display = 'none';
+        countEl.textContent = '0 photos';
+        return;
+      }
+
+      empty.style.display = 'none';
+      footer.style.display = 'flex';
+      countEl.textContent  = _galOvFiltered.length + ' photo' + (_galOvFiltered.length>1?'s':'');
+      footerCount.textContent = _galOvFiltered.length + ' photo' + (_galOvFiltered.length>1?'s':'') + ' affichées';
+
+      const KSI_CATS = {general:'Général','vie-scolaire':'Vie scolaire',evenements:'Événements',infrastructure:'Infrastructure',humanitaire:'Humanitaire',sport:'Sport',ceremonie:'Cérémonie'};
+
+      grid.innerHTML = _galOvFiltered.map((p, i) => {
+        const catLabel = KSI_CATS[p.categorie] || p.categorie || '';
+        return `<div class="gal-ov-item" onclick="ouvrirGalLb(${i})" style="animation-delay:${Math.min(i*0.04,0.6)}s">
+          <img src="${p.url}" alt="${p.titre}" loading="lazy" onerror="this.parentElement.style.background='#dde3ef';this.style.display='none'">
+          <div class="gal-ov-item-overlay">
+            ${p.titre ? `<div class="gal-ov-item-titre">${p.titre}</div>` : ''}
+            ${catLabel ? `<div class="gal-ov-item-cat">${catLabel}</div>` : ''}
+          </div>
+          <div class="gal-ov-item-zoom">🔍</div>
+        </div>`;
+      }).join('');
+    }
+
+    // ── Filtre par catégorie ──
+    window.filtrerCategorie = function(cat, btn) {
+      _galOvCatActif = cat;
+      document.querySelectorAll('.gal-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      appliquerFiltres();
+    };
+
+    // ── Filtre par recherche ──
+    window.filtrerGalerieOverlay = function() {
+      appliquerFiltres();
+    };
+
+    function appliquerFiltres() {
+      const q = (document.getElementById('gal-ov-search').value || '').toLowerCase().trim();
+      _galOvFiltered = _galOvData.filter(p => {
+        const matchCat = !_galOvCatActif || p.categorie === _galOvCatActif;
+        const matchQ   = !q || (p.titre + ' ' + p.description + ' ' + p.categorie).toLowerCase().includes(q);
+        return matchCat && matchQ;
+      });
+      rendreGrille();
+    }
+
+    // ── Réinitialiser filtres ──
+    window.reinitialiserFiltres = function() {
+      _galOvCatActif = '';
+      document.getElementById('gal-ov-search').value = '';
+      document.querySelectorAll('.gal-filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.gal-filter-btn').classList.add('active');
+      _galOvFiltered = [..._galOvData];
+      rendreGrille();
+    };
+
+    // ── Changer le nombre de colonnes ──
+    window.changerVueGalerie = function(cols, btn) {
+      const grid = document.getElementById('gal-ov-grid');
+      grid.classList.remove('cols-2','cols-3','cols-4');
+      if (cols !== 4) grid.classList.add('cols-' + cols);
+      document.querySelectorAll('.gal-view-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    };
+
+    // ══ LIGHTBOX ══
+    window.ouvrirGalLb = function(idx) {
+      if (!_galOvFiltered.length) return;
+      _galOvLbIdx = ((idx % _galOvFiltered.length) + _galOvFiltered.length) % _galOvFiltered.length;
+      const lb = document.getElementById('gal-lb');
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      _majGalLb();
+      _construireThumbstrip();
+    };
+
+    window.fermerGalLb = function() {
+      document.getElementById('gal-lb').classList.remove('open');
+      // Ne pas rétablir overflow ici — l'overlay est encore ouvert
+    };
+
+    window.navGalLb = function(dir) {
+      _galOvLbIdx = ((_galOvLbIdx + dir + _galOvFiltered.length) % _galOvFiltered.length);
+      _majGalLb();
+      _majThumbActif();
+    };
+
+    function _majGalLb() {
+      const p   = _galOvFiltered[_galOvLbIdx];
+      const img = document.getElementById('gal-lb-img');
+      const KSI_CATS = {general:'Général','vie-scolaire':'Vie scolaire',evenements:'Événements',infrastructure:'Infrastructure',humanitaire:'Humanitaire',sport:'Sport',ceremonie:'Cérémonie'};
+
+      img.style.opacity = '0';
+      img.src = p.url;
+      img.onload = () => { img.style.opacity='1'; };
+
+      document.getElementById('gal-lb-caption').textContent = p.titre || '';
+      document.getElementById('gal-lb-cat').textContent     = KSI_CATS[p.categorie] || p.categorie || '';
+      document.getElementById('gal-lb-counter').textContent = (_galOvLbIdx+1) + ' / ' + _galOvFiltered.length;
+    }
+
+    function _construireThumbstrip() {
+      const strip = document.getElementById('gal-lb-thumbstrip');
+      strip.innerHTML = _galOvFiltered.map((p, i) =>
+        `<div class="gal-lb-thumb${i===_galOvLbIdx?' active':''}" onclick="window.navGalLbTo(${i})">
+          <img src="${p.url}" alt="${p.titre}" loading="lazy">
+        </div>`
+      ).join('');
+    }
+
+    function _majThumbActif() {
+      const thumbs = document.querySelectorAll('.gal-lb-thumb');
+      thumbs.forEach((t,i) => t.classList.toggle('active', i===_galOvLbIdx));
+      if (thumbs[_galOvLbIdx]) thumbs[_galOvLbIdx].scrollIntoView({inline:'nearest',behavior:'smooth'});
+    }
+
+    window.navGalLbTo = function(idx) {
+      _galOvLbIdx = idx;
+      _majGalLb();
+      _majThumbActif();
+    };
+
+    // Navigation clavier
+    document.addEventListener('keydown', function(e) {
+      const lb = document.getElementById('gal-lb');
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'ArrowRight') navGalLb(1);
+      if (e.key === 'ArrowLeft')  navGalLb(-1);
+      if (e.key === 'Escape')     fermerGalLb();
+    });
+
+    // Fermer overlay avec Escape (si lightbox fermée)
+    document.addEventListener('keydown', function(e) {
+      const ov = document.getElementById('galerie-overlay');
+      const lb = document.getElementById('gal-lb');
+      if (e.key === 'Escape' && ov.classList.contains('open') && !lb.classList.contains('open')) {
+        fermerGalerieOverlay();
+      }
+    });
+
+    // Swipe sur la lightbox (mobile)
+    (function() {
+      let _lbTx = 0;
+      const lb = document.getElementById('gal-lb');
+      lb.addEventListener('touchstart', e => { _lbTx = e.touches[0].clientX; }, {passive:true});
+      lb.addEventListener('touchend',   e => {
+        const d = _lbTx - e.changedTouches[0].clientX;
+        if (Math.abs(d) > 40) navGalLb(d > 0 ? 1 : -1);
+      });
+    })();
+    </script>
 </body>
 </html>

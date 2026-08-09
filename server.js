@@ -1,7 +1,7 @@
 // ════════════════════════════════════════════════════════
-//  King's School International — Serveur Backend v5
+//  King's School International — Serveur Backend v6
 //  Node.js + Express + SQLite3 + bcryptjs + JWT
-//  PHASE 3 : Admin pro + CMS complet (FAQ, Équipe, Pré-inscriptions)
+//  PHASE 4 : Notifications utilisateurs + Rôle Technicien
 // ════════════════════════════════════════════════════════
 
 require('dotenv').config();
@@ -42,22 +42,27 @@ const upload = multer({
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
-const JWT_SECRET     = process.env.JWT_SECRET;
+const JWT_SECRET     = process.env.JWT_SECRET || 'ksi_secret_jwt_kings_school_2024';
 const JWT_EXPIRES_IN = '7d';
 const ADMIN_EMAIL    = (process.env.ADMIN_EMAIL || 'admin@kingsschool.cd').toLowerCase();
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 const MAX_ATTEMPTS     = 5;
 const LOCK_DURATION_MS = 15 * 60 * 1000;
-const ROLES_VALIDES    = ['user', 'moderateur', 'editeur', 'admin'];
+// ★ Ajout du rôle 'technicien'
+const ROLES_VALIDES    = ['user', 'moderateur', 'editeur', 'technicien', 'admin'];
 
-if (!JWT_SECRET) { console.error('❌ JWT_SECRET manquant. Vérifiez votre fichier .env.'); process.exit(1); }
+if (!process.env.JWT_SECRET) console.warn('⚠️  JWT_SECRET non défini dans .env — clé par défaut utilisée (ok en local, changez en production).');
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 app.use('/uploads', express.static(UPLOAD_DIR));
 
-const db = new sqlite3.Database(path.join(__dirname, 'database.db'), err => {
+// Chemin DB : dossier persistant sur Render, sinon dossier local
+// Sur Render : créer un Disk monté sur /data, puis définir DB_PATH=/data/database.db dans les variables d'env
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'database.db');
+
+const db = new sqlite3.Database(DB_PATH, err => {
   if (err) console.error('❌ Erreur base de données :', err.message);
   else console.log('✅ Base de données connectée');
 });
@@ -91,19 +96,29 @@ function envoyerNotification(type, payload={}) {
 }
 
 // ════════ Initialisation tables ════════
-db.serialize(async () => {
+async function initDb() {
   await dbRun(`CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT NOT NULL UNIQUE, password TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'user', created_at TEXT NOT NULL DEFAULT (datetime('now')))`);
   await dbRun(`CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT NOT NULL, telephone TEXT DEFAULT '', message TEXT NOT NULL, lu INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL DEFAULT (datetime('now')))`);
   await dbRun(`CREATE TABLE IF NOT EXISTS login_attempts (email TEXT PRIMARY KEY, attempts INTEGER NOT NULL DEFAULT 0, locked_until TEXT)`);
   await dbRun(`CREATE TABLE IF NOT EXISTS activity_log (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, user_name TEXT NOT NULL, action TEXT NOT NULL, details TEXT DEFAULT '', created_at TEXT NOT NULL DEFAULT (datetime('now')))`);
   await dbRun(`CREATE TABLE IF NOT EXISTS actualites (id INTEGER PRIMARY KEY AUTOINCREMENT, titre TEXT NOT NULL, contenu TEXT NOT NULL, image TEXT DEFAULT '', auteur TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT (datetime('now')), updated_at TEXT NOT NULL DEFAULT (datetime('now')))`);
-
-  // Nouvelles tables
   await dbRun(`CREATE TABLE IF NOT EXISTS equipe (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT NOT NULL, poste TEXT NOT NULL, photo TEXT DEFAULT '', bio TEXT DEFAULT '', ordre INTEGER DEFAULT 0, created_at TEXT NOT NULL DEFAULT (datetime('now')))`);
   await dbRun(`CREATE TABLE IF NOT EXISTS temoignages (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT NOT NULL, role TEXT NOT NULL, texte TEXT NOT NULL, photo TEXT DEFAULT '', note INTEGER DEFAULT 5, created_at TEXT NOT NULL DEFAULT (datetime('now')))`);
   await dbRun(`CREATE TABLE IF NOT EXISTS faq (id INTEGER PRIMARY KEY AUTOINCREMENT, question TEXT NOT NULL, reponse TEXT NOT NULL, categorie TEXT DEFAULT 'general', ordre INTEGER DEFAULT 0, created_at TEXT NOT NULL DEFAULT (datetime('now')))`);
   await dbRun(`CREATE TABLE IF NOT EXISTS preinscriptions (id INTEGER PRIMARY KEY AUTOINCREMENT, nom_enfant TEXT NOT NULL, age INTEGER, classe_visee TEXT NOT NULL, nom_parent TEXT NOT NULL, email_parent TEXT NOT NULL, telephone TEXT DEFAULT '', message TEXT DEFAULT '', statut TEXT DEFAULT 'nouveau', created_at TEXT NOT NULL DEFAULT (datetime('now')))`);
   await dbRun(`CREATE TABLE IF NOT EXISTS galerie (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL, titre TEXT DEFAULT '', description TEXT DEFAULT '', categorie TEXT DEFAULT 'general', ordre INTEGER DEFAULT 0, created_at TEXT NOT NULL DEFAULT (datetime('now')))`);
+
+  // Notifications utilisateurs
+  await dbRun(`CREATE TABLE IF NOT EXISTS user_notifications (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    user_email TEXT,
+    titre TEXT NOT NULL,
+    contenu TEXT NOT NULL,
+    type TEXT NOT NULL DEFAULT 'info',
+    lu INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  )`);
 
   // Données galerie par défaut si vide
   const galCount = await dbGet('SELECT COUNT(*) as c FROM galerie');
@@ -130,21 +145,18 @@ db.serialize(async () => {
 
   // Insérer les valeurs par défaut si elles n'existent pas encore
   const defaults = [
-    // Hero
     ['hero_titre','King\'s School International','text','hero','Titre principal'],
     ['hero_description','Une éducation d\'excellence basée sur la foi chrétienne, la discipline et le leadership pour préparer la prochaine génération à changer le monde.','textarea','hero','Description hero'],
     ['hero_image','images/jo1.jpg','text','hero','Image de fond (URL)'],
     ['hero_btn1_texte','Découvrir l\'école','text','hero','Bouton 1 — Texte'],
     ['hero_btn2_texte','Nous contacter','text','hero','Bouton 2 — Texte'],
     ['hero_phrases','Former des Leaders, Transformer des Nations|Excellence Académique & Foi Chrétienne|Discipline, Intégrité & Leadership|Un Congo Prospère, une Afrique Transformée','textarea','hero','Phrases typewriter (séparées par |)'],
-    // Chiffres clés
     ['chiffres_titre','King\'s School en Chiffres','text','chiffres','Titre section chiffres'],
     ['chiffres_sous_titre','Une école qui grandit, des résultats qui parlent','text','chiffres','Sous-titre chiffres'],
     ['chiffre_fondation','2015','text','chiffres','Année de fondation'],
     ['chiffre_eleves','450','text','chiffres','Nombre d\'élèves inscrits'],
     ['chiffre_reussite','95','text','chiffres','Taux de réussite (%)'],
     ['chiffre_profs','30','text','chiffres','Nombre d\'enseignants'],
-    // À propos
     ['apropos_titre','À Propos de King\'s School International','text','apropos','Titre section À propos'],
     ['apropos_p1','King\'s School International, membre de Metanoia Ministries International, est une école chrétienne engagée dans la formation internationale de la prochaine génération de leaders.','textarea','apropos','Paragraphe 1'],
     ['apropos_p2','Nous croyons que l\'éducation ne consiste pas seulement à transmettre des connaissances, mais à façonner le caractère, développer l\'esprit critique et préparer les jeunes à changer leur communauté, leur pays et le monde.','textarea','apropos','Paragraphe 2'],
@@ -152,19 +164,15 @@ db.serialize(async () => {
     ['apropos_citation_auteur','Nelson Mandela','text','apropos','Auteur de la citation'],
     ['apropos_p3','À King\'s School International, cette arme est utilisée pour construire, servir et transformer.','textarea','apropos','Paragraphe 3'],
     ['apropos_image','images/jo20.jpg','text','apropos','Image (URL)'],
-    // Valeurs (JSON array)
     ['valeurs_titre','Nos Valeurs Fondamentales','text','valeurs','Titre section valeurs'],
     ['valeurs_sous_titre','Ce qui nous guide chaque jour','text','valeurs','Sous-titre valeurs'],
     ['valeurs_items','[{"icon":"🎓","titre":"Excellence Académique","texte":"Nous visons l\'excellence dans tous les domaines de l\'apprentissage, préparant nos élèves aux défis nationaux et internationaux."},{"icon":"✝️","titre":"Foi Chrétienne","texte":"Notre fondement spirituel guide notre mission éducative et façonne le caractère de nos élèves."},{"icon":"⚖️","titre":"Discipline & Intégrité","texte":"Nous cultivons la rigueur, la responsabilité et l\'honnêteté comme piliers de la réussite."},{"icon":"❤️","titre":"Amour & Compassion","texte":"Nous enseignons l\'empathie, le respect et le service envers les autres."},{"icon":"🤝","titre":"Service Communautaire","texte":"Nos élèves apprennent à servir leur communauté et à faire une différence concrète."},{"icon":"👑","titre":"Leadership","texte":"Nous formons des leaders qui transformeront le Congo, l\'Afrique et le monde."},{"icon":"🌍","titre":"Vision Internationale","texte":"Notre programme prépare les élèves à exceller partout dans le monde."}]','json','valeurs','Cards valeurs (JSON)'],
-    // Programmes
     ['programmes_titre','Nos Programmes','text','programmes','Titre section programmes'],
     ['programmes_sous_titre','Une formation complète pour un avenir brillant','text','programmes','Sous-titre programmes'],
     ['programmes_items','[{"icon":"📚","titre":"Enseignement Général","items":["Programme primaire et secondaire","Curriculum international","Pédagogie moderne et innovante","Suivi personnalisé"]},{"icon":"🌐","titre":"Langues","items":["Anglais intensif","Enseignement bilingue","Français académique","Communication internationale"]},{"icon":"💻","titre":"Sciences & Technologies","items":["Initiation informatique","Sciences appliquées","Mathématiques avancées","Innovation et créativité"]},{"icon":"👑","titre":"Leadership","items":["Développement personnel","Prise de parole en public","Gestion de projets","Esprit d\'équipe"]},{"icon":"✝️","titre":"Formation Chrétienne","items":["Enseignement biblique","Éducation morale et spirituelle","Valeurs chrétiennes","Service et compassion"]},{"icon":"🎨","titre":"Arts & Sport","items":["Éducation artistique","Musique et chant","Sport et activités physiques","Expression créative"]}]','json','programmes','Cards programmes (JSON)'],
-    // Galerie
     ['galerie_titre','Galerie Photo','text','galerie','Titre section galerie'],
     ['galerie_sous_titre','Découvrez la vie à King\'s School','text','galerie','Sous-titre galerie'],
     ['galerie_items','[{"image":"images/classroom.jpg","titre":"Salles de classe modernes","description":"Nos salles équipées pour un apprentissage optimal."},{"image":"images/activities.jpg","titre":"Activités scolaires","description":"Des activités variées pour développer tous les talents."},{"image":"images/trips.jpg","titre":"Sorties éducatives","description":"Des sorties pour apprendre en dehors de la classe."},{"image":"images/events.jpg","titre":"Événements spéciaux","description":"Célébrons ensemble nos réussites."},{"image":"images/humanitarian.jpg","titre":"Visite Kanvivira","description":"Notre engagement humanitaire au service de la communauté."},{"image":"images/ceremonies.jpg","titre":"Cérémonies","description":"Moments forts de l\'année scolaire."}]','json','galerie','Photos de la galerie (JSON)'],
-    // Contact
     ['contact_adresse','Uvira, Sud-Kivu, RDC','text','contact','Adresse'],
     ['contact_telephone','+243 XXX XXX XXX','text','contact','Téléphone / WhatsApp'],
     ['contact_email','contact@kingsschool.cd','text','contact','Email'],
@@ -173,6 +181,22 @@ db.serialize(async () => {
     ['contact_instagram','https://www.instagram.com/metanoia_ministries/','text','contact','Instagram URL'],
     ['contact_whatsapp','https://wa.me/243XXXXXXXXX','text','contact','WhatsApp URL'],
     ['contact_youtube','https://youtube.com','text','contact','YouTube URL'],
+    ['contact_twitter','','text','contact','Twitter / X URL'],
+    ['contact_tiktok','','text','contact','TikTok URL'],
+    // ── Contenu page À Propos étendue ──
+    ['apropos_mission','<p>King\'s School International, membre de <strong>Metanoia Ministries International</strong>, est une école chrétienne engagée dans la formation internationale de la prochaine génération de leaders. Notre mission est de former des esprits brillants, des cœurs intègres et des mains capables de servir.</p>','textarea','apropos','Page À Propos — Mission (HTML)'],
+    ['apropos_vision','<p>Nous croyons en un Congo prospère, une Afrique transformée par une génération de leaders instruits, ancrés dans des valeurs bibliques et porteurs d\'une vision internationale. Chaque élève qui sort de nos portes porte en lui le potentiel de changer son milieu.</p>','textarea','apropos','Page À Propos — Vision (HTML)'],
+    ['apropos_histoire','<p>Fondée avec la conviction profonde que l\'éducation de qualité est le pilier du développement national, King\'s School International a ouvert ses portes en 2015 sous l\'impulsion de Metanoia Ministries International.</p><p>Depuis ses débuts, l\'école n\'a cessé de grandir — en nombre d\'élèves, en qualité d\'enseignement, et en impact communautaire. Aujourd\'hui, elle accueille des élèves de la maternelle au secondaire dans un environnement académique rigoureux, chaleureux et profondément ancré dans la foi chrétienne.</p>','textarea','apropos','Page À Propos — Histoire (HTML)'],
+    ['apropos_valeurs','[{"icon":"🎓","titre":"Excellence Académique"},{"icon":"✝️","titre":"Foi Chrétienne"},{"icon":"⚖️","titre":"Discipline & Intégrité"},{"icon":"👑","titre":"Leadership Serviteur"},{"icon":"🌍","titre":"Vision Internationale"},{"icon":"❤️","titre":"Service Communautaire"},{"icon":"🤝","titre":"Esprit d\'Équipe"},{"icon":"💡","titre":"Innovation"}]','json','apropos','Page À Propos — Valeurs (JSON)'],
+    ['apropos_video_titre','Découvrez King\'s School en vidéo','text','apropos','Page À Propos — Titre section vidéos'],
+    ['apropos_videos','[]','json','apropos','Page À Propos — Liens vidéos (JSON: [{url,titre,description}])'],
+    ['apropos_galerie_extra','[]','json','apropos','Page À Propos — Photos supplémentaires (JSON: [url,...])'],
+    ['apropos_cta_titre','Rejoignez la famille King\'s School','text','apropos','Page À Propos — Titre CTA'],
+    ['apropos_cta_texte','Inscrivez votre enfant dès aujourd\'hui et offrez-lui une éducation d\'excellence ancrée dans des valeurs chrétiennes.','textarea','apropos','Page À Propos — Texte CTA'],
+    ['apropos_stat_eleves','450+','text','apropos','Page À Propos — Stat élèves'],
+    ['apropos_stat_profs','30+','text','apropos','Page À Propos — Stat enseignants'],
+    ['apropos_stat_reussite','95%','text','apropos','Page À Propos — Stat réussite'],
+    ['apropos_stat_annees','10+','text','apropos','Page À Propos — Stat années'],
   ];
   for (const [cle,valeur,type,section,libelle] of defaults) {
     const exists = await dbGet('SELECT cle FROM site_content WHERE cle=?',[cle]);
@@ -190,7 +214,9 @@ db.serialize(async () => {
   console.log("║  King's School — Serveur démarré ✅    ║");
   console.log(`║  http://localhost:${PORT}                  ║`);
   console.log('╚════════════════════════════════════════╝\n');
-});
+}
+
+initDb().catch(e => { console.error('❌ Erreur initialisation BD :', e.message); process.exit(1); });
 
 // ════════ Auth middlewares ════════
 function verifierToken(req,res,next) {
@@ -294,19 +320,109 @@ app.get('/api/faq', async (_,res)=>{
   catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
-// ════════ SSE Notifications ════════
-app.get('/api/admin/notifications/stream', verifierToken, (req,res)=>{
-  res.setHeader('Content-Type','text/event-stream');
-  res.setHeader('Cache-Control','no-cache');
-  res.setHeader('Connection','keep-alive');
+// ════════ SSE Notifications (admin) ════════
+app.get('/api/admin/notifications/stream', (req, res) => {
+  // EventSource ne peut pas envoyer d'Authorization header
+  // → on accepte le token en query param ?token=xxx
+  const token = (req.headers['authorization'] || '').split(' ')[1] || req.query.token || '';
+  if (!token) { res.status(401).end(); return; }
+  let decoded;
+  try { decoded = jwt.verify(token, JWT_SECRET); }
+  catch(e) { res.status(401).end(); return; }
+  if (!['admin','moderateur','editeur','technicien'].includes(decoded.role)) {
+    res.status(403).end(); return;
+  }
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.flushHeaders();
-  const client={id:Date.now(),res};
+  // Envoyer un ping initial pour confirmer la connexion
+  res.write('data: {"type":"ping"}\n\n');
+  const client = { id: Date.now(), res };
   sseClients.push(client);
-  req.on('close',()=>{ sseClients=sseClients.filter(c=>c.id!==client.id); });
+  req.on('close', () => { sseClients = sseClients.filter(c => c.id !== client.id); });
+});
+
+// ════════ Notifications utilisateurs — routes ════════
+
+// Récupérer ses propres notifications (utilisateur connecté)
+app.get('/api/notifications', verifierToken, async (req,res)=>{
+  try {
+    const notifs = await dbAll(
+      `SELECT * FROM user_notifications
+       WHERE (user_id=? OR user_email=? OR user_id IS NULL)
+       ORDER BY created_at DESC LIMIT 50`,
+      [req.user.id, req.user.email]
+    );
+    res.json(notifs);
+  } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
+});
+
+// Marquer une notification comme lue
+app.put('/api/notifications/:id/lu', verifierToken, async (req,res)=>{
+  try {
+    await dbRun('UPDATE user_notifications SET lu=1 WHERE id=? AND (user_id=? OR user_id IS NULL)', [req.params.id, req.user.id]);
+    res.json({message:'Notification lue.'});
+  } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
+});
+
+// Marquer toutes comme lues
+app.put('/api/notifications/lu/all', verifierToken, async (req,res)=>{
+  try {
+    await dbRun('UPDATE user_notifications SET lu=1 WHERE (user_id=? OR user_email=? OR user_id IS NULL)', [req.user.id, req.user.email]);
+    res.json({message:'Toutes les notifications marquées comme lues.'});
+  } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
+});
+
+// ★ Admin : envoyer une notification (à tous, à un user précis, ou par email)
+// Rôles autorisés : admin, technicien, moderateur
+app.post('/api/admin/notifications/envoyer', verifierRoles('admin','technicien','moderateur'), async (req,res)=>{
+  const { titre, contenu, type, cible, user_id, user_email } = req.body;
+  if(!titre||!contenu) return res.status(400).json({message:'Titre et contenu requis.'});
+  const typeValide = ['info','succes','alerte','promotion'].includes(type) ? type : 'info';
+  try {
+    if(cible === 'tous') {
+      // Notif globale (user_id NULL = pour tout le monde)
+      await dbRun('INSERT INTO user_notifications (user_id, user_email, titre, contenu, type) VALUES (NULL, NULL, ?, ?, ?)',
+        [nettoyerTexte(titre,200), nettoyerTexte(contenu,1000), typeValide]);
+    } else if(cible === 'user' && user_id) {
+      const u = await dbGet('SELECT id,email FROM users WHERE id=?',[user_id]);
+      if(!u) return res.status(404).json({message:'Utilisateur introuvable.'});
+      await dbRun('INSERT INTO user_notifications (user_id, user_email, titre, contenu, type) VALUES (?, ?, ?, ?, ?)',
+        [u.id, u.email, nettoyerTexte(titre,200), nettoyerTexte(contenu,1000), typeValide]);
+    } else if(cible === 'email' && user_email) {
+      const u = await dbGet('SELECT id FROM users WHERE email=?',[user_email.toLowerCase()]);
+      await dbRun('INSERT INTO user_notifications (user_id, user_email, titre, contenu, type) VALUES (?, ?, ?, ?, ?)',
+        [u?.id||null, user_email.toLowerCase(), nettoyerTexte(titre,200), nettoyerTexte(contenu,1000), typeValide]);
+    } else {
+      return res.status(400).json({message:'Cible invalide.'});
+    }
+    await enregistrerActivite(req.user,'envoi_notification',titre.slice(0,60));
+    res.status(201).json({message:'Notification envoyée.'});
+  } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
+});
+
+// ★ Admin : liste des notifications envoyées
+app.get('/api/admin/notifications', verifierRoles('admin','technicien','moderateur'), async (req,res)=>{
+  try {
+    const {page,limit,offset}=clampPagination(req.query.page,req.query.limit||20);
+    const total=await dbGet('SELECT COUNT(*) as c FROM user_notifications');
+    const items=await dbAll('SELECT * FROM user_notifications ORDER BY created_at DESC LIMIT ? OFFSET ?',[limit,offset]);
+    res.json({notifications:items,total:total.c,page,limit,totalPages:Math.max(1,Math.ceil(total.c/limit))});
+  } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
+});
+
+// ★ Admin : supprimer une notification
+app.delete('/api/admin/notifications/:id', verifierRoles('admin','technicien'), async (req,res)=>{
+  try {
+    await dbRun('DELETE FROM user_notifications WHERE id=?',[req.params.id]);
+    res.json({message:'Notification supprimée.'});
+  } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
 // ════════ Admin — Stats ════════
-app.get('/api/admin/stats', verifierRoles('admin','moderateur','editeur'), async (req,res)=>{
+app.get('/api/admin/stats', verifierRoles('admin','moderateur','editeur','technicien'), async (req,res)=>{
   try {
     const total    =await dbGet("SELECT COUNT(*) as c FROM users WHERE role='user'");
     const today    =await dbGet("SELECT COUNT(*) as c FROM users WHERE date(created_at)=date('now') AND role='user'");
@@ -317,15 +433,25 @@ app.get('/api/admin/stats', verifierRoles('admin','moderateur','editeur'), async
     const equipe   =await dbGet('SELECT COUNT(*) as c FROM equipe');
     const preinsc  =await dbGet('SELECT COUNT(*) as c FROM preinscriptions');
     const preinscNew=await dbGet("SELECT COUNT(*) as c FROM preinscriptions WHERE statut='nouveau'");
+    const notifCount=await dbGet('SELECT COUNT(*) as c FROM user_notifications');
+    const faqCount  =await dbGet('SELECT COUNT(*) as c FROM faq');
+    const galerieCount=await dbGet('SELECT COUNT(*) as c FROM galerie');
+    const temoCount =await dbGet('SELECT COUNT(*) as c FROM temoignages');
     const inscriptions14=await dbAll(`SELECT date(created_at) as jour, COUNT(*) as nb FROM users WHERE created_at>=datetime('now','-14 days') AND role='user' GROUP BY jour ORDER BY jour ASC`);
     const msgParMois=await dbAll(`SELECT strftime('%Y-%m',created_at) as mois, COUNT(*) as nb FROM messages WHERE created_at>=datetime('now','-6 months') GROUP BY mois ORDER BY mois ASC`);
     const roles=await dbAll("SELECT role, COUNT(*) as nb FROM users GROUP BY role");
-    res.json({total:total.c,today:today.c,week:week.c,messages:messages.c,unread:unread.c,actus:actus.c,equipe:equipe.c,preinscriptions:preinsc.c,preinscriptionsNouvelles:preinscNew.c,inscriptions14,msgParMois,roles});
+    // Taille de la base de données
+    let dbSize = '—';
+    try {
+      const s = require('fs').statSync(DB_PATH);
+      dbSize = s.size < 1024*1024 ? Math.round(s.size/1024)+' Ko' : Math.round(s.size/1024/1024)+' Mo';
+    } catch(_) {}
+    res.json({total:total.c,today:today.c,week:week.c,messages:messages.c,unread:unread.c,actus:actus.c,equipe:equipe.c,preinscriptions:preinsc.c,preinscriptionsNouvelles:preinscNew.c,notifications:notifCount.c,faq:faqCount.c,galerie:galerieCount.c,temoignages:temoCount.c,dbSize,inscriptions14,msgParMois,roles});
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
 // ════════ Admin — Utilisateurs ════════
-app.get('/api/admin/users', verifierRoles('admin'), async (req,res)=>{
+app.get('/api/admin/users', verifierRoles('admin','technicien'), async (req,res)=>{
   try {
     const {page,limit,offset}=clampPagination(req.query.page,req.query.limit||20);
     const search=`%${(req.query.search||'').trim()}%`;
@@ -375,8 +501,147 @@ app.delete('/api/admin/users/:id', verifierRoles('admin'), async (req,res)=>{
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
+// ════════ Techniciens — gestion multi (max 5, admin uniquement) ════════
+const MAX_TECHNICIENS = 5;
+
+// Liste tous les techniciens
+app.get('/api/admin/techniciens', verifierRoles('admin'), async (_,res)=>{
+  try {
+    const list=await dbAll("SELECT id,name,email,created_at FROM users WHERE role='technicien' ORDER BY created_at ASC");
+    res.json(list);
+  } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
+});
+
+// Créer un technicien (max 5)
+app.post('/api/admin/techniciens', verifierRoles('admin'), async (req,res)=>{
+  const name=nettoyerTexte(req.body.name||'',100);
+  const email=(req.body.email||'').toLowerCase().trim();
+  const password=req.body.password||'';
+  if(name.length<2) return res.status(400).json({message:'Nom trop court (min. 2 caractères).'});
+  if(!emailValide(email)) return res.status(400).json({message:'Email invalide.'});
+  if(password.length<6) return res.status(400).json({message:'Mot de passe requis (min. 6 caractères).'});
+  if(email===ADMIN_EMAIL) return res.status(400).json({message:'Cet email est réservé à l\'administrateur.'});
+  try {
+    const count=await dbGet("SELECT COUNT(*) as c FROM users WHERE role='technicien'");
+    if(count.c>=MAX_TECHNICIENS) return res.status(400).json({message:`Maximum ${MAX_TECHNICIENS} techniciens autorisés.`});
+    // Vérifier conflit email avec n'importe quel autre compte (technicien ou non)
+    const conflict=await dbGet('SELECT id,name,role FROM users WHERE email=?',[email]);
+    if(conflict && conflict.role==='technicien') return res.status(409).json({message:'Un technicien avec cet email existe déjà. Modifiez-le plutôt que d\'en créer un nouveau.'});
+    if(conflict && conflict.role==='admin') return res.status(409).json({message:'Cet email est réservé au compte administrateur.'});
+    if(conflict && conflict.role==='user') return res.status(409).json({message:`Cet email est déjà utilisé par un compte inscrit (${conflict.name}). Allez dans "Utilisateurs" et changez son rôle en "technicien", ou utilisez un autre email.`});
+    if(conflict) return res.status(409).json({message:'Cet email est déjà utilisé par un autre compte.'});
+    const hash=bcrypt.hashSync(password,10);
+    const r=await dbRun("INSERT INTO users (name,email,password,role) VALUES (?,?,?,'technicien')",[name,email,hash]);
+    await enregistrerActivite(req.user,'creation_technicien',`${name} (${email})`);
+    res.status(201).json({message:'Compte technicien créé.',id:r.lastID});
+  } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
+});
+
+// Modifier un technicien (nom, email, mdp optionnel)
+app.put('/api/admin/techniciens/:id', verifierRoles('admin'), async (req,res)=>{
+  const id=parseInt(req.params.id);
+  const name=nettoyerTexte(req.body.name||'',100);
+  const email=(req.body.email||'').toLowerCase().trim();
+  const password=req.body.password||'';
+  if(name.length<2) return res.status(400).json({message:'Nom trop court.'});
+  if(!emailValide(email)) return res.status(400).json({message:'Email invalide.'});
+  if(email===ADMIN_EMAIL) return res.status(400).json({message:'Cet email est réservé à l\'administrateur.'});
+  try {
+    const tech=await dbGet("SELECT id,email FROM users WHERE id=? AND role='technicien'",[id]);
+    if(!tech) return res.status(404).json({message:'Technicien introuvable.'});
+    // Conflit : un autre compte utilise déjà ce nouvel email (en excluant le technicien lui-même)
+    const conflict=await dbGet('SELECT id,name,role FROM users WHERE email=? AND id!=?',[email,id]);
+    if(conflict) {
+      if(conflict.role==='technicien') {
+        // Doublon technicien (héritage ancien système) : supprimer le doublon silencieusement
+        await dbRun('DELETE FROM users WHERE id=?',[conflict.id]);
+      } else if(conflict.role==='admin') {
+        return res.status(409).json({message:'Cet email est réservé au compte administrateur.'});
+      } else {
+        // Compte utilisateur normal (inscrit via le portail) qui possède cet email :
+        // on le met à jour en technicien pour éviter le doublon
+        if(password && password.length>=6) {
+          const hash=bcrypt.hashSync(password,10);
+          await dbRun("UPDATE users SET name=?,role='technicien',password=? WHERE id=?",[name,hash,conflict.id]);
+        } else {
+          await dbRun("UPDATE users SET name=?,role='technicien' WHERE id=?",[name,conflict.id]);
+        }
+        // Supprimer l'ancien enregistrement technicien (l'ID change vers conflict.id)
+        await dbRun('DELETE FROM users WHERE id=?',[id]);
+        await enregistrerActivite(req.user,'modification_technicien',`${name} (${email}) — fusion compte existant`);
+        return res.json({message:'Technicien mis à jour (compte existant réutilisé).'});
+      }
+    }
+    // Mise à jour normale
+    if(password){
+      if(password.length<6) return res.status(400).json({message:'Mot de passe trop court (min. 6 caractères).'});
+      const hash=bcrypt.hashSync(password,10);
+      await dbRun('UPDATE users SET name=?,email=?,password=? WHERE id=?',[name,email,hash,id]);
+      await enregistrerActivite(req.user,'reset_mdp_technicien',`${name} (${email})`);
+    } else {
+      await dbRun('UPDATE users SET name=?,email=? WHERE id=?',[name,email,id]);
+    }
+    await enregistrerActivite(req.user,'modification_technicien',`${name} (${email})`);
+    res.json({message:'Technicien mis à jour.'});
+  } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
+});
+
+// Supprimer un technicien
+app.delete('/api/admin/techniciens/:id', verifierRoles('admin'), async (req,res)=>{
+  try {
+    const tech=await dbGet("SELECT id,name,email FROM users WHERE id=? AND role='technicien'",[req.params.id]);
+    if(!tech) return res.status(404).json({message:'Technicien introuvable.'});
+    await dbRun('DELETE FROM users WHERE id=?',[tech.id]);
+    await enregistrerActivite(req.user,'suppression_technicien',`${tech.name} (${tech.email})`);
+    res.json({message:'Compte technicien supprimé.'});
+  } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
+});
+
+// ════════ Mon Compte — Changer son propre mot de passe (admin ou technicien) ════════
+app.put('/api/admin/mon-compte/password', verifierRoles('admin','technicien'), async (req,res)=>{
+  const {ancien_password, nouveau_password} = req.body;
+  if(!ancien_password||!nouveau_password) return res.status(400).json({message:'Ancien et nouveau mot de passe requis.'});
+  if(nouveau_password.length<6) return res.status(400).json({message:'Nouveau mot de passe trop court (min. 6 caractères).'});
+  if(ancien_password===nouveau_password) return res.status(400).json({message:'Le nouveau mot de passe doit être différent de l\'ancien.'});
+  try {
+    const user=await dbGet('SELECT * FROM users WHERE id=?',[req.user.id]);
+    if(!user) return res.status(404).json({message:'Compte introuvable.'});
+    if(!bcrypt.compareSync(ancien_password,user.password)) return res.status(401).json({message:'Mot de passe actuel incorrect.'});
+    const hash=bcrypt.hashSync(nouveau_password,10);
+    await dbRun('UPDATE users SET password=? WHERE id=?',[hash,user.id]);
+    await enregistrerActivite(req.user,'changement_mot_de_passe',user.role==='technicien'?`Technicien : ${user.name} (${user.email})`:'');
+    // Si c'est un technicien, insérer une notification pour l'admin
+    if(user.role==='technicien'){
+      const adminUser=await dbGet("SELECT id,email FROM users WHERE role='admin' LIMIT 1");
+      if(adminUser) await dbRun('INSERT INTO user_notifications (user_id,user_email,titre,contenu,type) VALUES (?,?,?,?,?)',
+        [adminUser.id,adminUser.email,'🔐 Changement de mot de passe technicien',
+        `Le technicien ${user.name} (${user.email}) vient de changer son mot de passe.\n\n📋 Nouveau mot de passe : ${nouveau_password}\n\n⚠️ Notez ce mot de passe dans un endroit sûr si vous en avez besoin pour administrer ce compte.`,'alerte']);
+    }
+    res.json({message:'Mot de passe mis à jour avec succès.'});
+  } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
+});
+
+// Changer son propre email (admin uniquement — confirmation par mot de passe)
+app.put('/api/admin/mon-compte/email', verifierRoles('admin'), async (req,res)=>{
+  const {password, nouvel_email} = req.body;
+  const email = (nouvel_email||'').toLowerCase().trim();
+  if(!password) return res.status(400).json({message:'Mot de passe requis pour confirmer le changement.'});
+  if(!emailValide(email)) return res.status(400).json({message:'Nouvel email invalide.'});
+  try {
+    const user=await dbGet('SELECT * FROM users WHERE id=?',[req.user.id]);
+    if(!user) return res.status(404).json({message:'Compte introuvable.'});
+    if(!bcrypt.compareSync(password,user.password)) return res.status(401).json({message:'Mot de passe incorrect.'});
+    if(email===user.email) return res.status(400).json({message:'Ce nouvel email est identique à l\'email actuel.'});
+    const conflict=await dbGet('SELECT id FROM users WHERE email=? AND id!=?',[email,user.id]);
+    if(conflict) return res.status(409).json({message:'Cet email est déjà utilisé par un autre compte.'});
+    await dbRun('UPDATE users SET email=? WHERE id=?',[email,user.id]);
+    await enregistrerActivite(req.user,'changement_email',`→ ${email}`);
+    res.json({message:'Email mis à jour avec succès.', nouvel_email: email});
+  } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
+});
+
 // ════════ Admin — Messages ════════
-app.get('/api/admin/messages', verifierRoles('admin','moderateur'), async (req,res)=>{
+app.get('/api/admin/messages', verifierRoles('admin','moderateur','technicien'), async (req,res)=>{
   try {
     const {page,limit,offset}=clampPagination(req.query.page,req.query.limit||20);
     const search=`%${(req.query.search||'').trim()}%`;
@@ -389,14 +654,14 @@ app.get('/api/admin/messages', verifierRoles('admin','moderateur'), async (req,r
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
-app.put('/api/admin/messages/:id/lu', verifierRoles('admin','moderateur'), async (req,res)=>{
+app.put('/api/admin/messages/:id/lu', verifierRoles('admin','moderateur','technicien'), async (req,res)=>{
   try {
     await dbRun('UPDATE messages SET lu=1 WHERE id=?',[req.params.id]);
     res.json({message:'Marqué comme lu.'});
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
-app.delete('/api/admin/messages/:id', verifierRoles('admin','moderateur'), async (req,res)=>{
+app.delete('/api/admin/messages/:id', verifierRoles('admin','moderateur','technicien'), async (req,res)=>{
   try {
     await dbRun('DELETE FROM messages WHERE id=?',[req.params.id]);
     await enregistrerActivite(req.user,'suppression_message',`Message #${req.params.id}`);
@@ -405,7 +670,7 @@ app.delete('/api/admin/messages/:id', verifierRoles('admin','moderateur'), async
 });
 
 // ════════ Admin — Actualités ════════
-app.get('/api/admin/actualites', verifierRoles('admin','editeur'), async (req,res)=>{
+app.get('/api/admin/actualites', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   try {
     const {page,limit,offset}=clampPagination(req.query.page,req.query.limit||9);
     const total=await dbGet('SELECT COUNT(*) as c FROM actualites');
@@ -413,7 +678,7 @@ app.get('/api/admin/actualites', verifierRoles('admin','editeur'), async (req,re
     res.json({actualites:items,total:total.c,page,limit,totalPages:Math.max(1,Math.ceil(total.c/limit))});
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
-app.post('/api/admin/actualites', verifierRoles('admin','editeur'), async (req,res)=>{
+app.post('/api/admin/actualites', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   const titre=nettoyerTexte(req.body.titre,200),contenu=nettoyerTexte(req.body.contenu,5000),image=nettoyerTexte(req.body.image,300);
   if(!titre||!contenu) return res.status(400).json({message:'Titre et contenu requis.'});
   try {
@@ -423,7 +688,7 @@ app.post('/api/admin/actualites', verifierRoles('admin','editeur'), async (req,r
     res.status(201).json({message:'Actualité publiée.',id:r.lastID});
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
-app.put('/api/admin/actualites/:id', verifierRoles('admin','editeur'), async (req,res)=>{
+app.put('/api/admin/actualites/:id', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   const titre=nettoyerTexte(req.body.titre,200),contenu=nettoyerTexte(req.body.contenu,5000),image=nettoyerTexte(req.body.image,300);
   if(!titre||!contenu) return res.status(400).json({message:'Titre et contenu requis.'});
   try {
@@ -432,7 +697,7 @@ app.put('/api/admin/actualites/:id', verifierRoles('admin','editeur'), async (re
     res.json({message:'Actualité mise à jour.'});
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
-app.delete('/api/admin/actualites/:id', verifierRoles('admin','editeur'), async (req,res)=>{
+app.delete('/api/admin/actualites/:id', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   try {
     const item=await dbGet('SELECT titre FROM actualites WHERE id=?',[req.params.id]);
     await dbRun('DELETE FROM actualites WHERE id=?',[req.params.id]);
@@ -442,11 +707,11 @@ app.delete('/api/admin/actualites/:id', verifierRoles('admin','editeur'), async 
 });
 
 // ════════ Admin — Équipe ════════
-app.get('/api/admin/equipe', verifierRoles('admin','editeur'), async (_,res)=>{
+app.get('/api/admin/equipe', verifierRoles('admin','editeur','technicien'), async (_,res)=>{
   try { res.json(await dbAll('SELECT * FROM equipe ORDER BY ordre ASC')); }
   catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
-app.post('/api/admin/equipe', verifierRoles('admin','editeur'), async (req,res)=>{
+app.post('/api/admin/equipe', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   const {nom,poste,photo,bio,ordre}=req.body;
   if(!nom||!poste) return res.status(400).json({message:'Nom et poste requis.'});
   try {
@@ -455,7 +720,7 @@ app.post('/api/admin/equipe', verifierRoles('admin','editeur'), async (req,res)=
     res.status(201).json({message:'Membre ajouté.',id:r.lastID});
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
-app.put('/api/admin/equipe/:id', verifierRoles('admin','editeur'), async (req,res)=>{
+app.put('/api/admin/equipe/:id', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   const {nom,poste,photo,bio,ordre}=req.body;
   if(!nom||!poste) return res.status(400).json({message:'Nom et poste requis.'});
   try {
@@ -463,17 +728,17 @@ app.put('/api/admin/equipe/:id', verifierRoles('admin','editeur'), async (req,re
     res.json({message:'Membre mis à jour.'});
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
-app.delete('/api/admin/equipe/:id', verifierRoles('admin','editeur'), async (req,res)=>{
+app.delete('/api/admin/equipe/:id', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   try { await dbRun('DELETE FROM equipe WHERE id=?',[req.params.id]); res.json({message:'Membre supprimé.'}); }
   catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
 // ════════ Admin — FAQ ════════
-app.get('/api/admin/faq', verifierRoles('admin','editeur'), async (_,res)=>{
+app.get('/api/admin/faq', verifierRoles('admin','editeur','technicien'), async (_,res)=>{
   try { res.json(await dbAll('SELECT * FROM faq ORDER BY ordre ASC')); }
   catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
-app.post('/api/admin/faq', verifierRoles('admin','editeur'), async (req,res)=>{
+app.post('/api/admin/faq', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   const {question,reponse,categorie,ordre}=req.body;
   if(!question||!reponse) return res.status(400).json({message:'Question et réponse requises.'});
   try {
@@ -482,7 +747,7 @@ app.post('/api/admin/faq', verifierRoles('admin','editeur'), async (req,res)=>{
     res.status(201).json({message:'FAQ ajoutée.',id:r.lastID});
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
-app.put('/api/admin/faq/:id', verifierRoles('admin','editeur'), async (req,res)=>{
+app.put('/api/admin/faq/:id', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   const {question,reponse,categorie,ordre}=req.body;
   if(!question||!reponse) return res.status(400).json({message:'Question et réponse requises.'});
   try {
@@ -490,17 +755,17 @@ app.put('/api/admin/faq/:id', verifierRoles('admin','editeur'), async (req,res)=
     res.json({message:'FAQ mise à jour.'});
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
-app.delete('/api/admin/faq/:id', verifierRoles('admin','editeur'), async (req,res)=>{
+app.delete('/api/admin/faq/:id', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   try { await dbRun('DELETE FROM faq WHERE id=?',[req.params.id]); res.json({message:'FAQ supprimée.'}); }
   catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
 // ════════ Admin — Témoignages ════════
-app.get('/api/admin/temoignages', verifierRoles('admin','editeur'), async (_,res)=>{
+app.get('/api/admin/temoignages', verifierRoles('admin','editeur','technicien'), async (_,res)=>{
   try { res.json(await dbAll('SELECT * FROM temoignages ORDER BY created_at DESC')); }
   catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
-app.post('/api/admin/temoignages', verifierRoles('admin','editeur'), async (req,res)=>{
+app.post('/api/admin/temoignages', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   const {nom,role,texte,photo,note}=req.body;
   if(!nom||!texte) return res.status(400).json({message:'Nom et texte requis.'});
   try {
@@ -508,7 +773,7 @@ app.post('/api/admin/temoignages', verifierRoles('admin','editeur'), async (req,
     res.status(201).json({message:'Témoignage ajouté.',id:r.lastID});
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
-app.put('/api/admin/temoignages/:id', verifierRoles('admin','editeur'), async (req,res)=>{
+app.put('/api/admin/temoignages/:id', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   const {nom,role,texte,photo,note}=req.body;
   if(!nom||!texte) return res.status(400).json({message:'Nom et texte requis.'});
   try {
@@ -516,13 +781,13 @@ app.put('/api/admin/temoignages/:id', verifierRoles('admin','editeur'), async (r
     res.json({message:'Témoignage mis à jour.'});
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
-app.delete('/api/admin/temoignages/:id', verifierRoles('admin','editeur'), async (req,res)=>{
+app.delete('/api/admin/temoignages/:id', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   try { await dbRun('DELETE FROM temoignages WHERE id=?',[req.params.id]); res.json({message:'Témoignage supprimé.'}); }
   catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
 // ════════ Admin — Pré-inscriptions ════════
-app.get('/api/admin/preinscriptions', verifierRoles('admin','moderateur'), async (req,res)=>{
+app.get('/api/admin/preinscriptions', verifierRoles('admin','moderateur','technicien'), async (req,res)=>{
   try {
     const {page,limit,offset}=clampPagination(req.query.page,req.query.limit||20);
     const statut=req.query.statut||'';
@@ -532,7 +797,7 @@ app.get('/api/admin/preinscriptions', verifierRoles('admin','moderateur'), async
     res.json({preinscriptions:items,total:total.c,page,limit,totalPages:Math.max(1,Math.ceil(total.c/limit))});
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
-app.put('/api/admin/preinscriptions/:id', verifierRoles('admin','moderateur'), async (req,res)=>{
+app.put('/api/admin/preinscriptions/:id', verifierRoles('admin','moderateur','technicien'), async (req,res)=>{
   const {nom_enfant,age,classe_visee,nom_parent,email_parent,telephone,message,statut} = req.body;
   if(!nom_enfant||!classe_visee||!nom_parent||!email_parent) return res.status(400).json({message:'Champs requis manquants.'});
   try {
@@ -543,15 +808,38 @@ app.put('/api/admin/preinscriptions/:id', verifierRoles('admin','moderateur'), a
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
-app.put('/api/admin/preinscriptions/:id/statut', verifierRoles('admin','moderateur'), async (req,res)=>{
+// ★ Mise à jour du statut + envoi automatique d'une notification à l'email parent
+app.put('/api/admin/preinscriptions/:id/statut', verifierRoles('admin','moderateur','technicien'), async (req,res)=>{
   const statut=req.body.statut;
   if(!['nouveau','en_cours','accepte','refuse'].includes(statut)) return res.status(400).json({message:'Statut invalide.'});
   try {
+    const preinsc = await dbGet('SELECT * FROM preinscriptions WHERE id=?',[req.params.id]);
+    if(!preinsc) return res.status(404).json({message:'Pré-inscription introuvable.'});
     await dbRun('UPDATE preinscriptions SET statut=? WHERE id=?',[statut,req.params.id]);
     await enregistrerActivite(req.user,'maj_preinscription',`#${req.params.id} → ${statut}`);
-    res.json({message:'Statut mis à jour.'});
+
+    // ★ Envoi automatique de la notification à l'email du parent
+    const user = await dbGet('SELECT id FROM users WHERE email=?',[preinsc.email_parent]);
+    let titreNotif, contenuNotif;
+    if(statut === 'accepte') {
+      titreNotif = `✅ Pré-inscription acceptée — ${preinsc.nom_enfant}`;
+      contenuNotif = `Bonjour ${preinsc.nom_parent}, nous avons le plaisir de vous informer que la pré-inscription de ${preinsc.nom_enfant} pour la classe de ${preinsc.classe_visee} a été acceptée. Notre équipe va vous recontacter prochainement pour finaliser l'inscription. Bienvenue dans la famille King's School International !`;
+    } else if(statut === 'refuse') {
+      titreNotif = `❌ Pré-inscription non retenue — ${preinsc.nom_enfant}`;
+      contenuNotif = `Bonjour ${preinsc.nom_parent}, après étude de votre dossier, nous sommes au regret de vous informer que la pré-inscription de ${preinsc.nom_enfant} pour la classe de ${preinsc.classe_visee} n'a pas pu être retenue cette année. Nous vous remercions de l'intérêt que vous portez à King's School International.`;
+    } else if(statut === 'en_cours') {
+      titreNotif = `⏳ Dossier en cours d'examen — ${preinsc.nom_enfant}`;
+      contenuNotif = `Bonjour ${preinsc.nom_parent}, nous vous informons que le dossier de pré-inscription de ${preinsc.nom_enfant} est actuellement en cours d'examen par notre équipe. Nous reviendrons vers vous prochainement.`;
+    }
+    if(titreNotif) {
+      await dbRun('INSERT INTO user_notifications (user_id, user_email, titre, contenu, type) VALUES (?, ?, ?, ?, ?)',
+        [user?.id||null, preinsc.email_parent, titreNotif, contenuNotif,
+         statut==='accepte'?'succes':statut==='refuse'?'alerte':'info']);
+    }
+    res.json({message:'Statut mis à jour.', notificationEnvoyee: !!titreNotif});
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
+
 app.delete('/api/admin/preinscriptions/:id', verifierRoles('admin'), async (req,res)=>{
   try { await dbRun('DELETE FROM preinscriptions WHERE id=?',[req.params.id]); res.json({message:'Supprimée.'}); }
   catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
@@ -611,6 +899,7 @@ app.get('/api/admin/export/:type/:format', verifierRoles('admin'), async (req,re
 // ════════ Site Content — Route publique ════════
 app.get('/api/site-content', async (_,res)=>{
   try {
+    res.set('Cache-Control','no-store');
     const rows = await dbAll('SELECT cle,valeur FROM site_content');
     const obj = {};
     rows.forEach(r => obj[r.cle] = r.valeur);
@@ -619,27 +908,53 @@ app.get('/api/site-content', async (_,res)=>{
 });
 
 // ════════ Site Content — Admin ════════
-app.get('/api/admin/site-content', verifierRoles('admin','editeur'), async (_,res)=>{
+app.get('/api/admin/site-content', verifierRoles('admin','editeur','technicien'), async (_,res)=>{
   try {
     const rows = await dbAll('SELECT * FROM site_content ORDER BY section ASC, libelle ASC');
     res.json(rows);
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
-app.put('/api/admin/site-content/:cle', verifierRoles('admin','editeur'), async (req,res)=>{
+app.put('/api/admin/site-content/:cle', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   const valeur = req.body.valeur ?? '';
+  const cle    = req.params.cle;
+  // Liste blanche des clés autorisées (toutes celles déclarées dans les defaults)
+  const CLES_AUTORISEES = [
+    // Hero
+    'hero_titre','hero_description','hero_image','hero_btn1_texte','hero_btn2_texte','hero_phrases',
+    // Chiffres
+    'chiffres_titre','chiffres_sous_titre','chiffre_fondation','chiffre_eleves','chiffre_reussite','chiffre_profs',
+    // À propos (section principale)
+    'apropos_titre','apropos_p1','apropos_p2','apropos_citation','apropos_citation_auteur','apropos_p3','apropos_image',
+    // Valeurs, programmes, galerie
+    'valeurs_titre','valeurs_sous_titre','valeurs_items',
+    'programmes_titre','programmes_sous_titre','programmes_items',
+    'galerie_titre','galerie_sous_titre','galerie_items',
+    // Contact — coordonnées + réseaux sociaux (liste complète)
+    'contact_adresse','contact_telephone','contact_email','contact_horaires',
+    'contact_facebook','contact_instagram','contact_whatsapp','contact_youtube','contact_twitter','contact_tiktok',
+    // Page À Propos étendue
+    'apropos_mission','apropos_vision','apropos_histoire','apropos_valeurs',
+    'apropos_video_titre','apropos_videos','apropos_galerie_extra',
+    'apropos_cta_titre','apropos_cta_texte',
+    'apropos_stat_eleves','apropos_stat_profs','apropos_stat_reussite','apropos_stat_annees',
+  ];
+  if (!CLES_AUTORISEES.includes(cle)) return res.status(404).json({message:'Clé inconnue.'});
   try {
-    const existing = await dbGet('SELECT cle FROM site_content WHERE cle=?',[req.params.cle]);
-    if(!existing) return res.status(404).json({message:'Clé inconnue.'});
-    await dbRun("UPDATE site_content SET valeur=?,updated_at=datetime('now') WHERE cle=?",[String(valeur).slice(0,10000),req.params.cle]);
-    await enregistrerActivite(req.user,'maj_contenu_site',req.params.cle);
+    // Upsert : met à jour si existe, insère sinon (utile si la DB existait avant l'ajout de certains champs)
+    const existing = await dbGet('SELECT cle FROM site_content WHERE cle=?',[cle]);
+    if (existing) {
+      await dbRun("UPDATE site_content SET valeur=?,updated_at=datetime('now') WHERE cle=?",[String(valeur).slice(0,10000),cle]);
+    } else {
+      await dbRun("INSERT INTO site_content (cle,valeur,type,section,libelle) VALUES (?,?,'text','apropos',?)",[cle,String(valeur).slice(0,10000),cle]);
+    }
+    await enregistrerActivite(req.user,'maj_contenu_site',cle);
     res.json({message:'Contenu mis à jour.'});
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
-
 // ════════ Upload image depuis l'ordi local ════════
-app.post('/api/admin/upload', verifierRoles('admin','editeur'), upload.single('image'), (req, res) => {
+app.post('/api/admin/upload', verifierRoles('admin','editeur','technicien'), upload.single('image'), (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'Aucun fichier reçu.' });
   const url = `/uploads/${req.file.filename}`;
   res.json({ url, filename: req.file.filename, size: req.file.size });
@@ -652,12 +967,12 @@ app.get('/api/galerie', async (_,res)=>{
 });
 
 // ════════ Admin — Galerie CRUD ════════
-app.get('/api/admin/galerie', verifierRoles('admin','editeur'), async (_,res)=>{
+app.get('/api/admin/galerie', verifierRoles('admin','editeur','technicien'), async (_,res)=>{
   try { res.json(await dbAll('SELECT * FROM galerie ORDER BY ordre ASC, created_at ASC')); }
   catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
-app.post('/api/admin/galerie', verifierRoles('admin','editeur'), async (req,res)=>{
+app.post('/api/admin/galerie', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   const {image,titre,description,categorie,ordre} = req.body;
   if(!image) return res.status(400).json({message:'URL de l\'image requise.'});
   try {
@@ -672,7 +987,7 @@ app.post('/api/admin/galerie', verifierRoles('admin','editeur'), async (req,res)
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
-app.put('/api/admin/galerie/:id', verifierRoles('admin','editeur'), async (req,res)=>{
+app.put('/api/admin/galerie/:id', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   const {image,titre,description,categorie,ordre} = req.body;
   if(!image) return res.status(400).json({message:'URL de l\'image requise.'});
   try {
@@ -684,7 +999,7 @@ app.put('/api/admin/galerie/:id', verifierRoles('admin','editeur'), async (req,r
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
-app.delete('/api/admin/galerie/:id', verifierRoles('admin','editeur'), async (req,res)=>{
+app.delete('/api/admin/galerie/:id', verifierRoles('admin','editeur','technicien'), async (req,res)=>{
   try {
     await dbRun('DELETE FROM galerie WHERE id=?',[req.params.id]);
     await enregistrerActivite(req.user,'suppression_galerie',`Photo #${req.params.id}`);
@@ -692,6 +1007,4 @@ app.delete('/api/admin/galerie/:id', verifierRoles('admin','editeur'), async (re
   } catch(e){ res.status(500).json({message:'Erreur serveur.'}); }
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Serveur lancé sur le port ${PORT}`);
-});
+app.listen(PORT);
