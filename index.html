@@ -186,7 +186,7 @@
 
         .mobile-nav ul {
             list-style: none;
-            padding: 0.5rem 0 1rem;
+            padding: 0.3rem 0 0.8rem;
         }
 
         .mobile-nav li {
@@ -196,24 +196,22 @@
 
         .mobile-nav li:last-child {
             border-bottom: none;
-            margin-top: 0.4rem;
-            padding: 0.4rem 5%;
+            padding: 0.5rem 5%;
         }
 
         .mobile-nav a {
             display: block;
-            padding: 0.85rem 5%;
+            padding: 0.8rem 5%;
             text-decoration: none;
             color: var(--dark-gray);
             font-weight: 500;
-            font-size: 0.97rem;
+            font-size: 0.95rem;
             transition: all 0.2s ease;
         }
 
         .mobile-nav a:hover {
             background: var(--light-gray);
             color: var(--royal-blue);
-            padding-left: 7%;
         }
 
         /* Hero Section */
@@ -917,50 +915,42 @@
 
         /* ══ CORRECTIONS MOBILE GLOBALES ══ */
         @media (max-width: 768px) {
-            /* Sections padding réduit */
-            section { padding-left: 4% !important; padding-right: 4% !important; }
-
-            /* Actu cards : 1 colonne */
-            .actu-card img { height: 220px; }
-
-            /* Section équipe centrée */
+            /* Section équipe : 1 colonne, photos bien visibles */
             #equipe { padding: 3.5rem 4% !important; }
             #equipe-container {
                 grid-template-columns: 1fr !important;
-                max-width: 400px !important;
+                max-width: 420px !important;
                 margin: 0 auto !important;
             }
             .equipe-card img { height: 300px !important; object-position: center top !important; }
             .equipe-card-ph { height: 300px !important; }
             .equipe-card-body { padding: 1.1rem 1.2rem !important; }
-            .equipe-card-body h3 { font-size: 1.1rem !important; }
-            .equipe-card-body .poste { font-size: .9rem !important; }
-            .equipe-card-body p { font-size: .88rem !important; }
+            .equipe-card-body h3 { font-size: 1.05rem !important; }
+            .equipe-card-body .poste { font-size: .88rem !important; }
+            .equipe-card-body p { font-size: .86rem !important; }
 
-            /* Chiffres clés : 2 colonnes */
-            #chiffres > div { grid-template-columns: repeat(2, 1fr) !important; gap: 1.5rem !important; }
+            /* Hero texte adapté */
+            .hero h1 { font-size: 1.85rem !important; line-height: 1.2 !important; }
+            .hero .tagline { font-size: 1.05rem !important; }
+            .section-title { font-size: 1.65rem !important; }
 
-            /* Témoignages : 1 colonne */
-            #temoignages > div > div[style*="grid"] { grid-template-columns: 1fr !important; }
+            /* Actu cards : pleine largeur */
+            .actu-overlay-grid { grid-template-columns: 1fr !important; }
 
-            /* Hero texte */
-            .hero { padding: 7rem 5% 4rem !important; }
-            .hero h1 { font-size: 1.9rem !important; line-height: 1.2 !important; }
-            .hero .tagline { font-size: 1.1rem !important; }
-            .hero p { font-size: .95rem !important; }
+            /* Overlay logos plus petits */
+            .overlay-nav-logo-text span { font-size: .75rem !important; }
+            .overlay-nav-logo-text small { font-size: .6rem !important; }
+            .overlay-nav-logo-img { height: 34px !important; }
 
-            /* Section titre */
-            .section-title { font-size: 1.7rem !important; }
-
-            /* Preinscription form */
-            #preinscription form { padding: 1.5rem !important; }
+            /* Pré-inscription form padding réduit */
+            #preinscription > div { padding: 0 !important; }
         }
 
         @media (max-width: 480px) {
-            .hero h1 { font-size: 1.6rem !important; }
-            #chiffres > div { grid-template-columns: 1fr 1fr !important; }
+            .hero h1 { font-size: 1.55rem !important; }
             .equipe-card img { height: 260px !important; }
             .equipe-card-ph { height: 260px !important; }
+            .section-title { font-size: 1.4rem !important; }
         }
 
         /* Animations */
@@ -1034,25 +1024,16 @@
         }
 
         @media (max-width: 640px) {
-            .hero {
-                padding: 6rem 5% 3rem;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .logo-text h1 {
-                font-size: 1.2rem;
-            }
-
-            .logo-container img {
-                height: 50px;
-            }
+            .hero { padding: 6rem 5% 3rem; }
+            .hero h1 { font-size: 2rem; }
+            .section-title { font-size: 2rem; }
+            .logo-text h1 { font-size: 0.8rem; }
+            .logo-text p { font-size: 0.6rem; }
+            .logo-container img { height: 40px; }
+        }
+        @media (max-width: 400px) {
+            .logo-text h1 { font-size: 0.72rem; }
+            .logo-container img { height: 34px; }
         }
         /* ══ Chiffres clés ══ */
         .chiffre-item { text-align:center; }
@@ -1072,20 +1053,12 @@
         /* ══ Équipe cards ══ */
         .equipe-card { background:white; border-radius:14px; box-shadow:0 4px 16px rgba(0,0,0,.07); overflow:hidden; text-align:center; transition:transform .2s; }
         .equipe-card:hover { transform:translateY(-4px); }
-        .equipe-card img { width:100%; height:220px; object-fit:cover; object-position:top center; display:block; }
-        .equipe-card-ph { width:100%; height:220px; background:linear-gradient(135deg,var(--royal-blue),#2563eb); display:flex; align-items:center; justify-content:center; font-size:4rem; }
-        .equipe-card-body { padding:1rem 1.2rem; }
-        .equipe-card-body h3 { font-size:.95rem; font-weight:700; color:var(--royal-blue); }
-        .equipe-card-body .poste { font-size:.8rem; color:var(--gold); font-weight:600; margin:.2rem 0 .5rem; }
-        .equipe-card-body p { font-size:.82rem; color:#64748b; line-height:1.5; }
-        @media(max-width:768px) {
-          #equipe-container { grid-template-columns: 1fr !important; max-width: 420px !important; }
-          .equipe-card img { height:280px; object-position:center top; }
-          .equipe-card-ph { height:280px; }
-          .equipe-card-body h3 { font-size:1.05rem; }
-          .equipe-card-body .poste { font-size:.88rem; }
-          .equipe-card-body p { font-size:.88rem; }
-        }
+        .equipe-card img { width:100%; height:160px; object-fit:cover; object-position:top; }
+        .equipe-card-ph { width:100%; height:160px; background:linear-gradient(135deg,var(--royal-blue),#2563eb); display:flex; align-items:center; justify-content:center; font-size:4rem; }
+        .equipe-card-body { padding:.8rem 1rem; }
+        .equipe-card-body h3 { font-size:.88rem; font-weight:700; color:var(--royal-blue); }
+        .equipe-card-body .poste { font-size:.75rem; color:var(--gold); font-weight:600; margin:.15rem 0 .4rem; }
+        .equipe-card-body p { font-size:.8rem; color:#64748b; line-height:1.5; }
 
         /* ══ Témoignages ══ */
         .temo-card { background:white; border-radius:14px; box-shadow:0 4px 16px rgba(0,0,0,.07); padding:1.5rem; display:flex; flex-direction:column; gap:1rem; }
@@ -1489,7 +1462,7 @@
                 <li><a href="#" onclick="navVersActualites();document.querySelector('.mobile-nav').classList.remove('active');return false;">Actualités</a></li>
                 <li><a href="#equipe" onclick="document.querySelector('.mobile-nav').classList.remove('active')">Équipe</a></li>
                 <li><a href="#temoignages" onclick="document.querySelector('.mobile-nav').classList.remove('active')">Témoignages</a></li>
-                <li><a href="#galerie" onclick="ouvrirGalerieOverlay();document.querySelector('.mobile-nav').classList.remove('active');return false;">Galerie</a></li>
+                <li><a href="#" onclick="ouvrirGalerieOverlay();document.querySelector('.mobile-nav').classList.remove('active');return false;">Galerie</a></li>
                 <li><a href="#preinscription" onclick="document.querySelector('.mobile-nav').classList.remove('active')">Pré-inscription</a></li>
                 <li><a href="#contact" onclick="document.querySelector('.mobile-nav').classList.remove('active')">Contact</a></li>
                 <li><a href="portail.html" style="color:var(--royal-blue);font-weight:700;">🔑 Connexion / Compte</a></li>
@@ -1552,7 +1525,7 @@
     </section>
 
     <!-- ══ PAGE À PROPOS (overlay) ══ -->
-    <div id="page-apropos-overlay" style="display:none;position:fixed;inset:0;background:#f0f4f8;z-index:2000;overflow-y:auto;">
+    <div id="page-apropos-overlay" style="display:none;position:fixed;inset:0;background:#f0f4f8;z-index:2000;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;">
 
       <!-- Navbar intégrée overlay À propos -->
       <div class="overlay-nav">
@@ -2199,7 +2172,7 @@
     <section id="actualites" style="padding:5rem 5%;background:var(--light-gray);">
       <h2 class="section-title">Actualités</h2>
       <p class="section-subtitle">Restez informés de la vie scolaire</p>
-      <div id="actus-container" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;max-width:1200px;margin:0 auto 2.5rem;"></div>
+      <div id="actus-container" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:1.5rem;max-width:1200px;margin:0 auto 2.5rem;"></div>
       <div id="actus-loading" style="text-align:center;padding:3rem;color:#64748b;">Chargement des actualités...</div>
       <div id="actus-empty" style="display:none;text-align:center;padding:3rem;color:#94a3b8;"><div style="font-size:3rem;">📰</div><p>Aucune actualité publiée pour l'instant.</p></div>
       <div style="text-align:center;">
@@ -2210,7 +2183,7 @@
     </section>
 
     <!-- ══ PAGE ACTUALITÉS (overlay) ══ -->
-    <div id="page-actualites-overlay" style="display:none;position:fixed;inset:0;background:#f0f4f8;z-index:2000;overflow-y:auto;">
+    <div id="page-actualites-overlay" style="display:none;position:fixed;inset:0;background:#f0f4f8;z-index:2000;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;">
       <!-- Navbar intégrée overlay Actualités -->
       <div class="overlay-nav">
         <div class="overlay-nav-inner">
@@ -2906,7 +2879,7 @@
           }
           const overlay = document.getElementById('page-actualites-overlay');
           overlay.style.display = 'block';
-          document.body.style.overflow = 'hidden';
+          if (window.innerWidth > 768) document.body.style.overflow = 'hidden';
           actusFiltrees = [...allActus];
           actusPageCourante = 1;
           afficherPageActus();
@@ -3057,7 +3030,7 @@
 
           overlay.style.display = 'block';
           overlay.scrollTo({top: 0, behavior: 'instant'});
-          document.body.style.overflow = 'hidden';
+          if (window.innerWidth > 768) document.body.style.overflow = 'hidden';
 
           // Progress bar de lecture
           overlay.onscroll = () => {
@@ -3532,7 +3505,7 @@
         function ouvrirPageAPropos() {
           const overlay = document.getElementById('page-apropos-overlay');
           overlay.style.display = 'block';
-          document.body.style.overflow = 'hidden';
+          if (window.innerWidth > 768) document.body.style.overflow = 'hidden';
           overlay.scrollTo({top:0,behavior:'instant'});
           chargerContenuAPropos();
           updateOverlayAuthBtns();
@@ -3989,6 +3962,8 @@
       z-index: 9500;
       background: #f0f2f7;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
     }
     #galerie-overlay.open {
       display: block;
@@ -4389,7 +4364,8 @@
       // Ouvrir immédiatement l'overlay avec le spinner
       ov.classList.add('open');
       ov.scrollTo(0, 0);
-      document.body.style.overflow = 'hidden';
+      // Sur mobile Safari, overflow:hidden sur body cause écran noir — on gère via l'overlay lui-même
+      if (window.innerWidth > 768) document.body.style.overflow = 'hidden';
       loading.style.display = 'flex';
       empty.style.display   = 'none';
       grid.innerHTML        = '';
@@ -4449,6 +4425,9 @@
     window.fermerGalerieOverlay = function() {
       document.getElementById('galerie-overlay').classList.remove('open');
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
     };
 
     // ── Construire la grille ──
