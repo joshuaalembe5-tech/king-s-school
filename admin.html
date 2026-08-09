@@ -2082,6 +2082,11 @@ tr:hover td{background:#fafbff;}
 <div id="toastWrap"></div>
 
 <script>
+// ══ Détection automatique URL serveur (déclarée en premier) ══
+const API = window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1'
+  ? 'http://localhost:3000' : 'https://king-s-school.onrender.com';
+const API_BASE = API;
+
 let adminToken=localStorage.getItem('ksi_admin_token')||'', currentUser=null, notifications=[];
 const usersMap = new Map();
 let usersState={page:1,totalPages:1}, msgsState={page:1,totalPages:1};
@@ -5221,10 +5226,7 @@ closeModal = function(id) {
 //  NOTIFICATIONS ADMIN — Envoi + Liste
 // ════════════════════════════════════════════════════════
 
-// ══ Détection automatique URL serveur ══
-const API = window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1'
-  ? 'http://localhost:3000' : 'https://king-s-school.onrender.com';
-const API_BASE = API;
+// API et API_BASE déclarés en haut du script
 
 let notifAdminState = {page:1, totalPages:1, total:0};
 
